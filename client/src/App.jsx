@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-function App() {
-
+const App = () => {
   return (
-    <>
-     <Button>Click me</Button>
-      MindMesh
-    </>
-  )
-}
+    <div className="grid min-h-screen place-items-center">
+      <Button>MindMesh</Button>
+    </div>
+  );
+};
 
-export default App
+export default App;
