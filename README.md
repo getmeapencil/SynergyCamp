@@ -1,6 +1,6 @@
 # SynergyCamp
 
-StyleGuide-
+## StyleGuide-
 - Always use arrow functions  
 Eg.
 ```js
