@@ -2,8 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import inviteData from "../../../assets/inviteData.json";
+import inviteData from "@/assets/inviteData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export const InvitesTable = () => {
   return (
@@ -33,7 +34,9 @@ export const InvitesTable = () => {
                     </Avatar>
                     <div className="font-medium">{data.roomName}</div>
                   </TableCell>
-                  <TableCell className="text-center sm:table-cell">{data.role}</TableCell>
+                  <TableCell className="text-center sm:table-cell">
+                    <Badge variant={"outline"}>{data.role}</Badge>
+                  </TableCell>
                   <TableCell className="text-center sm:table-cell">{data.totalMembers} Members</TableCell>
                   <TableCell className="text-center sm:table-cell">
                     <div className="flex place-content-center gap-2">
