@@ -16,7 +16,7 @@
     {
       "id": 3,
       "roomName": "Gate",
-      "role": "Guest",
+      "role": "Moderator",
       "onlineMembers": 8,
       "joinLink": "https://example.com/join/roomC"
     },

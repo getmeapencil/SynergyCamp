@@ -1,6 +1,6 @@
-import { Barchart } from "../components/dashboard/Barchart";
-import { Room } from "@/components/Room";
-import { RoomDetailsMain } from "@/components/dashboard/RoomDetailsMain";
+import { Barchart } from "./components/Barchart";
+import { Room } from "./components/Room";
+import { RoomsData } from "./components/RoomsData";
 
 export const Dashboard = () => {
   return (
@@ -15,7 +15,7 @@ export const Dashboard = () => {
           </div>
         </div>
         <div className="mt-4 h-screen w-full">
-          <RoomDetailsMain />
+          <RoomsData />
         </div>
       </div>
     </>

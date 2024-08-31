@@ -12,16 +12,14 @@ export const Barchart = () => {
   dayjs.extend(duration);
   const dailyDuration = dayjs.duration(data.presentDayTime, "seconds").format("H[h] m[m] ");
   const weeklyDuration = dayjs.duration(data.weekTime, "seconds").format("H[h] m[m] ");
-  const goalTime  = dayjs.duration(data.goaltime, "seconds").format("H[h] m[m] ");
+  const goalTime = dayjs.duration(data.goaltime, "seconds").format("H[h] m[m] ");
 
   return (
     <div>
       <Card className="lg:max-w-md">
         <CardHeader className="space-y-0 pb-2">
           <CardDescription>Today</CardDescription>
-          <CardTitle className="text-4xl tabular-nums">
-            {dailyDuration} 
-          </CardTitle>
+          <CardTitle className="text-4xl tabular-nums">{dailyDuration}</CardTitle>
         </CardHeader>
         <CardContent>
           <ChartContainer
@@ -119,10 +117,10 @@ export const Barchart = () => {
         </CardContent>
         <CardFooter className="flex-col items-start gap-1">
           <CardDescription>
-            Over the past 7 days, you have studied <span className="font-medium text-foreground">{weeklyDuration}</span> 
+            Over the past 7 days, you have studied <span className="font-medium text-foreground">{weeklyDuration}</span>
           </CardDescription>
           <CardDescription>
-            You need <span className="font-medium text-foreground">{goalTime}</span> more  to reach your goal.
+            You need <span className="font-medium text-foreground">{goalTime}</span> more to reach your goal.
           </CardDescription>
         </CardFooter>
       </Card>
