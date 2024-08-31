@@ -1,16 +1,14 @@
-
-import { Dashboard } from "./pages/dashboard/index"
-import {Routes, Route} from 'react-router-dom'
+import { Dashboard } from "@/pages/dashboard";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-
   return (
     <>
-    <Routes>
-      <Route path="/dashboard" element = {<Dashboard/>}/>
-    </Routes>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
