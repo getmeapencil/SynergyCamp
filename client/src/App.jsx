@@ -1,5 +1,5 @@
-import { Auth } from './Pages/Auth/index'
-import { BrowserRouter as Route, Routes } from 'react-router-dom';
+import { Auth } from "@/pages/auth";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
 
