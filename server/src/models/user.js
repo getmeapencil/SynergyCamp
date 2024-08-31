@@ -10,66 +10,17 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true
   },
-  email_verified: {
-    type: Boolean
-  },
-  accountActive: {
-    type: Boolean
-  },
-  celloReferralCode: String,
-  plan: Object,
-  engagePlan: Object,
-  picture: String,
-  phone: String, // not being used anymore
-  phoneNumber: {
+  picture: {
     type: String,
-    sparse: true
+    required: true
   },
-  phone_verified: Boolean,
-  role: {
+  googleId: {
     type: String,
-    enum: ["user", "admin", "participant"],
-    default: "user"
-  },
-  phoneVerified: {
-    // @todo: check and remove this - this is a dup
-    type: Boolean
-  },
-  organization: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "organization"
-  },
-  password: {
-    type: String,
-    minlength: 8
-  },
-  refreshToken: String,
-  emailVerification: {
-    token: String,
-    expires: Date
-  },
-  passwordReset: {
-    token: String,
-    expires: Date
-  },
-  appData: {
-    type: Object
-  },
-  createdAt: {
-    type: Date,
-    default: new Date()
-  },
-  participant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "participant"
-  },
-  roles: Array,
-  signedInAs: {
-    type: String
-  },
-  degradedModel: {
-    type: Boolean
+    required: true,
+    unique: true
   }
+}, {
+  timestamps: true
 });
 
 export default mongoose.model("user", userSchema);
