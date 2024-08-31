@@ -3,8 +3,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import tableData from "@/assets/roomData.json";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+
 export const RoomsTable = () => {
   return (
     <Card>
@@ -33,7 +34,9 @@ export const RoomsTable = () => {
                     </Avatar>
                     <div className="font-medium">{data.roomName}</div>
                   </TableCell>
-                  <TableCell className="text-center sm:table-cell">{data.role}</TableCell>
+                  <TableCell className="text-center sm:table-cell">
+                    <Badge variant={"outline"}>{data.role}</Badge>
+                  </TableCell>
                   <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
                   <TableCell className="text-center sm:table-cell">
                     <Button>Join Room</Button>
