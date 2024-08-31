@@ -5,16 +5,12 @@ import { RoomsData } from "./components/RoomsData";
 export const Dashboard = () => {
   return (
     <>
-      <div className="sm:flex">
-        <div className="flex h-fit flex-col pl-4">
-          <div className="flex flex-1 p-1">
-            <Room />
-          </div>
-          <div className="flex flex-1 p-1">
-            <Barchart />
-          </div>
+      <div className="flex h-screen flex-col gap-4 p-4 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:w-1/3">
+          <Room />
+          <Barchart />
         </div>
-        <div className="mt-4 h-screen w-full">
+        <div className="flex-1">
           <RoomsData />
         </div>
       </div>
