@@ -15,8 +15,8 @@ export const Barchart = () => {
   const goalTime = dayjs.duration(data.goaltime, "seconds").format("H[h] m[m] ");
 
   return (
-    <div>
-      <Card className="lg:max-w-md">
+    <div className="w-full">
+      <Card>
         <CardHeader className="space-y-0 pb-2">
           <CardDescription>Today</CardDescription>
           <CardTitle className="text-4xl tabular-nums">{dailyDuration}</CardTitle>
