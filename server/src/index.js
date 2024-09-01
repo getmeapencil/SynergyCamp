@@ -7,6 +7,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import session from "express-session";
 import User from "./models/user.js";
+import apiRouter from "./apps/index.js";
 dotenv.config();
 
 const app = express();
@@ -19,13 +20,10 @@ const allowedOrigins = ["http://localhost:5173"];
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log("Origin: ", origin);
       const requestOrigin = origin || "Unknown origin";
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        console.log("Allowed CORS request from: ", requestOrigin);
         callback(null, true);
       } else {
-        console.log(`Blocked CORS request from ${requestOrigin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -37,8 +35,7 @@ app.use(
     maxFieldsSize: 1073741824, // 1 GB in bytes
   })
 );
-// Routes setup
-// app.use('/api', apiRouter);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -49,6 +46,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/", apiRouter);
 passport.use(
   new GoogleStrategy(
     {
@@ -58,7 +56,6 @@ passport.use(
       scope: ["email", "profile"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
       try {
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
@@ -97,26 +94,9 @@ app.get(
     successRedirect: "http://localhost:5173/dashboard",
   })
 );
-app.post("/logout", (req, res) => {
-  console.log("I am called 1")
-  req.logout((err) => {
-    console.log("I am called")
-  res.send("Logged out");
-  console.log("err", err);
-  });
-});
-
-app.get("/user", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json(req.user);
-    console.log("user is as follows", req.user);
-    return;
-  }
-  res.json({ message: "Unauthorized" });
-});
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Backend of MIND MESH");
 });
 
 export { app, PORT };

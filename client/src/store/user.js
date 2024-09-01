@@ -8,7 +8,7 @@ export const useUserStore = create((set) => ({
     try {
       await createApiCall({
         method: "POST",
-        url: "http://localhost:3000/logout",
+        url: "http://localhost:3000/user/logout",
         withCredentials: true,
       });
       set({ user: null });

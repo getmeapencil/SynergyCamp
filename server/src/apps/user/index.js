@@ -4,7 +4,7 @@ import * as controller from './controller.js';
 
 const router = express.Router();
 
-router.post('/', controller.signup);
-
+router.get('/', controller.getUser);
+router.post('/logout', controller.logout);
 
 export default router;
