@@ -20,6 +20,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@react-oauth/google": "^0.12.1",
+    "axios": "^1.7.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
@@ -29,7 +30,8 @@
     "react-router-dom": "^6.26.1",
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@babel/types": "^7.25.6",

@@ -8,6 +8,15 @@ import { Heatmap } from "./components/Heatmap";
 import { MindMeshLogo } from "@/assets/mindmesh-logo";
 
 export const Dashboard = () => {
+  const { user } = useUserStore();
+  const navigate = useNavigate();
+  useEffect(() => {
+    // fetch user data
+    if (!user) {
+      useUserStore.getState().fetchUser();
+    }
+  }, [user]);
+  console.log(user)
   return (
     <>
       <div className="flex h-screen flex-col">
