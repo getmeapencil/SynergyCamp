@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-
+import { FcGoogle } from "react-icons/fc";
 export const Auth = () => {
   return (
     <div className="h-screen w-full lg:grid lg:grid-cols-2">
@@ -12,20 +12,16 @@ export const Auth = () => {
       </div>
       <div className="flex items-center justify-center p-6">
         <div className="mx-auto grid w-[300px] gap-4">
-          <div className="grid gap-1 text-center">
-            <div className="flex gap-2">
-              <div className="flex flex-1 flex-col">
-                <div className="flex-1 border-b"></div>
-                <div className="flex-1"></div>
+          <div className="grid gap-3 text-center ">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-center text-2xl md:text-5xl lg:text-5xl">
+                <h1>Welcome to MindMesh</h1>
               </div>
-              <div>Continue with</div>
-              <div className="flex flex-1 flex-col">
-                <div className="flex-1 border-b"></div>
-                <div className="flex-1"></div>
-              </div>
+              <div>study together grow together</div>
             </div>
             <Button type="submit" className="w-full">
-              Google
+              <FcGoogle className="mr-2 inline-block" />
+              <span>Sign in with Google</span>
             </Button>
           </div>
         </div>
