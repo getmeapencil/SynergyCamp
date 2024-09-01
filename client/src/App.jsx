@@ -1,11 +1,14 @@
-import { Button } from "@/components/ui/button";
+import { Auth } from "@/pages/auth";
+import { Routes, Route } from "react-router-dom";
 
-const App = () => {
+function App() {
   return (
-    <div className="grid min-h-screen place-items-center">
-      <Button>MindMesh</Button>
-    </div>
+    <>
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
+    </>
   );
-};
+}
 
 export default App;
