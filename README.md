@@ -47,3 +47,12 @@ getSum({num1: 3, num2: 4});
 - Music?
 - Whiteboard?
 
+## Room DB Schema
+- id (unique)
+- Name (string)
+- Members (ref(user)[]) {Admin, Mod, Members, Todo}
+- temporaryBanned (ref(user), banEndTime(Date))
+- permanentBanned (ref(user))
+- pomodoroStartTime (Date)
+- pinnedMessages (5 pins, 1000 chars)
+- Rules
