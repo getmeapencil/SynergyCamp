@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 export const Auth = () => {
+  const loginwithgoogle = () => {
+    window.open("http://localhost:3000/auth/google/callback", "_self");
+  };
   return (
     <div className="h-screen w-full lg:grid lg:grid-cols-2">
       <div className="hidden flex-col justify-between bg-[url('/src/assets/study_group.jpeg')] p-6 lg:flex">
@@ -19,7 +22,7 @@ export const Auth = () => {
               </div>
               <div>study together grow together</div>
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" onClick={loginwithgoogle}>
               <FcGoogle className="mr-2 inline-block" />
               <span>Sign in with Google</span>
             </Button>

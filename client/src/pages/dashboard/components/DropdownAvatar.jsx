@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,12 +10,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useUserStore } from "@/store/user";
 import { LogOut, Moon, Settings, User } from "lucide-react";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 export const DropdownAvatar = ({ user }) => {
   const [isDark, setIsDark] = useState(false);
-
+  const navi = useNavigate();
   return (
     <div>
       <DropdownMenu>
@@ -47,8 +49,16 @@ export const DropdownAvatar = ({ user }) => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex gap-2 font-medium focus:text-destructive">
-            <LogOut className="h-4 w-4" />
-            <span>Log out</span>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                useUserStore.getState().logout();
+                navi("/auth");
+              }}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Log out</span>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
