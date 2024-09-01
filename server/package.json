@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "backend of mindmesh",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start":  "node ./src/index.js  "
+  },
+  "keywords": [
+    "study",
+    "group"
+  ],
+  "author": "yogitheboss",
+  "license": "ISC"
+}

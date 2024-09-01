@@ -29,3 +29,21 @@ Eg.
 export const getSum = ({num1, num2}) => {return num1 + num2}; // ✅
 getSum({num1: 3, num2: 4});
 ```
+
+## Features
+
+- Dashboard
+  - Create Room
+  - Room list
+  - Invite list
+  - Bar Chart (Stats)
+  - Streak (like Github)
+  - Todo Overview
+- Chat
+- Polls
+- Pomodoro
+- Todo
+- Video Conferencing
+- Music?
+- Whiteboard?
+
