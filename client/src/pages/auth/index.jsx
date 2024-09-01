@@ -10,7 +10,7 @@ export const Auth = () => {
         <h1 className="text-4xl font-extrabold text-white">MindMesh</h1>
         <div className="flex-grow"></div> {/* Empty div to push content to the bottom */}
         <p className="text-3xl font-medium text-white">
-          Boost Your Productivity Together -<div>Study and Work with Friends in Real-Time</div>
+          Boost Your Productivity Together -<span>Study and Work with Friends in Real-Time</span>
         </p>
       </div>
       <div className="flex items-center justify-center p-6">
