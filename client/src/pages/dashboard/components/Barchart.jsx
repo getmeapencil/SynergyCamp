@@ -26,7 +26,7 @@ export const Barchart = () => {
             config={{
               steps: {
                 label: "Hours",
-                color: "hsl(var(--chart-1))",
+                color: "hsl(var(--chart-3))",
               },
             }}
           >
@@ -38,31 +38,31 @@ export const Barchart = () => {
               }}
               data={[
                 {
-                  date: "2024-01-01",
+                  date: "2024-09-01",
                   Hours: 12,
                 },
                 {
-                  date: "2024-01-02",
+                  date: "2024-09-02",
                   Hours: 4,
                 },
                 {
-                  date: "2024-01-03",
+                  date: "2024-09-03",
                   Hours: 6,
                 },
                 {
-                  date: "2024-01-04",
+                  date: "2024-09-04",
                   Hours: 8,
                 },
                 {
-                  date: "2024-01-05",
+                  date: "2024-09-05",
                   Hours: 2,
                 },
                 {
-                  date: "2024-01-06",
+                  date: "2024-09-06",
                   Hours: 3,
                 },
                 {
-                  date: "2024-01-07",
+                  date: "2024-09-07",
                   Hours: 10,
                 },
               ]}
@@ -86,7 +86,6 @@ export const Barchart = () => {
                 }}
               />
               <ChartTooltip
-                defaultIndex={2}
                 content={
                   <ChartTooltipContent
                     hideIndicator
@@ -101,11 +100,11 @@ export const Barchart = () => {
                 }
                 cursor={false}
               />
-              <ReferenceLine y={1200} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" strokeWidth={1}>
+              <ReferenceLine y={5} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" strokeWidth={1}>
                 <Label position="insideBottomLeft" value="Average Hours" offset={10} fill="hsl(var(--foreground))" />
                 <Label
                   position="insideTopLeft"
-                  value="12,343"
+                  value="5"
                   className="text-lg"
                   fill="hsl(var(--foreground))"
                   offset={10}
