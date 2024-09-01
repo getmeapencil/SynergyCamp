@@ -12,14 +12,15 @@ import { Switch } from "@/components/ui/switch";
 import { LogOut, Moon, Settings, User } from "lucide-react";
 import { useState } from "react";
 
-export const DropdownAvatar = () => {
+export const DropdownAvatar = ({avatar}) => {
   const [isDark, setIsDark] = useState(false);
+  
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary ring-offset-2 ring-offset-background">
-            <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage src={avatar} alt="avatar" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

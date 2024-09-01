@@ -6,6 +6,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoOverview } from "./components/TodoOverview";
 import { Heatmap } from "./components/Heatmap";
 import { MindMeshLogo } from "@/assets/mindmesh-logo";
+import { useUserStore } from "@/store/user";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const Dashboard = () => {
   const { user } = useUserStore();
@@ -28,7 +31,7 @@ export const Dashboard = () => {
             MindMesh
           </span>
           {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
-          <DropdownAvatar />
+          <DropdownAvatar avatar={user?.picture}/>
         </div>
         <ScrollArea>
           <div className="flex gap-4 p-4 sm:flex-row">
