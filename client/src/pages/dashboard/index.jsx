@@ -7,19 +7,16 @@ import { TodoOverview } from "./components/TodoOverview";
 import { Heatmap } from "./components/Heatmap";
 import { MindMeshLogo } from "@/assets/mindmesh-logo";
 import { useUserStore } from "@/store/user";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export const Dashboard = () => {
   const { user } = useUserStore();
-  const navigate = useNavigate();
   useEffect(() => {
     // fetch user data
     if (!user) {
       useUserStore.getState().fetchUser();
     }
   }, [user]);
-  console.log(user)
   return (
     <>
       <div className="flex h-screen flex-col">
