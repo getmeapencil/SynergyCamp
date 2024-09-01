@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { LogOut, Moon, Settings, User } from "lucide-react";
 import { useState } from "react";
 
 export const DropdownAvatar = () => {
@@ -26,36 +26,27 @@ export const DropdownAvatar = () => {
         <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="flex gap-2 font-medium">
+            <User className="h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <div className="flex w-full items-center justify-between">
               <Label htmlFor="theme-toggle" className="flex items-center space-x-2">
-                {isDark ? (
-                  <>
-                    <Moon className="h-4 w-4" />
-                    <span>Dark Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Sun className="h-4 w-4" />
-                    <span>Light Mode</span>
-                  </>
-                )}
+                <Moon className="h-4 w-4" />
+                <span>Dark Mode</span>
               </Label>
               <Switch id="theme-toggle" checked={isDark} onCheckedChange={setIsDark} />
             </div>
           </DropdownMenuItem>
 
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="flex gap-2 font-medium">
+            <Settings className="h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="flex gap-2 font-medium focus:text-destructive">
+            <LogOut className="h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
