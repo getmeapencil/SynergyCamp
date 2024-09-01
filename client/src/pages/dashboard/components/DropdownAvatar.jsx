@@ -12,15 +12,15 @@ import { Switch } from "@/components/ui/switch";
 import { LogOut, Moon, Settings, User } from "lucide-react";
 import { useState } from "react";
 
-export const DropdownAvatar = ({avatar}) => {
+export const DropdownAvatar = ({ user }) => {
   const [isDark, setIsDark] = useState(false);
-  
+
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary ring-offset-2 ring-offset-background">
-              <AvatarImage src={avatar} alt="avatar" />
+            <AvatarImage src={user?.picture} alt="avatar" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -29,7 +29,7 @@ export const DropdownAvatar = ({avatar}) => {
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex gap-2 font-medium">
             <User className="h-4 w-4" />
-            <span>Profile</span>
+            <span>{user?.name}</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <div className="flex w-full items-center justify-between">
