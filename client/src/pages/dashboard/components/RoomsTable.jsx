@@ -6,13 +6,19 @@ import tableData from "@/assets/roomData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-export const RoomsTable = () => {
+export const RoomsTable = ({filterRole}) => {
+  console.log(filterRole);
+  let filteredData = tableData.filter((data) => data.role == filterRole);
+  if (filteredData.length == 0)
+     {filteredData = tableData};
+  console.log(filteredData)
   return (
     <Card>
       <CardHeader>
         <CardTitle>Rooms</CardTitle>
         <CardDescription>Recent rooms that you have joined.</CardDescription>
       </CardHeader>
+
       <CardContent>
         <ScrollArea className="h-72 rounded-md border">
           <Table>
@@ -25,7 +31,7 @@ export const RoomsTable = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tableData.map((data) => (
+              {filteredData.map((data) => (
                 <TableRow key={data.id}>
                   <TableCell className="flex items-center gap-2">
                     <Avatar>
