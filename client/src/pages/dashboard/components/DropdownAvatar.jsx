@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,17 +47,15 @@ export const DropdownAvatar = ({ user }) => {
             <span>Settings</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="flex gap-2 font-medium focus:text-destructive">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                useUserStore.getState().logout();
-                navi("/auth");
-              }}
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Log out</span>
-            </Button>
+          <DropdownMenuItem
+            className="flex gap-2 font-medium focus:text-destructive"
+            onClick={() => {
+              useUserStore.getState().logout();
+              navi("/auth");
+            }}
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Log out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
