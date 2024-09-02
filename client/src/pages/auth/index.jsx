@@ -1,33 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
+import { BsGoogle } from "react-icons/bs";
 export const Auth = () => {
   const loginwithgoogle = () => {
     window.open("http://localhost:3000/auth/google/callback", "_self");
   };
   return (
-    <div className="h-screen w-full lg:grid lg:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-[url('/src/assets/study_group.jpeg')] p-6 lg:flex">
-        <h1 className="text-4xl font-extrabold text-white">MindMesh</h1>
-        <div className="flex-grow"></div> {/* Empty div to push content to the bottom */}
-        <p className="text-3xl font-medium text-white">
-          Boost Your Productivity Together -<span>Study and Work with Friends in Real-Time</span>
-        </p>
-      </div>
-      <div className="flex items-center justify-center p-6">
-        <div className="mx-auto grid w-[300px] gap-4">
-          <div className="grid gap-3 text-center">
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-center text-2xl md:text-5xl lg:text-5xl">
-                <h1>Welcome to MindMesh</h1>
-              </div>
-              <div>study together grow together</div>
-            </div>
-            <Button type="submit" className="w-full" onClick={loginwithgoogle}>
-              <FcGoogle className="mr-2 inline-block" />
-              <span>Sign in with Google</span>
-            </Button>
-          </div>
+    <div className="h-screen w-full lg:flex">
+      <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
+        <h1 className="text-5xl font-extrabold text-white">MindMesh</h1>
+        <div className="flex flex-col gap-2 text-4xl font-medium text-white">
+          <p>Boost Your Productivity Together -</p>
+          <p>Study and Work with Friends in Real-Time</p>
         </div>
+      </div>
+      <div className="grid flex-1 place-items-center p-6">
+        <Button type="submit" size="lg" className="flex w-80 gap-2 text-xl" onClick={loginwithgoogle}>
+          <span>
+            <BsGoogle />
+          </span>
+          <span>Sign in with Google</span>
+        </Button>
       </div>
     </div>
   );
