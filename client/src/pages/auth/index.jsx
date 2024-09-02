@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { BsGoogle } from "react-icons/bs";
+import Typewriter from "typewriter-effect";
+
 export const Auth = () => {
   const loginwithgoogle = () => {
     window.open("http://localhost:3000/auth/google/callback", "_self");
@@ -10,7 +12,16 @@ export const Auth = () => {
         <h1 className="text-5xl font-extrabold text-white">MindMesh</h1>
         <div className="flex flex-col gap-2 text-4xl font-medium text-white">
           <p>Boost Your Productivity Together -</p>
-          <p>Study and Work with Friends in Real-Time</p>
+          <span className="flex">
+            <Typewriter
+              options={{
+                strings: ["Study", "Work"],
+                autoStart: true,
+                loop: true,
+              }}
+            />{" "}
+            with Friends in Real-Time
+          </span>
         </div>
       </div>
       <div className="grid flex-1 place-items-center p-6">
