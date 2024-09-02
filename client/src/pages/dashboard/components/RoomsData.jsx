@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FilterIcon, ListFilter } from "lucide-react";
+import {  ListFilter } from "lucide-react";
 
 import { useState } from "react";
 
@@ -86,7 +86,8 @@ export function RoomsData() {
         <RoomsTable filterRole={filter.selectedRole} />
       </TabsContent>
       <TabsContent value="invites">
-        <InvitesTable />
+
+        <InvitesTable filterRole={filter.selectedRole} />
       </TabsContent>
     </Tabs>
   );
