@@ -40,9 +40,10 @@ getSum({num1: 3, num2: 4});
   - Streak (like Github)
   - Todo Overview
 - Chat
-- Polls
 - Pomodoro
 - Todo
+- Google Calendar Integration
+- Polls?
 - Video Conferencing
 - Music?
 - Whiteboard?
