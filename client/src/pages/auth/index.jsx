@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { BsGoogle } from "react-icons/bs";
-import { MindMeshLogo } from "@/assets/mindmesh-logo";
+import MindWhite from "@/assets/mind-white.svg";
 import Typewriter from "typewriter-effect";
 
 export const Auth = () => {
@@ -11,9 +11,7 @@ export const Auth = () => {
     <div className="light h-screen w-full lg:flex">
       <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
         <h1 className="flex gap-2 text-5xl font-extrabold text-white">
-          <span className="grid aspect-square w-10 place-content-center">
-            <MindMeshLogo color={"white"} />
-          </span>
+          <img src={MindWhite} alt="Mind" className="grid aspect-square w-10 place-content-center" />
           MindMesh
         </h1>
         <div className="flex flex-col gap-2 text-4xl font-medium text-white">
