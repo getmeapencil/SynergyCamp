@@ -1,42 +1,58 @@
 [
-    {
-      "id": 1,
-      "roomName": "Coders",
-      "role": "Admin",
-      "totalMembers": 10,
-      "acceptLink": "https://example.com/accept/roomA",
-      "declineLink": "https://example.com/decline/roomA"
-    },
-    {
-      "id": 2,
-      "roomName": "SynergyCamp",
-      "role": "Member",
-      "totalMembers": 8,
-      "acceptLink": "https://example.com/accept/roomB",
-      "declineLink": "https://example.com/decline/roomB"
-    },
-    {
-      "id": 3,
-      "roomName": "Novel",
-      "role": "Moderator",
-      "totalMembers": 15,
-      "acceptLink": "https://example.com/accept/roomC",
-      "declineLink": "https://example.com/decline/roomC"
-    },
-    {
-      "id": 4,
-      "roomName": "Room D",
-      "role": "Admin",
-      "totalMembers": 5,
-      "acceptLink": "https://example.com/accept/roomD",
-      "declineLink": "https://example.com/decline/roomD"
-    },
-    {
-      "id": 5,
-      "roomName": "Room e",
-      "role": "Admin",
-      "totalMembers": 5,
-      "acceptLink": "https://example.com/accept/roomD",
-      "declineLink": "https://example.com/decline/roomD"
-    }
-  ]
+  {
+    "id": 1,
+    "roomName": "Coders",
+    "role": "Admin",
+    "totalMembers": 10,
+    "acceptLink": "https://example.com/accept/roomA",
+    "declineLink": "https://example.com/decline/roomA"
+  },
+  {
+    "id": 2,
+    "roomName": "SynergyCamp",
+    "role": "Member",
+    "totalMembers": 8,
+    "acceptLink": "https://example.com/accept/roomB",
+    "declineLink": "https://example.com/decline/roomB"
+  },
+  {
+    "id": 3,
+    "roomName": "Novel",
+    "role": "Moderator",
+    "totalMembers": 15,
+    "acceptLink": "https://example.com/accept/roomC",
+    "declineLink": "https://example.com/decline/roomC"
+  },
+  {
+    "id": 4,
+    "roomName": "Room D",
+    "role": "Admin",
+    "totalMembers": 5,
+    "acceptLink": "https://example.com/accept/roomD",
+    "declineLink": "https://example.com/decline/roomD"
+  },
+  {
+    "id": 5,
+    "roomName": "Room e",
+    "role": "Admin",
+    "totalMembers": 5,
+    "acceptLink": "https://example.com/accept/roomD",
+    "declineLink": "https://example.com/decline/roomD"
+  },
+  {
+    "id": 6,
+    "roomName": "Room s",
+    "role": "Admin",
+    "totalMembers": 5,
+    "acceptLink": "https://example.com/accept/roomD",
+    "declineLink": "https://example.com/decline/roomD"
+  },
+  {
+    "id": 7,
+    "roomName": "Room F",
+    "role": "Admin",
+    "totalMembers": 5,
+    "acceptLink": "https://example.com/accept/roomD",
+    "declineLink": "https://example.com/decline/roomD"
+  }
+]
