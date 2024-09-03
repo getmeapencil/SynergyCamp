@@ -22,13 +22,13 @@ export const Dashboard = () => {
       <div className="flex h-screen flex-col">
         <div className="flex items-center justify-between border border-b p-4">
           <span className="flex gap-2 text-4xl font-extrabold">
-            <span className="grid aspect-square w-10 place-content-center">
+            <span className="grid aspect-square w-8 place-content-center">
               <MindMeshLogo />
             </span>
             MindMesh
           </span>
           {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
-          <DropdownAvatar user={user}/>
+          <DropdownAvatar user={user} />
         </div>
         <ScrollArea>
           <div className="flex gap-4 p-4 sm:flex-row">

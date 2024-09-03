@@ -40,10 +40,16 @@ export const InvitesTable = () => {
                   <TableCell className="text-center sm:table-cell">{data.totalMembers} Members</TableCell>
                   <TableCell className="text-center sm:table-cell">
                     <div className="flex place-content-center gap-2">
-                      <Button variant="outline" className="border-green-300 hover:bg-green-300">
+                      <Button
+                        variant="outline"
+                        className="border-green-300 hover:bg-green-300 dark:border-green-700 hover:dark:bg-green-700"
+                      >
                         Accept
                       </Button>
-                      <Button variant="outline" className="border-red-300 hover:bg-red-300">
+                      <Button
+                        variant="outline"
+                        className="border-red-300 hover:bg-red-300 dark:border-red-700 hover:dark:bg-red-700"
+                      >
                         Reject
                       </Button>
                     </div>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { BsGoogle } from "react-icons/bs";
+import { MindMeshLogo } from "@/assets/mindmesh-logo";
 import Typewriter from "typewriter-effect";
 
 export const Auth = () => {
@@ -7,9 +8,14 @@ export const Auth = () => {
     window.open("http://localhost:3000/auth/google/callback", "_self");
   };
   return (
-    <div className="h-screen w-full lg:flex">
+    <div className="light h-screen w-full lg:flex">
       <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
-        <h1 className="text-5xl font-extrabold text-white">MindMesh</h1>
+        <h1 className="flex gap-2 text-5xl font-extrabold text-white">
+          <span className="grid aspect-square w-10 place-content-center">
+            <MindMeshLogo color={"white"} />
+          </span>
+          MindMesh
+        </h1>
         <div className="flex flex-col gap-2 text-4xl font-medium text-white">
           <p>Boost Your Productivity Together -</p>
           <span className="flex">
@@ -24,7 +30,7 @@ export const Auth = () => {
           </span>
         </div>
       </div>
-      <div className="grid flex-1 place-items-center p-6">
+      <div className="grid flex-1 place-items-center bg-white p-6">
         <Button type="submit" size="lg" className="flex w-80 gap-2 text-xl" onClick={loginwithgoogle}>
           <span>
             <BsGoogle />
