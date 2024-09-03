@@ -8,21 +8,31 @@ import { Heatmap } from "./components/Heatmap";
 
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
-import Mind from "@/assets/mind.svg";
+import MindMeshLogo from "@/assets/mind.svg";
+import MindMeshLogoWhite from "@/assets/mind-white.svg";
+import { useTheme } from "@/components/theme-provider";
+
 export const Dashboard = () => {
   const { user } = useUserStore();
+  const { theme } = useTheme();
+
   useEffect(() => {
     // fetch user data
     if (!user) {
       useUserStore.getState().fetchUser();
     }
   }, [user]);
+
   return (
     <>
       <div className="flex h-screen flex-col">
         <div className="flex items-center justify-between border border-b p-4">
           <span className="flex gap-2 text-4xl font-extrabold">
-            <img src={Mind} alt="Mind" className="grid aspect-square w-8 place-content-center" />
+            <img
+              src={theme === "light" ? MindMeshLogo : MindMeshLogoWhite}
+              alt="MindMesh"
+              className="grid aspect-square w-8 place-content-center"
+            />
             MindMesh
           </span>
           {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
