@@ -21,7 +21,7 @@ export const InvitesTable = ({ filterRole, searchName }) => {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-72 rounded-md border">
-          {inviteData.length ? (
+          {filteredData.length ? (
             <Table>
               <TableHeader>
                 <TableRow>
