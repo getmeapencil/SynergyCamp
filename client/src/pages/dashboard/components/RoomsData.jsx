@@ -21,7 +21,6 @@ export function RoomsData() {
     minMembers: 0,
     name: "",
   });
-  console.log(filter);
 
   return (
     <Tabs defaultValue="rooms" className="">
@@ -34,11 +33,13 @@ export function RoomsData() {
         </div>
         <div className="flex gap-2">
           <div className="relative flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <span className="absolute grid h-full w-8 place-content-center text-muted-foreground">
+              <Search className="h-4 w-4" />
+            </span>
             <Input
               type="search"
               placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+              className="w-full rounded-lg bg-background pl-7 md:w-[200px] lg:w-[336px]"
               aria-label="Search"
               onChange={(e) => {
                 setFilter((prevFilter) => ({ ...prevFilter, name: e.target.value }));
@@ -47,16 +48,14 @@ export function RoomsData() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <ListFilter />
-                Filter{" "}
+              <Button variant="outline" className="flex gap-1">
+                <ListFilter className="h-4 w-4" />
+                Filter
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Filter By</DropdownMenuLabel>
+            <DropdownMenuContent className="" align="end">
+              <DropdownMenuLabel>Role</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem>hi</DropdownMenuItem> */}
-
               <DropdownMenuCheckboxItem
                 checked={filter.selectedRole == "Admin" ? true : false}
                 onCheckedChange={() => {
