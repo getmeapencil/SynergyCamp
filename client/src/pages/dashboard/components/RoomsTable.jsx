@@ -5,12 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import tableData from "@/assets/roomData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { NoRooms } from "./NoRooms";
+import { EmptyTable } from "./EmptyTable";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  let filteredData = tableData.filter((data) => data.role == filterRole);
-  if (filteredData.length == 0) {
-    filteredData = tableData;
+  let filteredData = tableData;
+  if (filterRole.length !== 0) {
+    filteredData = tableData.filter((data) => data.role === filterRole);
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (
@@ -54,7 +54,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
               </TableBody>
             </Table>
           ) : (
-            <NoRooms />
+            <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
         </ScrollArea>
       </CardContent>

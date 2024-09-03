@@ -5,12 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import inviteData from "@/assets/inviteData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { NoInvites } from "./NoInvites";
+import { EmptyTable } from "./EmptyTable";
 
 export const InvitesTable = ({ filterRole, searchName }) => {
-  let filteredData = inviteData.filter((data) => data.role == filterRole);
-  if (filteredData.length == 0) {
-    filteredData = inviteData;
+  let filteredData = inviteData;
+  if (filterRole.length !== 0) {
+    filteredData = inviteData.filter((data) => data.role === filterRole);
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (
@@ -66,7 +66,7 @@ export const InvitesTable = ({ filterRole, searchName }) => {
               </TableBody>
             </Table>
           ) : (
-            <NoInvites />
+            <EmptyTable variant={"invite"} text={"You haven't recieved any room invites yet."} />
           )}
         </ScrollArea>
       </CardContent>
