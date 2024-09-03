@@ -7,12 +7,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { NoRooms } from "./NoRooms";
 
-export const RoomsTable = ({ filterRole }) => {
+export const RoomsTable = ({ filterRole, searchName }) => {
   let filteredData = tableData.filter((data) => data.role == filterRole);
   if (filteredData.length == 0) {
     filteredData = tableData;
   }
-  console.log(filteredData);
+  filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (
     <Card>
       <CardHeader>
