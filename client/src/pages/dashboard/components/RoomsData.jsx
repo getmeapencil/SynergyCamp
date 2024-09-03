@@ -62,7 +62,7 @@ export function RoomsData() {
                 onCheckedChange={() => {
                   setFilter((prevFilter) => ({
                     ...prevFilter,
-                    selectedRole: "Admin",
+                    selectedRole: prevFilter.selectedRole === "Admin" ? "" : "Admin",
                   }));
                 }}
               >
@@ -73,7 +73,7 @@ export function RoomsData() {
                 onCheckedChange={() => {
                   setFilter((prevFilter) => ({
                     ...prevFilter,
-                    selectedRole: "Moderator",
+                    selectedRole: prevFilter.selectedRole === "Moderator" ? "" : "Moderator",
                   }));
                 }}
               >
@@ -84,7 +84,7 @@ export function RoomsData() {
                 onCheckedChange={() => {
                   setFilter((prevFilter) => ({
                     ...prevFilter,
-                    selectedRole: "Member",
+                    selectedRole: prevFilter.selectedRole === "Member" ? "" : "Member",
                   }));
                 }}
               >
