@@ -56,7 +56,7 @@ export const DropdownAvatar = ({ user }) => {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="flex gap-2 font-medium focus:text-destructive"
+            className="flex gap-2 font-medium focus:text-red-500"
             onClick={() => {
               useUserStore.getState().logout();
               navi("/auth");
