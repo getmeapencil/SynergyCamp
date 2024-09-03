@@ -9,18 +9,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useUserStore } from "@/store/user";
 import { LogOut, Moon, Settings, User } from "lucide-react";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/components/theme-provider";
 
-export const DropdownAvatar = () => {
-  const [isDark, setIsDark] = useState(false);
+export const DropdownAvatar = ({ user }) => {
+  const { theme, setTheme } = useTheme();
+  const navi = useNavigate();
+
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary ring-offset-2 ring-offset-background">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src={user?.picture} alt="avatar" />
+            <AvatarFallback>{user?.name[0]}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
@@ -28,7 +32,7 @@ export const DropdownAvatar = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem className="flex gap-2 font-medium">
             <User className="h-4 w-4" />
-            <span>Profile</span>
+            <span>{user?.name}</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <div className="flex w-full items-center justify-between">
@@ -36,7 +40,13 @@ export const DropdownAvatar = () => {
                 <Moon className="h-4 w-4" />
                 <span>Dark Mode</span>
               </Label>
-              <Switch id="theme-toggle" checked={isDark} onCheckedChange={setIsDark} />
+              <Switch
+                id="theme-toggle"
+                checked={theme === "dark"}
+                onCheckedChange={(checked) => {
+                  checked ? setTheme("dark") : setTheme("light");
+                }}
+              />
             </div>
           </DropdownMenuItem>
 
@@ -45,7 +55,13 @@ export const DropdownAvatar = () => {
             <span>Settings</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="flex gap-2 font-medium focus:text-destructive">
+          <DropdownMenuItem
+            className="flex gap-2 font-medium focus:text-red-500"
+            onClick={() => {
+              useUserStore.getState().logout();
+              navi("/auth");
+            }}
+          >
             <LogOut className="h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>

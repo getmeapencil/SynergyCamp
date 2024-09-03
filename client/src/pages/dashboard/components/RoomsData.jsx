@@ -21,7 +21,7 @@ export function RoomsData() {
     minMembers: 0,
     name: "",
   });
-  console.log(filter)
+  console.log(filter);
 
   return (
     <Tabs defaultValue="rooms" className="">
@@ -95,10 +95,10 @@ export function RoomsData() {
         </div>
       </div>
       <TabsContent value="rooms">
-        <RoomsTable filterRole={filter.selectedRole} searchName = {filter.name} />
+        <RoomsTable filterRole={filter.selectedRole} searchName={filter.name} />
       </TabsContent>
       <TabsContent value="invites">
-        <InvitesTable filterRole={filter.selectedRole} searchName = {filter.name} />
+        <InvitesTable filterRole={filter.selectedRole} searchName={filter.name} />
       </TabsContent>
     </Tabs>
   );

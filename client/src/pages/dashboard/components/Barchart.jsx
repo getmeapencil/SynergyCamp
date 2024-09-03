@@ -26,7 +26,7 @@ export const Barchart = () => {
             config={{
               steps: {
                 label: "Hours",
-                color: "hsl(var(--chart-3))",
+                color: "hsl(var(--chart-2))",
               },
             }}
           >

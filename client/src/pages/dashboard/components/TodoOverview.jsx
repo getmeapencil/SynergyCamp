@@ -4,12 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 export const TodoOverview = () => {
   return (
     <Card className="w-1/3">
-      <CardHeader className="flex flex-row justify-between">
-        <div className="flex flex-col space-y-1.5">
-          <CardTitle>ToDo</CardTitle>
-          <CardDescription>ToDo list from all rooms.</CardDescription>
-        </div>
-        <div className="text-5xl">2/5</div>
+      <CardHeader>
+        <CardTitle>ToDo</CardTitle>
+        <CardDescription>ToDo list from all rooms.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <div className="items-top flex space-x-2">
@@ -25,10 +22,10 @@ export const TodoOverview = () => {
           </div>
         </div>
         <div className="items-top flex space-x-2">
-          <Checkbox id="terms2" />
+          <Checkbox id="terms1" />
           <div className="grid gap-1.5 leading-none">
             <label
-              htmlFor="terms2"
+              htmlFor="terms1"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Work on backend of OB

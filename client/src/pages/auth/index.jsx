@@ -1,34 +1,40 @@
 import { Button } from "@/components/ui/button";
+import { BsGoogle } from "react-icons/bs";
+import MindWhite from "@/assets/mind-white.svg";
+import Typewriter from "typewriter-effect";
 
 export const Auth = () => {
+  const loginwithgoogle = () => {
+    window.open("http://localhost:3000/auth/google/callback", "_self");
+  };
   return (
-    <div className="h-screen w-full lg:grid lg:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-foreground p-6 lg:flex">
-        <h1 className="text-4xl font-extrabold text-white">MindMesh</h1>
-        <div className="flex-grow"></div> {/* Empty div to push content to the bottom */}
-        <p className="text-3xl font-medium text-white">
-          Boost Your Productivity Together -<div>Study and Work with Friends in Real-Time</div>
-        </p>
-      </div>
-      <div className="flex items-center justify-center p-6">
-        <div className="mx-auto grid w-[300px] gap-4">
-          <div className="grid gap-1 text-center">
-            <div className="flex gap-2">
-              <div className="flex flex-1 flex-col">
-                <div className="flex-1 border-b"></div>
-                <div className="flex-1"></div>
-              </div>
-              <div>Continue with</div>
-              <div className="flex flex-1 flex-col">
-                <div className="flex-1 border-b"></div>
-                <div className="flex-1"></div>
-              </div>
-            </div>
-            <Button type="submit" className="w-full">
-              Google
-            </Button>
-          </div>
+    <div className="light h-screen w-full lg:flex">
+      <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
+        <h1 className="flex gap-2 text-5xl font-extrabold text-white">
+          <img src={MindWhite} alt="Mind" className="grid aspect-square w-10 place-content-center" />
+          MindMesh
+        </h1>
+        <div className="flex flex-col gap-2 text-4xl font-medium text-white">
+          <p>Boost Your Productivity Together -</p>
+          <span className="flex">
+            <Typewriter
+              options={{
+                strings: ["Study", "Work"],
+                autoStart: true,
+                loop: true,
+              }}
+            />{" "}
+            with Friends in Real-Time
+          </span>
         </div>
+      </div>
+      <div className="grid flex-1 place-items-center bg-white p-6">
+        <Button type="submit" size="lg" className="flex w-80 gap-2 text-xl" onClick={loginwithgoogle}>
+          <span>
+            <BsGoogle />
+          </span>
+          <span>Sign in with Google</span>
+        </Button>
       </div>
     </div>
   );

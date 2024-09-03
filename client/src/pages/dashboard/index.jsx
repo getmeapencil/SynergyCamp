@@ -5,21 +5,38 @@ import { RoomsData } from "./components/RoomsData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoOverview } from "./components/TodoOverview";
 import { Heatmap } from "./components/Heatmap";
-import { MindMeshLogo } from "@/assets/mindmesh-logo";
+
+import { useUserStore } from "@/store/user";
+import { useEffect } from "react";
+import MindMeshLogo from "@/assets/mind.svg";
+import MindMeshLogoWhite from "@/assets/mind-white.svg";
+import { useTheme } from "@/components/theme-provider";
 
 export const Dashboard = () => {
+  const { user } = useUserStore();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    // fetch user data
+    if (!user) {
+      useUserStore.getState().fetchUser();
+    }
+  }, [user]);
+
   return (
     <>
       <div className="flex h-screen flex-col">
         <div className="flex items-center justify-between border border-b p-4">
           <span className="flex gap-2 text-4xl font-extrabold">
-            <span className="grid aspect-square w-10 place-content-center">
-              <MindMeshLogo />
-            </span>
+            <img
+              src={theme === "light" ? MindMeshLogo : MindMeshLogoWhite}
+              alt="MindMesh"
+              className="grid aspect-square w-8 place-content-center"
+            />
             MindMesh
           </span>
           {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
-          <DropdownAvatar />
+          <DropdownAvatar user={user} />
         </div>
         <ScrollArea>
           <div className="flex gap-4 p-4 sm:flex-row">

@@ -1,33 +1,41 @@
 # SynergyCamp
 
 Project Name -  
-**MindMesh**  
+**MindMesh**
 
 Description -  
-Video Conferencing app with features that allows you to study and work with friends in real-time.  
+Video Conferencing app with features that allows you to study and work with friends in real-time.
 
 ## StyleGuide-
+
 - Make sure `Format on save` is enabled and configured to `Prettier`  
-https://www.digitalocean.com/community/tutorials/how-to-format-code-with-prettier-in-visual-studio-code
+  https://www.digitalocean.com/community/tutorials/how-to-format-code-with-prettier-in-visual-studio-code
 
 - Always use arrow functions  
-Eg.
+  Eg.
+
 ```js
-const niceFunction = () => {return "Hello"};
+const niceFunction = () => {
+  return "Hello";
+};
 ```
 
 - Don't use `default` export  
-Eg.
+  Eg.
+
 ```js
 export default const niceFunction = () => {return "Hello"}; // ❌
 export const niceFunction = () => {return "Hello"}; // ✅
 ```
 
 - If a function takes more than one params, pass params as object  
-Eg.
+  Eg.
+
 ```js
-export const getSum = ({num1, num2}) => {return num1 + num2}; // ✅
-getSum({num1: 3, num2: 4});
+export const getSum = ({ num1, num2 }) => {
+  return num1 + num2;
+}; // ✅
+getSum({ num1: 3, num2: 4 });
 ```
 
 ## Features
@@ -47,3 +55,13 @@ getSum({num1: 3, num2: 4});
 - Music?
 - Whiteboard?
 
+## Room DB Schema
+
+- id (unique)
+- Name (string)
+- Members (ref(user)[]) {Admin, Mod, Members, Todo}
+- temporaryBanned (ref(user), banEndTime(Date))
+- permanentBanned (ref(user))
+- pomodoroStartTime (Date)
+- pinnedMessages (5 pins, 1000 chars)
+- Rules
