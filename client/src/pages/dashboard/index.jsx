@@ -5,10 +5,10 @@ import { RoomsData } from "./components/RoomsData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoOverview } from "./components/TodoOverview";
 import { Heatmap } from "./components/Heatmap";
-import { MindMeshLogo } from "@/assets/mindmesh-logo";
+
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
-
+import Mind from "@/assets/mind.svg";
 export const Dashboard = () => {
   const { user } = useUserStore();
   useEffect(() => {
@@ -22,9 +22,7 @@ export const Dashboard = () => {
       <div className="flex h-screen flex-col">
         <div className="flex items-center justify-between border border-b p-4">
           <span className="flex gap-2 text-4xl font-extrabold">
-            <span className="grid aspect-square w-8 place-content-center">
-              <MindMeshLogo />
-            </span>
+            <img src={Mind} alt="Mind" className="grid aspect-square w-8 place-content-center" />
             MindMesh
           </span>
           {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
