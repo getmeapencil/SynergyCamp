@@ -11,18 +11,20 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useUserStore } from "@/store/user";
 import { LogOut, Moon, Settings, User } from "lucide-react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/components/theme-provider";
+
 export const DropdownAvatar = ({ user }) => {
-  const [isDark, setIsDark] = useState(false);
+  const { theme, setTheme } = useTheme();
   const navi = useNavigate();
+
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary ring-offset-2 ring-offset-background">
             <AvatarImage src={user?.picture} alt="avatar" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarFallback>{user?.name[0]}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
@@ -38,7 +40,13 @@ export const DropdownAvatar = ({ user }) => {
                 <Moon className="h-4 w-4" />
                 <span>Dark Mode</span>
               </Label>
-              <Switch id="theme-toggle" checked={isDark} onCheckedChange={setIsDark} />
+              <Switch
+                id="theme-toggle"
+                checked={theme === "dark"}
+                onCheckedChange={(checked) => {
+                  checked ? setTheme("dark") : setTheme("light");
+                }}
+              />
             </div>
           </DropdownMenuItem>
 
