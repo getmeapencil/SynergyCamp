@@ -9,8 +9,8 @@ import { EmptyTable } from "./EmptyTable";
 
 export const RoomsTable = ({ filterRoles, searchName }) => {
   let filteredData = tableData;
-  if (filterRole.length !== 0) {
-    filteredData = tableData.filter((data) => filterRole.includes(data.role));
+  if (filterRoles.length !== 0) {
+    filteredData = tableData.filter((data) => filterRoles.includes(data.role));
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (
