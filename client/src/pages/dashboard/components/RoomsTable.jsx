@@ -7,10 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 
-export const RoomsTable = ({ filterRole, searchName }) => {
+export const RoomsTable = ({ filterRoles, searchName }) => {
   let filteredData = tableData;
   if (filterRole.length !== 0) {
-    filteredData = tableData.filter((data) => filterRole.some((role) => data.role.includes(role)));
+    filteredData = tableData.filter((data) => filterRole.includes(data.role));
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (

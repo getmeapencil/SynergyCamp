@@ -109,7 +109,7 @@ export function RoomsData() {
         </div>
       </div>
       <TabsContent value="rooms">
-        <RoomsTable filterRole={filter.selectedRole} searchName={filter.name} />
+        <RoomsTable filterRoles = {filter.selectedRole} searchName={filter.name} />
       </TabsContent>
       <TabsContent value="invites">
         <InvitesTable filterRole={filter.selectedRole} searchName={filter.name} />
