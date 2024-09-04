@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 
 export function RoomsData() {
   const [filter, setFilter] = useState({
-    selectedRole: "",
+    selectedRole: [],
     minMembers: 0,
     name: "",
   });
@@ -57,34 +57,49 @@ export function RoomsData() {
               <DropdownMenuLabel>Role</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole == "Admin" ? true : false}
+                checked={filter.selectedRole.includes("Admin")}
                 onCheckedChange={() => {
-                  setFilter((prevFilter) => ({
-                    ...prevFilter,
-                    selectedRole: prevFilter.selectedRole === "Admin" ? "" : "Admin",
-                  }));
+                  setFilter((prevFilter) => {
+                    const isSelected = prevFilter.selectedRole.includes("Admin");
+                    return {
+                      ...prevFilter,
+                      selectedRole: isSelected
+                        ? prevFilter.selectedRole.filter((role) => role !== "Admin")
+                        : [...prevFilter.selectedRole, "Admin"],
+                    };
+                  });
                 }}
               >
                 Admin
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole == "Moderator" ? true : false}
+                checked={filter.selectedRole.includes("Moderator")}
                 onCheckedChange={() => {
-                  setFilter((prevFilter) => ({
-                    ...prevFilter,
-                    selectedRole: prevFilter.selectedRole === "Moderator" ? "" : "Moderator",
-                  }));
+                  setFilter((prevFilter) => {
+                    const isSelected = prevFilter.selectedRole.includes("Moderator");
+                    return {
+                      ...prevFilter,
+                      selectedRole: isSelected
+                        ? prevFilter.selectedRole.filter((role) => role !== "Moderator")
+                        : [...prevFilter.selectedRole, "Moderator"],
+                    };
+                  });
                 }}
               >
                 Moderator
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole == "Member" ? true : false}
+                checked={filter.selectedRole.includes("Member")}
                 onCheckedChange={() => {
-                  setFilter((prevFilter) => ({
-                    ...prevFilter,
-                    selectedRole: prevFilter.selectedRole === "Member" ? "" : "Member",
-                  }));
+                  setFilter((prevFilter) => {
+                    const isSelected = prevFilter.selectedRole.includes("Member");
+                    return {
+                      ...prevFilter,
+                      selectedRole: isSelected
+                        ? prevFilter.selectedRole.filter((role) => role !== "Member")
+                        : [...prevFilter.selectedRole, "Member"],
+                    };
+                  });
                 }}
               >
                 Member
