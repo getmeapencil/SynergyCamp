@@ -6,13 +6,22 @@ import tableData from "@/assets/roomData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
+import { useEffect, useState } from "react";
 
 export const RoomsTable = ({ filterRoles, searchName }) => {
+  const [noSearchResults, setNoSearchResults] = useState(null);
   let filteredData = tableData;
   if (filterRoles.length !== 0) {
     filteredData = tableData.filter((data) => filterRoles.includes(data.role));
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
+  useEffect(() => {
+    if (searchName && filteredData.length === 0) {
+      setNoSearchResults(true);
+    } else {
+      setNoSearchResults(false);
+    }
+  }, [filteredData, searchName]);
   return (
     <Card>
       <CardHeader>
@@ -53,6 +62,8 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                 ))}
               </TableBody>
             </Table>
+          ) : noSearchResults ? (
+            <EmptyTable variant={"emptysearch"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
