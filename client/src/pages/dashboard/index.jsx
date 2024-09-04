@@ -11,18 +11,24 @@ import { useEffect } from "react";
 import MindMeshLogo from "@/assets/mind.svg";
 import MindMeshLogoWhite from "@/assets/mind-white.svg";
 import { useTheme } from "@/components/theme-provider";
-
+import { useNavigate } from "react-router-dom";
 export const Dashboard = () => {
   const { user } = useUserStore();
   const { theme } = useTheme();
-
+  const navigate = useNavigate();
   useEffect(() => {
     // fetch user data
     if (!user) {
-      useUserStore.getState().fetchUser();
+      useUserStore.getState().fetchUser().then((res)=>{
+        if(!res){
+          navigate("/auth");
+        }
+      });
     }
   }, [user]);
-
+  if(!user){
+    return null;
+  }
   return (
     <>
       <div className="flex h-screen flex-col">
