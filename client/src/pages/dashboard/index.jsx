@@ -8,8 +8,8 @@ import { Heatmap } from "./components/Heatmap";
 
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
-import MindMeshLogo from "@/assets/mind.svg";
-import MindMeshLogoWhite from "@/assets/mind-white.svg";
+import LogoBlack from "/logo-black.svg";
+import LogoWhite from "/logo-white.svg";
 import { useTheme } from "@/components/theme-provider";
 import { useNavigate } from "react-router-dom";
 export const Dashboard = () => {
@@ -35,7 +35,7 @@ export const Dashboard = () => {
         <div className="flex items-center justify-between border border-b p-4">
           <span className="flex gap-2 text-4xl font-extrabold">
             <img
-              src={theme === "light" ? MindMeshLogo : MindMeshLogoWhite}
+              src={theme === "light" ? LogoBlack : LogoWhite}
               alt="MindMesh"
               className="grid aspect-square w-8 place-content-center"
             />

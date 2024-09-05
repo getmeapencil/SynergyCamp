@@ -7,12 +7,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 
-export const RoomsTable = ({ filterRole, searchName }) => {
+export const RoomsTable = ({ filterRoles, searchName }) => {
   let filteredData = tableData;
-  if (filterRole.length !== 0) {
-    filteredData = tableData.filter((data) => data.role === filterRole);
+  if (filterRoles.length !== 0) {
+    filteredData = tableData.filter((data) => filterRoles.includes(data.role));
   }
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
+
+  const noSearchResults = searchName && filteredData.length === 0;
+
   return (
     <Card>
       <CardHeader>
@@ -53,6 +56,8 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                 ))}
               </TableBody>
             </Table>
+          ) : noSearchResults ? (
+            <EmptyTable variant={"room"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
