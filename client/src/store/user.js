@@ -3,7 +3,7 @@ import createApiCall from "./ceateApiCall";
 
 export const useUserStore = create((set) => ({
   user: null,
-  isAuthenticated:false,
+  isAuthenticated: false,
   setUser: (user) => set({ user }),
   logout: async () => {
     try {
@@ -26,16 +26,16 @@ export const useUserStore = create((set) => ({
         url: "http://localhost:3000/user",
         withCredentials: true,
       });
-      if(res.message==="Unauthorized"){
-        set({ user: null,isAuthenticated:false });
+      if (res.message === "Unauthorized") {
+        set({ user: null, isAuthenticated: false });
         return false;
-      }else{
-        set({ user: res ,isAuthenticated:true});
+      } else {
+        set({ user: res, isAuthenticated: true });
         return true;
       }
     } catch (error) {
       console.error(error);
-        set({ user: null,isAuthenticated:false });
+      set({ user: null, isAuthenticated: false });
     }
   },
 }));

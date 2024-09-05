@@ -11,6 +11,8 @@ Video Conferencing app with features that allows you to study and work with frie
 - Make sure `Format on save` is enabled and configured to `Prettier`  
   https://www.digitalocean.com/community/tutorials/how-to-format-code-with-prettier-in-visual-studio-code
 
+- Optionally, you can run `npm run format` in terminal and prettier will format all the `js, ts, jsx, tsx` files that needs formatting
+
 - Always use arrow functions  
   Eg.
 

@@ -19,14 +19,17 @@ export const Dashboard = () => {
   useEffect(() => {
     // fetch user data
     if (!user) {
-      useUserStore.getState().fetchUser().then((res)=>{
-        if(!res){
-          navigate("/auth");
-        }
-      });
+      useUserStore
+        .getState()
+        .fetchUser()
+        .then((res) => {
+          if (!res) {
+            navigate("/auth");
+          }
+        });
     }
   }, [user]);
-  if(!user){
+  if (!user) {
     return null;
   }
   return (

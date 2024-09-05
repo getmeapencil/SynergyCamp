@@ -17,7 +17,7 @@ import { useTheme } from "@/components/theme-provider";
 export const DropdownAvatar = ({ user }) => {
   const { theme, setTheme } = useTheme();
   const navi = useNavigate();
-  if(!user){
+  if (!user) {
     return null;
   }
   return (

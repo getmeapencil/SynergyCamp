@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier 'src/**/*.{js,jsx,ts,tsx}' --write --config ./.prettierrc"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
