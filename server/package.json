@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "dev": "nodemon ./src/server.js"
+    "dev": "nodemon ./src/server.js",
+    "format": "prettier 'src/**/*.{js,jsx,ts,tsx}' --write --config ./.prettierrc"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -19,5 +20,8 @@
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0"
+  },
+  "devDependencies": {
+    "prettier": "3.3.3"
   }
 }

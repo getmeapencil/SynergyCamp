@@ -33,7 +33,7 @@ app.use(
     maxAge: 86400,
     maxFileSize: 1073741824, // 1 GB in bytes
     maxFieldsSize: 1073741824, // 1 GB in bytes
-  })
+  }),
 );
 
 app.use(
@@ -41,7 +41,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-  })
+  }),
 );
 
 app.use(passport.initialize());
@@ -70,8 +70,8 @@ passport.use(
       } catch (err) {
         done(err, null);
       }
-    }
-  )
+    },
+  ),
 );
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -83,16 +83,13 @@ passport.deserializeUser(async (id, done) => {
 
 // Start server
 const PORT = 3000;
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
+app.get("/auth/google", passport.authenticate("google", { scope: ["email", "profile"] }));
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: "http://localhost:5173/login",
     successRedirect: "http://localhost:5173/dashboard",
-  })
+  }),
 );
 
 app.get("/", (req, res) => {

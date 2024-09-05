@@ -1,16 +1,11 @@
 import { OAuth2Client } from "google-auth-library";
 
-const oauthClient = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  "postmessage"
-);
+const oauthClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET, "postmessage");
 export const googleAuth = async (req, res) => {
   try {
     const { code } = req.body;
 
-    if (!code)
-      return res.status(400).json({ message: "Missing authorization code" });
+    if (!code) return res.status(400).json({ message: "Missing authorization code" });
 
     const { tokens } = await oauthClient.getToken(code);
     if (!tokens.id_token) {
@@ -31,13 +26,10 @@ export const googleAuth = async (req, res) => {
         picture,
         email_verified: true,
       },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
 
-    const { accessToken, refreshToken } = await generateToken(
-      user,
-      user?.roles?.includes("admin") || false
-    );
+    const { accessToken, refreshToken } = await generateToken(user, user?.roles?.includes("admin") || false);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -46,7 +38,6 @@ export const googleAuth = async (req, res) => {
       domain: DOMAIN,
       sameSite: "None",
     });
-
 
     return res.status(200).json({
       accessToken,
