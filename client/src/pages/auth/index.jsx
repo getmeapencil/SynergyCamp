@@ -5,7 +5,7 @@ import Typewriter from "typewriter-effect";
 
 export const Auth = () => {
   const loginwithgoogle = () => {
-    window.open("http://localhost:3000/auth/google/callback", "_self");
+    window.open(`${import.meta.env.VITE_BACKEND_URL}/auth/google/callback`, "_self");
   };
   return (
     <div className="light h-screen w-full lg:flex">
