@@ -47,7 +47,7 @@ const NavItem = ({ item, setActivePanel }) => {
 
 export const SideNav = ({ activePanel, setActivePanel }) => {
   return (
-    <aside className="fixed inset-y-0 right-0 z-10 hidden w-14 flex-col border-l bg-background sm:flex">
+    <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         {navTopItems.map((item, index) => {
           return activePanel === item.label ? (
