@@ -1,14 +1,25 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Typewriter from "typewriter-effect";
 
-export const Room = () => {
+export const CreateRoom = () => {
   return (
     <div className="w-full">
       <Card className="min-w-sm">
         <CardHeader>
           <CardTitle>Your Room</CardTitle>
-          <CardDescription>Create a room of your own and host a study session.</CardDescription>
+          <CardDescription className="flex gap-1">
+            <span>Create a room of your own and host a</span>
+            <Typewriter
+              options={{
+                strings: ["study", "work"],
+                autoStart: true,
+                loop: true,
+              }}
+            />
+            <span>session.</span>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="font-bold">Room Name</p>
