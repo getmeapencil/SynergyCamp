@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import createApiCall from "./ceateApiCall";
+import { createApiCall } from "@/utils/createApiCall";
 
 export const useUserStore = create((set) => ({
   user: null,
@@ -9,7 +9,7 @@ export const useUserStore = create((set) => ({
     try {
       await createApiCall({
         method: "POST",
-        url: "http://localhost:3000/user/logout",
+        route: "/user/logout",
         withCredentials: true,
       });
       set({ user: null });
@@ -23,7 +23,7 @@ export const useUserStore = create((set) => ({
     try {
       const res = await createApiCall({
         method: "GET",
-        url: "http://localhost:3000/user",
+        route: "/user",
         withCredentials: true,
       });
       if (res.message === "Unauthorized") {
