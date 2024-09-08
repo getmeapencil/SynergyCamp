@@ -13,7 +13,7 @@ import { useUserStore } from "@/store/user";
 import { LogOut, Moon, Settings, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
-import { generateAvatarFallback } from "@/utils/generate-avatar-fallback";
+import { generateAvatarFallback } from "@/utils/generateAvatarFallback";
 
 export const DropdownAvatar = ({ user }) => {
   const { theme, setTheme } = useTheme();
