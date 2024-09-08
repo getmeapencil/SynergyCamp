@@ -1,4 +1,4 @@
-import { MessageSquare, Hourglass, Settings, ListTodo, Calendar, LogOut, ShieldPlus } from "lucide-react";
+import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -6,12 +6,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
   { label: "ToDo", icon: ListTodo },
-  { label: "Pomodoro", icon: Hourglass },
+  { label: "Pomodoro", icon: Timer },
   { label: "Calendar", icon: Calendar },
 ];
 
 const cn = {
-  div: "flex h-9 w-9 items-center justify-center rounded-lg border border-muted-foreground text-muted-foreground transition-colors hover:border-foreground hover:text-foreground md:h-8 md:w-8",
+  div: "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:border-foreground hover:text-foreground md:h-8 md:w-8",
   icon: "h-5 w-5",
 };
 
@@ -70,7 +70,7 @@ export const SideNav = ({ activePanel, setActivePanel }) => {
         )}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-muted-foreground text-muted-foreground transition-colors hover:border-destructive hover:text-destructive md:h-8 md:w-8">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:border-destructive hover:text-destructive md:h-8 md:w-8">
               <LogOut className="h-5 w-5" />
               <span className="sr-only">Exit</span>
             </div>
