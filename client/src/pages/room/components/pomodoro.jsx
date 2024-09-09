@@ -27,7 +27,7 @@ export function Pomodoro() {
   const chartSecondValue = 100 - safeDivide(seconds, Math.min(DURATION, 60)) * 100;
 
   return (
-    <div className="flex flex-1 flex-col gap-4 bg-background p-4">
+    <div className="flex flex-1 flex-col gap-4 p-4">
       <Card>
         <CardHeader className="p-4">
           <CardTitle>Break</CardTitle>
