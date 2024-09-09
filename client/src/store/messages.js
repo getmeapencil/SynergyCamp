@@ -86,7 +86,6 @@ export const useMessagesStore = create((set, get) => ({
     const messages = get().messages;
     const _id = uuidv4();
     const user = useUserStore.getState().user;
-    console.log("useMessagesStore ~ user:", user);
     const date = new Date();
     const message = {
       _id,
