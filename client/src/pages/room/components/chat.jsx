@@ -9,9 +9,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { Button } from "@/components/ui/button";
 import { Laugh, SendHorizontal } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUserStore } from "@/store/user";
+import { useNavigate } from "react-router-dom";
 
 export const Chat = () => {
+  const navigate = useNavigate();
   const messages = useMessagesStore((state) => state.messages);
   const { theme } = useTheme();
   const [text, setText] = useState("");
@@ -19,6 +22,29 @@ export const Chat = () => {
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
+
+  const sendMessage = () => {
+    useMessagesStore.getState().pushMessage(text);
+    setText("");
+  };
+
+  const handleEnterPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
+  useEffect(() => {
+    // fetch user data
+    useUserStore
+      .getState()
+      .fetchUser()
+      .then((res) => {
+        if (!res) {
+          navigate("/auth");
+        }
+      });
+  }, [navigate]);
 
   return (
     <div className="flex h-full flex-col">
@@ -59,13 +85,21 @@ export const Chat = () => {
             <EmojiPicker
               theme={theme}
               emojiStyle="native"
-              onEmojiClick={(obj) => setText(text + obj.emoji)}
+              onEmojiClick={(obj) => {
+                setText((prevText) => prevText + obj.emoji);
+              }}
               style={{ fontFamily: '"Inter", sans-serif' }}
             />
           </DropdownMenuContent>
         </DropdownMenu>
-        <Input value={text} onChange={handleTextChange} className="flex-1" placeholder="Type a message" />
-        <Button size="icon" variant="outline">
+        <Input
+          value={text}
+          onChange={handleTextChange}
+          className="flex-1"
+          placeholder="Type a message"
+          onKeyDown={handleEnterPress}
+        />
+        <Button size="icon" variant="outline" onClick={sendMessage}>
           <SendHorizontal />
         </Button>
       </div>

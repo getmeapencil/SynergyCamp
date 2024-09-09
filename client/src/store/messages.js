@@ -1,6 +1,8 @@
 import { create } from "zustand";
+import { useUserStore } from "./user";
+import { v4 as uuidv4 } from "uuid";
 
-export const useMessagesStore = create(() => ({
+export const useMessagesStore = create((set, get) => ({
   messages: [
     {
       _id: "m1",
@@ -80,4 +82,23 @@ export const useMessagesStore = create(() => ({
       createdAt: "2021-09-02T13:10:42.298+00:00",
     },
   ],
+  pushMessage: (text) => {
+    const messages = get().messages;
+    const _id = uuidv4();
+    const user = useUserStore.getState().user;
+    console.log("useMessagesStore ~ user:", user);
+    const date = new Date();
+    const message = {
+      _id,
+      user: {
+        _id: user._id,
+        name: user.name,
+        picture: user.picture,
+        role: "member",
+      },
+      text,
+      createdAt: date.toUTCString(),
+    };
+    set({ messages: [...messages, message] });
+  },
 }));
