@@ -76,7 +76,7 @@ export const Chat = () => {
       </div>
       <div className="flex gap-2 border-t px-2 py-4">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button size="icon" variant="outline">
               <Laugh />
             </Button>
