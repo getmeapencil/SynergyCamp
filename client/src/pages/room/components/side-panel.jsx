@@ -8,6 +8,8 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
     switch (activePanel) {
       case "Chat":
         return <Chat />;
+      case "Participants":
+        return <div className="p-4">Participants list goes here.</div>;
       case "ToDo":
         return <div className="p-4">To-Do list content goes here.</div>;
       case "Pomodoro":
