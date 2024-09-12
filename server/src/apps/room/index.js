@@ -4,7 +4,7 @@ import { checkAuthenticated } from "../../middlewares/checkAuthenticated.js";
 
 const router = express.Router();
 
-router.get("/", checkAuthenticated, controller.getUser);
-router.post("/logout", controller.logout);
+router.post("/",  controller.createRoom);
+router.get("/",  controller.getRooms);
 
 export default router;

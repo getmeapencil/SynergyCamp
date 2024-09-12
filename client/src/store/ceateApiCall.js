@@ -1,5 +1,6 @@
 import axios from "axios";
 const createApiCall = (config) => {
+  console.log(config)
   // Use axios to make API call
   return axios({
     method: config.method,

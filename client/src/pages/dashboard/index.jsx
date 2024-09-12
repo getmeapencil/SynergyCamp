@@ -41,7 +41,6 @@ export const Dashboard = () => {
             />
             MindMesh
           </span>
-          {/* Add DropDown here - Show Name, username, Switch for lightmode and dark, logout  */}
           <DropdownAvatar user={user} />
         </div>
         <ScrollArea>

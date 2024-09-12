@@ -6,12 +6,30 @@ import tableData from "@/assets/roomData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
+import { useRoomStore } from "@/store/room";
+import { useEffect } from "react";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  let filteredData = tableData;
-  if (filterRole.length !== 0) {
-    filteredData = tableData.filter((data) => data.role === filterRole);
-  }
+  const {rooms}=useRoomStore();
+  const [filteredData, setFilteredData] = useState();
+  
+  useEffect(() => {
+    if (filterRole.length === 0) {
+      setFilteredData(rooms);
+    }else{
+      setFilteredData(()=>{
+        return rooms.filter((data) => data.role === filterRole);
+      });
+    }
+  }, [filterRole]);
+  
+  useEffect(() => {
+    if(!rooms){
+      useRoomStore.getState().getRooms();
+    }
+    setFilteredData(rooms);
+  }, [rooms]);
+
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
   return (
     <Card>
