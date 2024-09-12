@@ -49,7 +49,7 @@ export const Dashboard = () => {
               <RoomsData />
               <div className="flex flex-1 gap-4">
                 <TodoOverview />
-                <div className="w-2/3">
+                <div className="w-2/5">
                   <Streak />
                 </div>
                 <Heatmap />
