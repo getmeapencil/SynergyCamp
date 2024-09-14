@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 export const TodoOverview = () => {
   return (
-    <Card className="w-1/3">
+    <Card className="h-fit w-1/4">
       <CardHeader>
         <CardTitle>ToDo</CardTitle>
         <CardDescription>ToDo list from all rooms.</CardDescription>
