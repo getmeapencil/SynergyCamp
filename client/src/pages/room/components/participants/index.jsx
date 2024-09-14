@@ -123,7 +123,7 @@ const Participant = ({ member }) => {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <DialogClose>
+                <DialogClose asChild>
                   <Button variant="secondary">Cancel</Button>
                 </DialogClose>
                 <Button type="submit" variant="destructive">
@@ -141,7 +141,7 @@ const Participant = ({ member }) => {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <DialogClose>
+                <DialogClose asChild>
                   <Button variant="secondary">Cancel</Button>
                 </DialogClose>
                 <Button type="submit" variant="destructive">
