@@ -11,7 +11,6 @@ import { TodoOverview } from "./components/TodoOverview";
 import { Inspiration } from "./components/Inspiration";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
-import { useTheme } from "@/components/theme-provider";
 import { Streak } from "./components/Streak";
 
 export const Dashboard = () => {
