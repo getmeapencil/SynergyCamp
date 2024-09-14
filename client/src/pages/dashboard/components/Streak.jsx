@@ -1,12 +1,13 @@
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Flame, Trophy } from "lucide-react";
 
 export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
   return (
-    <Card className="w-full max-w-md">
+    <Card className="h-fit w-1/4">
       <CardHeader>
-        <CardTitle className="text-center text-2xl">Study Streak </CardTitle>
+        <CardTitle>Streak</CardTitle>
+        <CardDescription>Continuous days you&apos;ve exceeded your study goal</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
@@ -17,11 +18,7 @@ export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
             </span>
             <span className="text-sm font-semibold"> {currentStreak}d</span>
           </div>
-          <Progress
-            value={(currentStreak / longestStreak) * 100}
-            className="h-4 bg-orange-100 dark:bg-orange-900"
-            indicatorClassName="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500"
-          />
+          <Progress value={(currentStreak / longestStreak) * 100} className="h-4 bg-muted" />
         </div>
 
         <div className="space-y-3">
@@ -32,11 +29,7 @@ export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
             </span>
             <span className="text-sm font-semibold">{longestStreak}d</span>
           </div>
-          <Progress
-            value={100}
-            className="h-4 bg-blue-100 dark:bg-blue-900"
-            indicatorClassName="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500"
-          />
+          <Progress value={100} className="h-4 bg-muted" />
         </div>
       </CardContent>
     </Card>
