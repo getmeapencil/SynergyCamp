@@ -8,9 +8,11 @@ import { DropdownAvatar } from "./components/DropdownAvatar";
 import { CreateRoom } from "./components/CreateRoom";
 import { RoomsData } from "./components/RoomsData";
 import { TodoOverview } from "./components/TodoOverview";
-import { Heatmap } from "./components/Heatmap";
+import { Inspiration } from "./components/Inspiration";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
+import { useTheme } from "@/components/theme-provider";
+import { Streak } from "./components/Streak";
 
 export const Dashboard = () => {
   const { user } = useUserStore();
@@ -58,7 +60,8 @@ export const Dashboard = () => {
             <RoomsData />
             <div className="flex flex-1 gap-4">
               <TodoOverview />
-              <Heatmap />
+              <Streak />
+              <Inspiration />
             </div>
           </div>
         </div>
