@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
+import { Participants } from "./participants";
 
 export const SidePanel = ({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
@@ -9,7 +10,7 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
       case "Chat":
         return <Chat />;
       case "Participants":
-        return <div className="p-4">Participants list goes here.</div>;
+        return <Participants />;
       case "ToDo":
         return <div className="p-4">To-Do list content goes here.</div>;
       case "Pomodoro":
