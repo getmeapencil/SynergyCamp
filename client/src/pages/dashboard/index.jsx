@@ -4,7 +4,7 @@ import { Room } from "./components/Room";
 import { RoomsData } from "./components/RoomsData";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TodoOverview } from "./components/TodoOverview";
-import { Heatmap } from "./components/Heatmap";
+import { Inspiration } from "./components/Inspiration";
 
 import { useUserStore } from "@/store/user";
 import { useEffect } from "react";
@@ -49,10 +49,8 @@ export const Dashboard = () => {
               <RoomsData />
               <div className="flex flex-1 gap-4">
                 <TodoOverview />
-                <div className="w-2/5">
-                  <Streak />
-                </div>
-                <Heatmap />
+                <Streak />
+                <Inspiration />
               </div>
             </div>
           </div>
