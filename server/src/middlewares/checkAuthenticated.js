@@ -9,8 +9,7 @@ export default async function (req, res, next) {
   if (!req.headers.authorization) {
     console.log("Missing authorization header");
     return res.status(401).send({
-      message:
-        "It looks like your login session has expired. Please log out and login again."
+      message: "It looks like your login session has expired. Please log out and login again.",
     });
   }
 
@@ -19,8 +18,7 @@ export default async function (req, res, next) {
   if (!token) {
     console.log("Missing token");
     return res.status(401).send({
-      message:
-        "It looks like your login session has expired. Please log out and login again."
+      message: "It looks like your login session has expired. Please log out and login again.",
     });
   }
 
@@ -30,8 +28,7 @@ export default async function (req, res, next) {
   } catch (e) {
     console.log("Error decoding the token: ", e.message);
     return res.status(401).send({
-      message:
-        "It looks like your login session has expired. Please log out and login again."
+      message: "It looks like your login session has expired. Please log out and login again.",
     });
   }
 
@@ -39,20 +36,18 @@ export default async function (req, res, next) {
   if (!decoded) {
     console.log("jwt.decode returned null");
     return res.status(401).send({
-      message:
-        "It looks like your login session has expired. Please log out and login again."
+      message: "It looks like your login session has expired. Please log out and login again.",
     });
   }
 
   if (!decoded.email) {
     console.log("Missing email in decoded token");
     return res.status(401).send({
-      message:
-        "It looks like your login session has expired. Please log out and login again."
+      message: "It looks like your login session has expired. Please log out and login again.",
     });
   }
 
   req.email = decoded.email;
-  
+
   next();
 }

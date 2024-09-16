@@ -13,7 +13,7 @@ export const getUsers = async (req, res) => {
     const users = await user
       .find({
         name: new RegExp(query, "i"), // Case-insensitive partial match on name
-        email: { $ne: userEmail } // Exclude the current user by email
+        email: { $ne: userEmail }, // Exclude the current user by email
       })
       .select("id email name picture") // Only select id, email, name, and picture
       .limit(10); // Limit the result to 10 users

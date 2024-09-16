@@ -50,11 +50,12 @@ export default function useSocketIO() {
       socketRef.current.emit(event, payload);
     }
   };
+
   const sendInvite = useCallback(
-    (userId, roomId,inviterId) => {
+    (userId, roomId, inviterId) => {
       console.log("called");
       if (socketRef.current) {
-        socketRef.current.emit("send-invite", { inviteeId: userId, roomId: roomId ,inviterId:inviterId});
+        socketRef.current.emit("send-invite", { inviteeId: userId, roomId: roomId, inviterId: inviterId });
       }
     },
     [socketRef],

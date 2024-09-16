@@ -1,5 +1,5 @@
 export const getUser = async (req, res) => {
-    res.json(req.user);
+  res.json(req.user);
 };
 
 export const logout = async (req, res) => {

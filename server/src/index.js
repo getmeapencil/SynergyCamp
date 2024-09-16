@@ -9,7 +9,7 @@ import "./passport.js";
 import { Server } from "socket.io";
 import invite from "./models/invite.js";
 import checkJwtSocketMiddleware from "./middlewares/socketJwt.js";
-import socketRegistry from "./utils/socketRegistry.js"
+import socketRegistry from "./utils/socketRegistry.js";
 dotenv.config();
 
 const app = express();

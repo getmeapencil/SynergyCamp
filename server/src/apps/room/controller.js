@@ -1,8 +1,8 @@
 import { RoomModel } from "../../models/room.js";
 import User from "../../models/user.js";
-export const createRoom = async (req, res) => {    
+export const createRoom = async (req, res) => {
   try {
-    const user= await User.findOne({email:req.email})
+    const user = await User.findOne({ email: req.email });
 
     const { name, description } = req.body;
     const room = await RoomModel.create({
@@ -19,7 +19,7 @@ export const createRoom = async (req, res) => {
 
 export const getRooms = async (req, res) => {
   try {
-    const user= await User.findOne({email:req.email})
+    const user = await User.findOne({ email: req.email });
     const rooms = await RoomModel.find({ "members.userId": user?._id });
     res.json(rooms);
   } catch (e) {

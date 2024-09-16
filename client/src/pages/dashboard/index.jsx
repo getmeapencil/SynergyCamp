@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUserStore } from "@/store/user";
@@ -14,6 +12,7 @@ import LogoWhite from "/logo-white.svg";
 export const Dashboard = () => {
   const { user } = useUserStore();
   const { theme } = useTheme();
+
   if (!user) {
     return null;
   }

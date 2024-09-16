@@ -1,12 +1,14 @@
-import {  OAuth2Client } from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
 import { randomBytes } from "crypto";
 import JWT from "jsonwebtoken";
 import User from "../../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
+
 const oauthClient = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, "postmessage");
 const COOKIE_AGE = 14 * 24 * 60 * 60 * 1000;
 const DOMAIN = process.env.DOMAIN || "localhost";
+
 export const googleAuth = async (req, res) => {
   try {
     const { code } = req.body;
@@ -35,6 +37,7 @@ export const googleAuth = async (req, res) => {
     );
 
     const { accessToken, refreshToken } = await generateToken(user);
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
@@ -72,21 +75,17 @@ export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
     if (refreshToken) {
-      const user = await User.findOneAndUpdate(
-        { refreshToken },
-        { refreshToken: "" }
-      );
+      const user = await User.findOneAndUpdate({ refreshToken }, { refreshToken: "" });
 
       if (!user) {
         return res.status(401).json({ message: "User not found" });
       }
-
     }
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
       domain: DOMAIN,
-      sameSite: "lax"
+      sameSite: "lax",
     });
     return res.status(200).json({ message: "Logout successful" });
   } catch (e) {

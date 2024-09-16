@@ -20,7 +20,7 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
       case "Settings":
         return <div className="p-4">Settings content goes here.</div>;
       case "Invite Friends":
-        return  <Invite/>
+        return <Invite />;
       default:
         return null;
     }

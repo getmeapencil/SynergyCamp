@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const createApiCall = (config) => {
-
   console.log(config);
-  
+
   const headers = {
     "Content-Type": "application/json",
     ...config.headers, // Allows adding additional custom headers if needed

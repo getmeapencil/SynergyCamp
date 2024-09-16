@@ -29,11 +29,11 @@ export const RoomsTable = ({ filterRole, searchName }) => {
   useEffect(() => {
     useRoomStore.getState().getRooms();
   }, []);
- useEffect(()=>{
-  if(rooms){
-    setFilteredData(rooms)
-  }
- },[rooms])
+  useEffect(() => {
+    if (rooms) {
+      setFilteredData(rooms);
+    }
+  }, [rooms]);
   return (
     <Card>
       <CardHeader>

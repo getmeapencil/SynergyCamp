@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { useState, useCallback } from "react";
 import { debounce } from "lodash";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,16 +11,16 @@ import { useParams } from "react-router-dom";
 import { useUserStore } from "@/store/user";
 
 const Invite = () => {
-  const {user}=useUserStore()
+  const { user } = useUserStore();
   const [searchName, setSearchName] = useState(""); // For search input
   const [inviteStatus, setInviteStatus] = useState(null); // To track invite status
   const [users, setUsers] = useState([]); // To store fetched users
   const [loading, setLoading] = useState(false); // Loading state for API call
   const { sendInvite } = useSocketIO();
-  const {roomId}=useParams()
+  const { roomId } = useParams();
   // Function to send an invite to a specific user
   const sendInviteHandle = (userId) => {
-    sendInvite(userId, roomId,user?._id);
+    sendInvite(userId, roomId, user?._id);
     setInviteStatus(`Invite Sent to user ${userId}!`);
   };
 
@@ -32,13 +31,13 @@ const Invite = () => {
       const res = await createApiCall({
         method: "GET", // Make sure to specify the method
         route: "/users/search",
-        query: { query },  // Pass the search query as a parameter
+        query: { query }, // Pass the search query as a parameter
         withCredentials: true,
       });
-      
-     if(res.status===200){
-      setUsers(res.data)
-     }
+
+      if (res.status === 200) {
+        setUsers(res.data);
+      }
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {

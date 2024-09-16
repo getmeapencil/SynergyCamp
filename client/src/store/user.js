@@ -6,7 +6,7 @@ export const useUserStore = create((set) => ({
   user: null,
   isAuthenticated: false,
   authToken: null,
-  users:[],
+  users: [],
   setUser: (user) => set({ user }),
   logout: async () => {
     try {
@@ -30,7 +30,7 @@ export const useUserStore = create((set) => ({
         data: { code },
       });
       if (res?.accessToken) {
-        console.log("res?.access", res?.accessToken,res?.user);
+        console.log("res?.access", res?.accessToken, res?.user);
         axios.defaults.headers.Authorization = "Bearer " + res?.accessToken;
         set({ authToken: res?.accessToken, isAuthenticated: true, user: res?.user });
       }
@@ -56,5 +56,5 @@ export const useUserStore = create((set) => ({
       console.error(error);
       set({ user: null, isAuthenticated: false });
     }
-  }
+  },
 }));

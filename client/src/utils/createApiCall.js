@@ -6,7 +6,7 @@ export const createApiCall = async (config) => {
       method: config.method,
       url: `${import.meta.env.VITE_BACKEND_URL}${config.route}`,
       data: config.data,
-      params: config.query,  // Adding support for query parameters
+      params: config.query, // Adding support for query parameters
       headers: {
         "Content-Type": "application/json",
         ...config.headers,
