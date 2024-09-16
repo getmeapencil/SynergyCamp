@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+
 export const Breathe = () => {
-  const breathingTime = 8; // Default breathing time
-  const holdingTime = 4; // Default holding time
+  const breathingTime = 6; // Default breathing time
+  const holdingTime = 3; // Default holding time
   const totalTime = breathingTime * 2 + holdingTime * 2;
+  const isBreathing = true;
   const [phase, setPhase] = useState("Inhale"); // Current breathing phase
-  const [isBreathing, setIsBreathing] = useState(false);
+  // const [isBreathing, setIsBreathing] = useState(false);
 
   useEffect(() => {
     let interval;
@@ -30,23 +32,23 @@ export const Breathe = () => {
   }, [breathingTime, holdingTime, isBreathing]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
       <div
-        className={`flex h-32 w-32 items-center justify-center rounded-full bg-primary ${
+        className={`flex h-56 w-56 items-center justify-center rounded-full bg-primary ${
           isBreathing ? "animate-breathe" : ""
         }`}
         style={{
           animation: isBreathing ? `breathe ${totalTime}s ease-in-out infinite` : "none",
         }}
       >
-        <p className="relative text-white">{isBreathing ? phase : ""}</p>
+        {/* <p className="relative text-background">{isBreathing ? phase : ""}</p> */}
       </div>
-      <button
-        className={`mt-12 rounded-md bg-blue-500 px-4 py-2 text-white ${isBreathing ? "bg-red-500" : "bg-blue-500"}`}
+      {/* <button
+        className={`rounded-md bg-blue-500 px-4 py-2 text-white ${isBreathing ? "bg-red-500" : "bg-blue-500"}`}
         onClick={() => setIsBreathing(!isBreathing)}
       >
         {isBreathing ? "Stop" : "Start"}
-      </button>
+      </button> */}
     </div>
   );
 };

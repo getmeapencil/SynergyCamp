@@ -98,21 +98,20 @@ html {
   }
 }
 
-
 @keyframes breathe {
   0% {
     transform: scale(1);
   }
   25% {
-    transform: scale(1.5); /* Expanding the circle */
+    transform: scale(2); /* Expanding the circle */
   }
   50% {
-    transform: scale(1.5); /* Holding the expanded state */
+    transform: scale(2); /* Holding the expanded state */
   }
   75% {
-    transform: scale(1);   /* Contracting back */
+    transform: scale(1); /* Contracting back */
   }
   100% {
-    transform: scale(1);   /* Holding the contracted state */
+    transform: scale(1); /* Holding the contracted state */
   }
 }
