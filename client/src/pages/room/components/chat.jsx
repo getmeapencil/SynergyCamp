@@ -34,18 +34,6 @@ export const Chat = () => {
     }
   };
 
-  useEffect(() => {
-    // fetch user data
-    useUserStore
-      .getState()
-      .fetchUser()
-      .then((res) => {
-        if (!res) {
-          navigate("/auth");
-        }
-      });
-  }, [navigate]);
-
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-1 flex-col gap-3 overflow-auto">

@@ -1,10 +1,8 @@
 import express from "express";
-import * as controller from "./controller.js";
 import checkJWT from "../../middlewares/checkAuthenticated.js";
-
+import { getUsers } from "./controller.js";
 const router = express.Router();
 
-router.get("/", checkJWT, controller.getUser);
-router.post("/logout", controller.logout);
+router.get("/search", checkJWT, getUsers);
 
 export default router;

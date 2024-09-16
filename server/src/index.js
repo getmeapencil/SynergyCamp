@@ -6,7 +6,10 @@ import session from "express-session";
 import apiRouter from "./apps/index.js";
 import dotenv from "dotenv";
 import "./passport.js";
-
+import { Server } from "socket.io";
+import invite from "./models/invite.js";
+import checkJwtSocketMiddleware from "./middlewares/socketJwt.js";
+import socketRegistry from "./utils/socketRegistry.js";
 dotenv.config();
 
 const app = express();
@@ -34,25 +37,53 @@ app.use(
     maxFieldsSize: 1073741824, // 1 GB in bytes
   }),
 );
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  }),
-);
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use("/", apiRouter);
 
-app.get("/auth/google", passport.authenticate("google", { scope: ["email", "profile"] }));
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: `${process.env.FRONTEND_URL}/login`,
-    successRedirect: `${process.env.FRONTEND_URL}/dashboard`,
-  }),
-);
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST"],
+  },
+});
+
+io.use(checkJwtSocketMiddleware);
+io.on("connection", (socket) => {
+  // Handle room joining
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room: ${roomId}`);
+  });
+
+  // Handle sending a message to a room
+  socket.on("send-message", (message) => {
+    io.to(message.roomId).emit("receive-message", message);
+    console.log(`Message sent to room ${message.roomId}`);
+  });
+  if (socket.user) {
+    socketRegistry.add(socket.user._id, socket);
+  }
+  // Handle sending an invite by userId
+  socket.on("send-invite", async ({ inviteeId, roomId, inviterId }) => {
+    console.log("Sending invite to user", inviteeId);
+    const inv = invite.create({
+      invitee: inviteeId,
+      roomId: roomId,
+      invitedBy: inviterId,
+    });
+    // Emit the "receive-invite" event to the invitee's userId room
+    io.to(inviteeId).emit("receive-invite", { roomId, inviterId: inviterId });
+    console.log(`Invite sent to user: ${inviteeId} for room: ${roomId}`);
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.user) {
+      socketRegistry.remove(socket.user._id, socket);
+    }
+    console.log("[SocketIO] user disconnected");
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("🤔 Wait... am I just a line of code in someone else's project? Is anything real?");
 });

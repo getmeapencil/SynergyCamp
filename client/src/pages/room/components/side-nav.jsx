@@ -1,4 +1,14 @@
-import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
+import {
+  MessageSquare,
+  Timer,
+  Settings,
+  ListTodo,
+  Calendar,
+  LogOut,
+  ShieldPlus,
+  SquareUserRound,
+  Users,
+} from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -9,6 +19,7 @@ const navTopItems = [
   { label: "ToDo", icon: ListTodo },
   { label: "Pomodoro", icon: Timer },
   { label: "Calendar", icon: Calendar },
+  { label: "Invite Friends", icon: Users },
 ];
 
 const cn = {

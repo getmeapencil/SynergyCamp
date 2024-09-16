@@ -2,9 +2,11 @@ import { useState } from "react";
 import { SideNav } from "./components/side-nav";
 import { SidePanel } from "./components/side-panel";
 import { MainView } from "./components/main-view";
+import { useParams } from "react-router-dom";
 
 export const Room = () => {
   const [activePanel, setActivePanel] = useState("Chat");
+  const { roomId } = useParams();
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">

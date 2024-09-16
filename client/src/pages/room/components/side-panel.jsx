@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
 import { Participants } from "./participants";
+import Invite from "@/components/invite";
 
 export const SidePanel = ({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
@@ -21,6 +22,8 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
         return <div className="p-4">Admin Control content goes here.</div>;
       case "Settings":
         return <div className="p-4">Settings content goes here.</div>;
+      case "Invite Friends":
+        return <Invite />;
       default:
         return null;
     }

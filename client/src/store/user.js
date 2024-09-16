@@ -1,22 +1,41 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
+import axios from "axios";
 
 export const useUserStore = create((set) => ({
   user: null,
   isAuthenticated: false,
+  authToken: null,
+  users: [],
   setUser: (user) => set({ user }),
   logout: async () => {
     try {
       await createApiCall({
-        method: "POST",
-        route: "/user/logout",
+        method: "GET",
+        route: "/auth/logout",
         withCredentials: true,
       });
-      set({ user: null });
+      set({ user: null, isAuthenticated: false, authToken: null });
       return true;
     } catch (error) {
       console.error(error);
       return false;
+    }
+  },
+  authGoogle: async (code) => {
+    try {
+      const res = await createApiCall({
+        method: "POST",
+        route: "/auth/google",
+        data: { code },
+      });
+      if (res?.accessToken) {
+        console.log("res?.access", res?.accessToken, res?.user);
+        axios.defaults.headers.Authorization = "Bearer " + res?.accessToken;
+        set({ authToken: res?.accessToken, isAuthenticated: true, user: res?.user });
+      }
+    } catch (err) {
+      console.error(err);
     }
   },
   fetchUser: async () => {

@@ -1,9 +1,5 @@
 export const getUser = async (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json(req.user);
-    return;
-  }
-  res.json({ message: "Unauthorized" });
+  res.json(req.user);
 };
 
 export const logout = async (req, res) => {

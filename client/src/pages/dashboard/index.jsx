@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUserStore } from "@/store/user";
@@ -16,21 +14,6 @@ import { Streak } from "./components/Streak";
 export const Dashboard = () => {
   const { user } = useUserStore();
   const { theme } = useTheme();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // fetch user data
-    if (!user) {
-      useUserStore
-        .getState()
-        .fetchUser()
-        .then((res) => {
-          if (!res) {
-            navigate("/auth");
-          }
-        });
-    }
-  }, [user, navigate]);
 
   if (!user) {
     return null;

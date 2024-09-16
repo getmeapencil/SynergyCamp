@@ -15,10 +15,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    googleId: {
+    refreshToken: {
       type: String,
-      required: true,
-      unique: true,
     },
   },
   {
