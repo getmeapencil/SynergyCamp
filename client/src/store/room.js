@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import createApiCall from "./ceateApiCall";
+import { createApiCall } from "@/utils/createApiCall";
 
 export const useRoomStore = create((set) => ({
   rooms: [],
@@ -8,7 +8,7 @@ export const useRoomStore = create((set) => ({
     try {
       const room = await createApiCall({
         method: "POST",
-        url: "http://localhost:3000/room",
+        route: "/room",
         data: { name, description },
         withCredentials: true,
       });
@@ -20,7 +20,6 @@ export const useRoomStore = create((set) => ({
       return false;
     }
   },
-
   setCurrentRoom: (room) => {
     set({ currentRoom: room });
   },
@@ -28,7 +27,7 @@ export const useRoomStore = create((set) => ({
     try {
       const rooms = await createApiCall({
         method: "GET",
-        url: "http://localhost:3000/room",
+        route: "/room",
         withCredentials: true,
       });
       set({ rooms });
