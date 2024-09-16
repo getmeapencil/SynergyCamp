@@ -97,3 +97,22 @@ html {
     font-size: 16px;
   }
 }
+
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5); /* Expanding the circle */
+  }
+  50% {
+    transform: scale(1.5); /* Holding the expanded state */
+  }
+  75% {
+    transform: scale(1);   /* Contracting back */
+  }
+  100% {
+    transform: scale(1);   /* Holding the contracted state */
+  }
+}
