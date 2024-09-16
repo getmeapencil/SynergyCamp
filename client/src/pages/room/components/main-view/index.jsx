@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useTheme } from "@/components/theme-provider";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
+import { Breathe } from "./components/Breathe";
 
 const themes = [
   {
@@ -17,6 +18,9 @@ const themes = [
   },
   {
     label: "Tea",
+  },
+  {
+    label: "Breathe",
   },
 ];
 
@@ -31,6 +35,8 @@ export const MainView = () => {
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-1.jpg')] bg-cover"></div>;
       case "Tea":
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-2.jpg')] bg-cover"></div>;
+      case "Breathe":
+        return <Breathe/>
       default:
         return null;
     }
