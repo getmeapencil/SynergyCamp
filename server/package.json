@@ -1,29 +1,30 @@
 {
+  "name": "mindmesh-server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js",
+    "format": "prettier 'src/**/*.{js,jsx,ts,tsx}' --write --config ./.prettierrc"
+  },
   "dependencies": {
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "google-auth-library": "^9.14.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.6.0",
     "nodemon": "^3.1.4",
     "passport": "^0.7.0",
-    "passport-google-oauth2": "^0.2.0"
+    "passport-google-oauth2": "^0.2.0",
+    "socket.io": "^4.7.5"
   },
-  "type": "module",
-  "name": "server",
-  "version": "1.0.0",
-  "description": "backend of mindmesh",
-  "main": "index.js",
-  "scripts": {
-    "start": "node ./src/server.js",
-    "dev": "nodemon ./src/server.js"
-  },
-  "keywords": [
-    "study",
-    "group"
-  ],
-  "author": "yogitheboss",
-  "license": "ISC"
+  "devDependencies": {
+    "prettier": "3.3.3"
+  }
 }

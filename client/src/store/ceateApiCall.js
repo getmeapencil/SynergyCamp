@@ -1,15 +1,24 @@
 import axios from "axios";
+
 const createApiCall = (config) => {
-  console.log(config)
-  // Use axios to make API call
+
+  console.log(config);
+  
+  const headers = {
+    "Content-Type": "application/json",
+    ...config.headers, // Allows adding additional custom headers if needed
+  };
+
+  // If an authToken is provided, add it to the Authorization header
+  if (config.authToken) {
+    headers.Authorization = `Bearer ${config.authToken}`;
+  }
+
   return axios({
     method: config.method,
     url: config.url,
     data: config.data,
-    headers: {
-      "Content-Type": "application/json",
-      ...config.headers, // Allows adding additional custom headers if needed
-    },
+    headers, // Updated headers
     withCredentials: config.withCredentials || false, // Add withCredentials support
   })
     .then((response) => {

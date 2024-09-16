@@ -1,10 +1,10 @@
 import express from "express";
 import * as controller from "./controller.js";
-import { checkAuthenticated } from "../../middlewares/checkAuthenticated.js";
+import checkJWT from "../../middlewares/checkAuthenticated.js";
 
 const router = express.Router();
 
-router.post("/",  controller.createRoom);
-router.get("/",  controller.getRooms);
+router.post("/",  checkJWT,controller.createRoom);
+router.get("/",  checkJWT,controller.getRooms);
 
 export default router;

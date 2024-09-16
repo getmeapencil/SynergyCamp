@@ -1,16 +1,17 @@
-import { OAuth2Client } from "google-auth-library";
-
-const oauthClient = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  "postmessage"
-);
+import {  OAuth2Client } from "google-auth-library";
+import { randomBytes } from "crypto";
+import JWT from "jsonwebtoken";
+import User from "../../models/user.js";
+import dotenv from "dotenv";
+dotenv.config();
+const oauthClient = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, "postmessage");
+const COOKIE_AGE = 14 * 24 * 60 * 60 * 1000;
+const DOMAIN = process.env.DOMAIN || "localhost";
 export const googleAuth = async (req, res) => {
   try {
     const { code } = req.body;
 
-    if (!code)
-      return res.status(400).json({ message: "Missing authorization code" });
+    if (!code) return res.status(400).json({ message: "Missing authorization code" });
 
     const { tokens } = await oauthClient.getToken(code);
     if (!tokens.id_token) {
@@ -20,25 +21,20 @@ export const googleAuth = async (req, res) => {
 
     const ticket = await oauthClient.verifyIdToken({
       idToken: tokens.id_token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: process.env.CLIENT_ID,
     });
     const { email, name, picture } = ticket.getPayload();
-    const user = await UserModel.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { email: email.toLowerCase() },
       {
         email: email.toLowerCase(),
         name,
         picture,
-        email_verified: true,
       },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
 
-    const { accessToken, refreshToken } = await generateToken(
-      user,
-      user?.roles?.includes("admin") || false
-    );
-
+    const { accessToken, refreshToken } = await generateToken(user);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
@@ -47,11 +43,52 @@ export const googleAuth = async (req, res) => {
       sameSite: "None",
     });
 
-
     return res.status(200).json({
       accessToken,
       user,
     });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: e.message });
+  }
+};
+
+const generateToken = async (user) => {
+  let payload = { email: user?.email, id: user?._id };
+
+  const accessToken = JWT.sign(payload, process.env.SESSION_SECRET, {
+    expiresIn: "7d",
+  });
+
+  // change refresh token on every login
+  const refreshToken = randomBytes(32).toString("hex");
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  return { accessToken, refreshToken };
+};
+
+export const logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (refreshToken) {
+      const user = await User.findOneAndUpdate(
+        { refreshToken },
+        { refreshToken: "" }
+      );
+
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      domain: DOMAIN,
+      sameSite: "lax"
+    });
+    return res.status(200).json({ message: "Logout successful" });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: e.message });

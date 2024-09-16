@@ -1,26 +1,28 @@
 import express from "express";
 import cors from "cors";
-// import apiRouter from './apps/index.js';
-import dotenv from "dotenv";
 import { createServer } from "http";
 import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import session from "express-session";
-import User from "./models/user.js";
 import apiRouter from "./apps/index.js";
+import dotenv from "dotenv";
+import "./passport.js";
+import { Server } from "socket.io";
+import invite from "./models/invite.js";
+import checkJwtSocketMiddleware from "./middlewares/socketJwt.js";
+import socketRegistry from "./utils/socketRegistry.js"
 dotenv.config();
 
 const app = express();
 
 const server = createServer(app);
+
 // Middleware setup
 app.use(express.json());
-const allowedOrigins = ["http://localhost:5173"];
-
+const allowedOrigins = [process.env.FRONTEND_URL];
 app.use(
   cors({
     origin: function (origin, callback) {
-      const requestOrigin = origin || "Unknown origin";
+      // const requestOrigin = origin || "Unknown origin";
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
@@ -33,72 +35,59 @@ app.use(
     maxAge: 86400,
     maxFileSize: 1073741824, // 1 GB in bytes
     maxFieldsSize: 1073741824, // 1 GB in bytes
-  })
+  }),
 );
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
 app.use("/", apiRouter);
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-      scope: ["email", "profile"],
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        let user = await User.findOne({ googleId: profile.id });
-        if (!user) {
-          user = await User.create({
-            name: profile.displayName,
-            email: profile.email,
-            picture: profile.photos[0].value,
-            googleId: profile.id,
-          });
-        }
-        done(null, user);
-      } catch (err) {
-        done(err, null);
-      }
-    }
-  )
-);
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser(async (id, done) => {
-  let user = await User.findById(id);
-  done(null, user);
+
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST"],
+  },
 });
 
-// Start server
-const PORT = 3000;
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login",
-    successRedirect: "http://localhost:5173/dashboard",
-  })
-);
+io.use(checkJwtSocketMiddleware);
+io.on("connection", (socket) => {
+  // Handle room joining
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room: ${roomId}`);
+  });
+
+  // Handle sending a message to a room
+  socket.on("send-message", (message) => {
+    io.to(message.roomId).emit("receive-message", message);
+    console.log(`Message sent to room ${message.roomId}`);
+  });
+  if (socket.user) {
+    socketRegistry.add(socket.user._id, socket);
+  }
+  // Handle sending an invite by userId
+  socket.on("send-invite", async ({ inviteeId, roomId, inviterId }) => {
+    console.log("Sending invite to user", inviteeId);
+    const inv = invite.create({
+      invitee: inviteeId,
+      roomId: roomId,
+      invitedBy: inviterId,
+    });
+    // Emit the "receive-invite" event to the invitee's userId room
+    io.to(inviteeId).emit("receive-invite", { roomId, inviterId: inviterId });
+    console.log(`Invite sent to user: ${inviteeId} for room: ${roomId}`);
+  });
+
+  socket.on("disconnect", () => {
+    if (socket.user) {
+      socketRegistry.remove(socket.user._id, socket);
+    }
+    console.log("[SocketIO] user disconnected");
+  });
+});
 
 app.get("/", (req, res) => {
-  res.send("Backend of MIND MESH");
+  res.send("🤔 Wait... am I just a line of code in someone else's project? Is anything real?");
 });
 
-export { app, PORT };
+export { app };
 
 export default server;

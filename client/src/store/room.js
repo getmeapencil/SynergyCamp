@@ -5,7 +5,6 @@ export const useRoomStore = create((set) => ({
   rooms: [],
   currentRoom:null,
   createRoom: async (name, description) => {
-    console.log('Creating Room:', name, description);
     try {
       const room = await createApiCall({
         method: "POST",

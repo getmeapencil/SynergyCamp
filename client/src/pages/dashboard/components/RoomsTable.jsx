@@ -7,30 +7,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/store/user";
+import { useNavigate } from "react-router-dom";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  const {rooms}=useRoomStore();
-  const [filteredData, setFilteredData] = useState();
-  
+  const { rooms } = useRoomStore();
+  const { user } = useUserStore();
+  const [filteredData, setFilteredData] = useState([]);
+  const userId = user?._id;
+  const navigate = useNavigate();
   useEffect(() => {
-    if (filterRole.length === 0) {
+    if (filterRole?.length === 0) {
       setFilteredData(rooms);
-    }else{
-      setFilteredData(()=>{
+    } else {
+      setFilteredData(() => {
         return rooms.filter((data) => data.role === filterRole);
       });
     }
   }, [filterRole]);
-  
   useEffect(() => {
-    if(!rooms){
-      useRoomStore.getState().getRooms();
-    }
-    setFilteredData(rooms);
-  }, [rooms]);
-
-  filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
+    useRoomStore.getState().getRooms();
+  }, []);
+ useEffect(()=>{
+  if(rooms){
+    setFilteredData(rooms)
+  }
+ },[rooms])
   return (
     <Card>
       <CardHeader>
@@ -40,7 +43,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
 
       <CardContent>
         <ScrollArea className="h-72 rounded-md border">
-          {filteredData.length ? (
+          {filteredData?.length ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -51,26 +54,37 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredData.map((data) => (
-                  <TableRow key={data.id}>
-                    <TableCell className="flex items-center gap-2">
-                      <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="font-medium">{data.roomName}</div>
-                    </TableCell>
-                    <TableCell className="text-center sm:table-cell">
-                      <Badge variant={"outline"}>{data.role}</Badge>
-                    </TableCell>
-                    <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
-                    <TableCell className="text-center sm:table-cell">
-                      <Button>Join Room</Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {filteredData.map((data) => {
+                  const role = data?.members?.find((member) => member.userId === userId)?.role;
+                  return (
+                    <TableRow key={data._id}>
+                      <TableCell className="flex items-center gap-2">
+                        <Avatar>
+                          <AvatarImage src="https://github.com/shadcn.png" />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        <div className="font-medium">{data.name}</div>
+                      </TableCell>
+                      <TableCell className="text-center sm:table-cell">
+                        <Badge variant={"outline"}>{role}</Badge>
+                      </TableCell>
+                      <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
+                      <TableCell className="text-center sm:table-cell">
+                        <Button
+                          onClick={() => {
+                            navigate(`/room/${data._id}`);
+                          }}
+                        >
+                          Join Room
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
+          ) : filteredData?.length === 0 ? (
+            <EmptyTable variant={"room"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
