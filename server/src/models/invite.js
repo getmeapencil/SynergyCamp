@@ -29,4 +29,4 @@ const inviteSchema = mongoose.Schema(
   },
 );
 
-export default mongoose.model("Invite", inviteSchema);
+export default mongoose.model("invite", inviteSchema);
