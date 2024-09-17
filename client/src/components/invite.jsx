@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { debounce } from "lodash";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { createApiCall } from "@/utils/createApiCall";
-import useSocketIO from "@/utils/useSocketio";
 import { useParams } from "react-router-dom";
 import { useUserStore } from "@/store/user";
+import { useSocketStore } from "@/store/socket";
+// import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 const Invite = () => {
   const { user } = useUserStore();
@@ -16,11 +17,14 @@ const Invite = () => {
   const [inviteStatus, setInviteStatus] = useState(null); // To track invite status
   const [users, setUsers] = useState([]); // To store fetched users
   const [loading, setLoading] = useState(false); // Loading state for API call
-  const { sendInvite } = useSocketIO();
+  const { socket } = useSocketStore();
+  // const { sendInvite } = useSocketEmitters(socket);
   const { roomId } = useParams();
+
   // Function to send an invite to a specific user
   const sendInviteHandle = (userId) => {
-    sendInvite(userId, roomId, user?._id);
+    socket.emit("send-invite", { inviteeId: userId, roomId: roomId, inviterId: user?._id });
+    // sendInvite()
     setInviteStatus(`Invite Sent to user ${userId}!`);
   };
 
@@ -46,12 +50,9 @@ const Invite = () => {
   };
 
   // Debounced version of fetchUsers
-  const debouncedFetchUsers = useCallback(
-    debounce((query) => {
-      fetchUsers(query);
-    }, 500),
-    [],
-  );
+  const debouncedFetchUsers = debounce((query) => {
+    fetchUsers(query);
+  }, 500);
 
   // Handle search input change
   const handleSearchChange = (e) => {
