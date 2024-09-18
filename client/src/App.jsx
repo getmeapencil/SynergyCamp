@@ -11,8 +11,7 @@ import { useEffect } from "react";
 
 function App() {
   useFavicon();
-  const { socket } = useSocket();
-  console.log("App ~ socket:", socket);
+  const socket = useSocket();
   useSocketStore.getState().setSocket(socket);
 
   useEffect(() => {

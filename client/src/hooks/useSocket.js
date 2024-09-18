@@ -49,7 +49,5 @@ export const useSocket = () => {
     }
   }, [authToken, initializeSocket]);
 
-  return {
-    socket,
-  };
+  return socket;
 };
