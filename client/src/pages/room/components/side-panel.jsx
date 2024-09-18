@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
 import { Participants } from "./participants";
+import { EventForm } from "./calendar";
 
 export const SidePanel = ({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
@@ -16,7 +17,7 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
       case "Pomodoro":
         return <Pomodoro />;
       case "Calendar":
-        return <div className="p-4">Calendar content goes here.</div>;
+        return <EventForm />;
       case "Admin Control":
         return <div className="p-4">Admin Control content goes here.</div>;
       case "Settings":
