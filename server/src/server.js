@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import apiRouter from "./apps/index.js";
+import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js"; // Socket initialization
 
@@ -32,6 +33,7 @@ app.use(
     maxFieldsSize: 1073741824, // 1 GB in bytes
   }),
 );
+app.use(cookieParser());
 
 app.use("/", apiRouter);
 
