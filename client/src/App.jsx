@@ -15,7 +15,7 @@ function App() {
   useSocketStore.getState().setSocket(socket);
 
   useEffect(() => {
-    useUserStore.getState().fetchUser();
+    useUserStore.getState().tryTokenRefresh();
   }, []);
 
   return (
