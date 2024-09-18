@@ -93,3 +93,36 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 };
+
+export const refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Your session has expired. Please login again" });
+    }
+
+    const user = await User.findOne({ refreshToken });
+
+    if (!user) {
+      return res.status(401).json({ message: "Your session has expired. Please login again" });
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = await generateToken(user);
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: COOKIE_AGE,
+      domain: DOMAIN,
+      sameSite: "None",
+    });
+
+    return res.status(200).json({
+      accessToken,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: e.message });
+  }
+};
