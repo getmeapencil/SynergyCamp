@@ -8,8 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { createApiCall } from "@/utils/createApiCall";
 import { useParams } from "react-router-dom";
 import { useUserStore } from "@/store/user";
-import { useSocketStore } from "@/store/socket";
-// import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 const Invite = () => {
   const { user } = useUserStore();
@@ -17,14 +16,12 @@ const Invite = () => {
   const [inviteStatus, setInviteStatus] = useState(null); // To track invite status
   const [users, setUsers] = useState([]); // To store fetched users
   const [loading, setLoading] = useState(false); // Loading state for API call
-  const { socket } = useSocketStore();
-  // const { sendInvite } = useSocketEmitters(socket);
   const { roomId } = useParams();
+  const { sendInvite } = useSocketEmitters();
 
   // Function to send an invite to a specific user
   const sendInviteHandle = (userId) => {
-    socket.emit("send-invite", { inviteeId: userId, roomId: roomId, inviterId: user?._id });
-    // sendInvite()
+    sendInvite({ inviteeId: userId, roomId: roomId, inviterId: user?._id });
     setInviteStatus(`Invite Sent to user ${userId}!`);
   };
 
