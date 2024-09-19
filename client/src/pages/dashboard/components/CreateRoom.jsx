@@ -14,7 +14,7 @@ export const CreateRoom = () => {
       toast.error("Room name can't be empty or whitespace!");
       return;
     }
-    await useRoomStore.getState().createRoom(name, "");
+    await useRoomStore.getState().createRoom(name.trim(), "");
   };
 
   return (
