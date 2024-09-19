@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const inviteSchema = mongoose.Schema(
+const inviteSchema = new mongoose.Schema(
   {
     status: {
       type: String,
@@ -29,4 +29,4 @@ const inviteSchema = mongoose.Schema(
   },
 );
 
-export default mongoose.model("invite", inviteSchema);
+export const InviteModel = mongoose.model("invite", inviteSchema);

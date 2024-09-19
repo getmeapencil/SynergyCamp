@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+import { UserModel } from "../models/user.js";
 import JWT from "jsonwebtoken";
 
 /** Socket middleware to check jwt token */
@@ -14,7 +14,7 @@ export default async function checkJwtSocketMiddleware(socket, next) {
     if (!decoded) {
       return next(new Error("Authentication error"));
     }
-    const user = await User.findOne({ email: decoded.email });
+    const user = await UserModel.findOne({ email: decoded.email });
     if (!user) {
       throw new Error("User not found");
     }
