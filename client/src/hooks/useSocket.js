@@ -32,7 +32,6 @@ export const useSocket = () => {
     });
 
     newSocket.on("incoming-invite", (invite) => {
-      console.log("Invite received:", invite);
       useInvitesStore.getState().setInvites(invite);
     });
 
