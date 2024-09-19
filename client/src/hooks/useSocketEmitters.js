@@ -4,6 +4,7 @@ export const useSocketEmitters = () => {
   const socket = useSocketStore((state) => state.socket);
 
   return {
-    sendInvite: ({ inviteeId, roomId, inviterId }) => socket.emit("send-invite", { inviteeId, roomId, inviterId }),
+    joinRoom: ({ roomId }) => socket.emit("join-room", { roomId }), // this emmiter can be used to join any socket room
+    sendInvites: ({ emails, roomId }) => socket.emit("send-invite", { emails, roomId }),
   };
 };

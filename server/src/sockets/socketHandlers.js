@@ -1,11 +1,11 @@
-import invite from "../models/invite.js";
 import socketRegistry from "./socketRegistry.js";
+import { invite } from "../apps/invite/controller.js";
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
-  socket.on("join-room", (roomId) => {
+  socket.on("join-room", ({ roomId }) => {
     socket.join(roomId);
-    console.log(`User ${socket.id} joined room: ${roomId}`);
+    console.log(`User ${socket.user._id} joined room: ${roomId}`);
   });
 
   // Handle sending a message to a room
@@ -15,17 +15,22 @@ const registerSocketHandlers = (io, socket) => {
   });
 
   // Handle sending an invite by userId
-  socket.on("send-invite", async ({ inviteeId, roomId, inviterId }) => {
-    console.log("Sending invite to user", inviteeId);
-    await invite.create({
-      invitee: inviteeId,
-      roomId: roomId,
-      invitedBy: inviterId,
-    });
+  socket.on("send-invite", async ({ emails, roomId }) => {
+    const senderId = String(socket.user._id);
 
-    // Emit the "receive-invite" event to the invitee's userId room
-    io.to(inviteeId).emit("receive-invite", { roomId, inviterId });
-    console.log(`Invite sent to user: ${inviteeId} for room: ${roomId}`);
+    const res = await invite({ emails, roomId, senderId });
+
+    if (res.error) {
+      io.to(senderId).emit("invite-error", { error: res.error });
+    } else {
+      res.successfulInvites?.map((invite) => {
+        io.to(invite.invitee).emit("incoming-invite", invite.room);
+      });
+    }
+
+    if (res.failedInvites?.length) {
+      io.to(senderId).emit("invite-error", { failedInvites: res.failedInvites });
+    }
   });
 
   socket.on("disconnect", () => {

@@ -1,6 +1,8 @@
 import { useUserStore } from "@/store/user";
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useInvitesStore } from "@/store/invite";
+import { toast } from "sonner";
 
 export const useSocket = () => {
   const authToken = useUserStore((state) => state.authToken);
@@ -29,9 +31,22 @@ export const useSocket = () => {
       console.log("Reconnected to socket server");
     });
 
-    newSocket.on("receive-invite", (invite) => {
+    newSocket.on("incoming-invite", (invite) => {
       console.log("Invite received:", invite);
-      alert(`You have been invited to join room: ${invite.roomId} by user: ${invite.inviterId}`);
+      useInvitesStore.getState().setInvites(invite);
+    });
+
+    newSocket.on("invite-error", (error) => {
+      console.log("Invite unsuccessful:", error);
+      if (error.failedInvites) {
+        toast("Failed to send invites to following emails:", {
+          description: error.failedInvites.join(" "),
+        });
+      } else if (error.error) {
+        toast("Failed to send invites:", {
+          description: error.error,
+        });
+      }
     });
 
     return newSocket;
