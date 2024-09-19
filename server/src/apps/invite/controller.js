@@ -106,7 +106,7 @@ export const acceptInvite = async (req, res) => {
     invite.status = "accepted";
     await invite.save();
 
-    res.status(200);
+    res.status(200).json("Invite accepted!");
   } catch (e) {
     console.log(e);
     res.json(e);
@@ -121,7 +121,7 @@ export const rejectInvite = async (req, res) => {
     invite.status = "rejected";
     await invite.save();
 
-    res.json(room);
+    res.status(200).json("Invite rejected!");
   } catch (e) {
     console.log(e);
     res.json(e);

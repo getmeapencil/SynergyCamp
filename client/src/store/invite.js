@@ -26,7 +26,7 @@ export const useInvitesStore = create((set, get) => ({
         data: { inviteId },
         withCredentials: true,
       });
-      const invites = get().invites.filter((invite) => invite._id !== inviteId);
+      const invites = get().invites.filter((invite) => invite.inviteId !== inviteId);
       set({ invites: [...invites] });
     } catch (error) {
       console.error("Error accepting invite:", error);
@@ -40,7 +40,7 @@ export const useInvitesStore = create((set, get) => ({
         data: { inviteId },
         withCredentials: true,
       });
-      const invites = get().invites.filter((invite) => invite._id !== inviteId);
+      const invites = get().invites.filter((invite) => invite.inviteId !== inviteId);
       set({ invites: [...invites] });
     } catch (error) {
       console.error("Error rejecting invite:", error);
