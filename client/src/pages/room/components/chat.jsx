@@ -9,58 +9,67 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { Button } from "@/components/ui/button";
 import { Laugh, SendHorizontal } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
-import { useState, useEffect } from "react";
-import { useUserStore } from "@/store/user";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { useRoomStore } from "@/store/room";
 
 export const Chat = () => {
-  const navigate = useNavigate();
   const messages = useMessagesStore((state) => state.messages);
+  const currentRoomId = useRoomStore((state) => state.currentRoom);
   const { theme } = useTheme();
   const [text, setText] = useState("");
-
+  const { sendMessage } = useSocketEmitters();
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
 
-  const sendMessage = () => {
-    useMessagesStore.getState().pushMessage(text);
+  const handleSendMessage = () => {
+    const _id = uuidv4();
+    const message = {
+      _id,
+      text,
+    };
+    useMessagesStore.getState().sendMessage(message);
+    sendMessage({ message, roomId: currentRoomId });
     setText("");
   };
 
   const handleEnterPress = (event) => {
     if (event.key === "Enter") {
-      sendMessage();
+      handleSendMessage();
     }
   };
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex flex-1 flex-col gap-3 overflow-auto">
-        {messages.map((message) => (
-          <div className="flex w-full gap-2 p-2 px-4 hover:bg-background" key={message._id}>
-            <div className="">
-              <Avatar className="rounded-lg">
-                <AvatarImage src={message.user.picture} />
-                <AvatarFallback className="rounded-lg">{generateAvatarFallback(message.user.name)}</AvatarFallback>
-              </Avatar>
-            </div>
-            <div className="flex flex-1 flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">{message.user.name}</span>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="text-xs text-muted-foreground">
-                      {formatDateTime(new Date(message.createdAt))}
-                    </TooltipTrigger>
-                    <TooltipContent>{formatDateWithWeekday(new Date(message.createdAt))}</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+        {messages.map((message) => {
+          return (
+            <div className="flex w-full gap-2 p-2 px-4 hover:bg-background" key={message._id}>
+              <div className="">
+                <Avatar className="rounded-lg">
+                  <AvatarImage src={message.user?.picture} />
+                  <AvatarFallback className="rounded-lg">{generateAvatarFallback(message.user?.name)}</AvatarFallback>
+                </Avatar>
               </div>
-              <div>{message.text}</div>
+              <div className="flex flex-1 flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">{message.user?.name}</span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className="text-xs text-muted-foreground">
+                        {formatDateTime(new Date(message.createdAt))}
+                      </TooltipTrigger>
+                      <TooltipContent>{formatDateWithWeekday(new Date(message.createdAt))}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div>{message.text}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className="flex gap-2 border-t px-2 py-4">
         <DropdownMenu>
@@ -87,7 +96,7 @@ export const Chat = () => {
           placeholder="Type a message"
           onKeyDown={handleEnterPress}
         />
-        <Button size="icon" variant="outline" onClick={sendMessage}>
+        <Button size="icon" variant="outline" onClick={handleSendMessage}>
           <SendHorizontal />
         </Button>
       </div>

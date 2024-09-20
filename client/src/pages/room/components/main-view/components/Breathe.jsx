@@ -32,7 +32,7 @@ export const Breathe = () => {
   }, [breathingTime, holdingTime, isBreathing]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background">
       <div
         className={`flex h-56 w-56 items-center justify-center rounded-full bg-primary ${
           isBreathing ? "animate-breathe" : ""

@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import tableData from "@/assets/roomData.json";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
@@ -65,7 +64,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                         </Avatar>
                         <div className="font-medium">{data.name}</div>
                       </TableCell>
-                      <TableCell className="text-center sm:table-cell">
+                      <TableCell className="text-center capitalize sm:table-cell">
                         <Badge variant={"outline"}>{role}</Badge>
                       </TableCell>
                       <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
@@ -75,7 +74,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                             navigate(`/room/${data._id}`);
                           }}
                         >
-                          Join Room
+                          Enter Room
                         </Button>
                       </TableCell>
                     </TableRow>

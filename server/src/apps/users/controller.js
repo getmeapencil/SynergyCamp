@@ -1,4 +1,4 @@
-import user from "../../models/user.js";
+import { UserModel } from "../../models/user.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -10,11 +10,10 @@ export const getUsers = async (req, res) => {
     }
 
     // Use the Mongoose 'find' method with regex for case-insensitive matching, excluding the current user
-    const users = await user
-      .find({
-        name: new RegExp(query, "i"), // Case-insensitive partial match on name
-        email: { $ne: userEmail }, // Exclude the current user by email
-      })
+    const users = await UserModel.find({
+      name: new RegExp(query, "i"), // Case-insensitive partial match on name
+      email: { $ne: userEmail }, // Exclude the current user by email
+    })
       .select("id email name picture") // Only select id, email, name, and picture
       .limit(10); // Limit the result to 10 users
 

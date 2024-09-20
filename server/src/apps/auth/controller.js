@@ -1,7 +1,7 @@
 import { OAuth2Client } from "google-auth-library";
 import { randomBytes } from "crypto";
 import JWT from "jsonwebtoken";
-import User from "../../models/user.js";
+import { UserModel } from "../../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -26,7 +26,7 @@ export const googleAuth = async (req, res) => {
       audience: process.env.CLIENT_ID,
     });
     const { email, name, picture } = ticket.getPayload();
-    const user = await User.findOneAndUpdate(
+    const user = await UserModel.findOneAndUpdate(
       { email: email.toLowerCase() },
       {
         email: email.toLowerCase(),
@@ -75,10 +75,10 @@ export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
     if (refreshToken) {
-      const user = await User.findOneAndUpdate({ refreshToken }, { refreshToken: "" });
+      const user = await UserModel.findOneAndUpdate({ refreshToken }, { refreshToken: "" });
 
       if (!user) {
-        return res.status(401).json({ message: "User not found" });
+        return res.status(401).json({ message: "UserModel not found" });
       }
     }
 
@@ -88,6 +88,39 @@ export const logout = async (req, res) => {
       sameSite: "lax",
     });
     return res.status(200).json({ message: "Logout successful" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: e.message });
+  }
+};
+
+export const refreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "Your session has expired. Please login again" });
+    }
+
+    const user = await UserModel.findOne({ refreshToken });
+
+    if (!user) {
+      return res.status(401).json({ message: "Your session has expired. Please login again" });
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } = await generateToken(user);
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: COOKIE_AGE,
+      domain: DOMAIN,
+      sameSite: "None",
+    });
+
+    return res.status(200).json({
+      accessToken,
+    });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: e.message });

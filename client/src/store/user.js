@@ -2,11 +2,12 @@ import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
 import axios from "axios";
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   authToken: null,
   users: [],
+  triedTokenRefresh: false,
   setUser: (user) => set({ user }),
   logout: async () => {
     try {
@@ -28,6 +29,7 @@ export const useUserStore = create((set) => ({
         method: "POST",
         route: "/auth/google",
         data: { code },
+        withCredentials: true,
       });
       if (res?.accessToken) {
         console.log("res?.access", res?.accessToken, res?.user);
@@ -55,6 +57,21 @@ export const useUserStore = create((set) => ({
     } catch (error) {
       console.error(error);
       set({ user: null, isAuthenticated: false });
+    }
+  },
+  tryTokenRefresh: async () => {
+    try {
+      const { accessToken } = await createApiCall({
+        method: "GET",
+        route: "/auth/refresh",
+        withCredentials: true,
+      });
+      set({ accessToken, triedTokenRefresh: true });
+      axios.defaults.headers.Authorization = "Bearer " + accessToken;
+      get().fetchUser();
+    } catch (error) {
+      console.error(error);
+      set({ triedTokenRefresh: true });
     }
   },
 }));

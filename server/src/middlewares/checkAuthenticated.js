@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { UserModel } from "../models/user.js";
 
 dotenv.config();
 
 export default async function (req, res, next) {
-  console.log("checkJwtMiddleware is running");
-
   if (!req.headers.authorization) {
     console.log("Missing authorization header");
     return res.status(401).send({
@@ -47,7 +46,11 @@ export default async function (req, res, next) {
     });
   }
 
-  req.email = decoded.email;
+  const user = await UserModel.findOne({ email: decoded.email });
+  if (!user) {
+    throw new Error("User not found");
+  }
+  req.user = user;
 
   next();
 }
