@@ -1,5 +1,6 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
+import { v4 as uuidv4 } from "uuid";
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
@@ -29,13 +30,15 @@ const registerSocketHandlers = (io, socket) => {
 
   socket.on("send-message", async ({ message, roomId }) => {
     const user = socket.user;
+    message._id = uuidv4();
+
     message.user = {
       _id: user._id,
       name: user.name,
       picture: user.picture,
     };
 
-    socket.to(roomId).emit("incoming-message", message);
+    io.to(roomId).emit("incoming-message", message);
   });
 
   socket.on("disconnect", () => {
