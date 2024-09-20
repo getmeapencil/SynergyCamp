@@ -9,12 +9,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { Button } from "@/components/ui/button";
 import { Laugh, SendHorizontal } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useParams } from "react-router-dom";
 
 export const Chat = () => {
   const messages = useMessagesStore((state) => state.messages);
+  const messagesEndRef = useRef(null);
   const { theme } = useTheme();
   const [text, setText] = useState("");
   const { sendMessage } = useSocketEmitters();
@@ -36,6 +37,14 @@ export const Chat = () => {
     if (event.key === "Enter") {
       handleSendMessage();
     }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -71,6 +80,7 @@ export const Chat = () => {
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
       <div className="flex gap-2 border-t px-2 py-4">
         <DropdownMenu>
