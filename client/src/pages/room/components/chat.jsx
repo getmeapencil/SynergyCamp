@@ -5,7 +5,7 @@ import { formatDateWithWeekday, formatDateTime } from "@/utils/formatDate";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import EmojiPicker from "emoji-picker-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Laugh, SendHorizontal } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
@@ -16,8 +16,10 @@ import { useParams } from "react-router-dom";
 export const Chat = () => {
   const messages = useMessagesStore((state) => state.messages);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
   const { theme } = useTheme();
   const [text, setText] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const { sendMessage } = useSocketEmitters();
   const { roomId } = useParams();
 
@@ -39,9 +41,24 @@ export const Chat = () => {
     }
   };
 
+  const handleEmojiSelect = (obj) => {
+    setText((prevText) => prevText + obj.emoji);
+
+    if (inputRef.current) {
+      console.log("handleEmojiSelect ~ inputRef.current:", inputRef.current);
+      inputRef.current.focus();
+    }
+
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    !isOpen && inputRef.current.focus();
+  }, [isOpen]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -83,24 +100,23 @@ export const Chat = () => {
         <div ref={messagesEndRef} />
       </div>
       <div className="flex gap-2 border-t px-2 py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
             <Button size="icon" variant="outline">
               <Laugh />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="border-0 p-0">
+          </PopoverTrigger>
+          <PopoverContent className="border-0 p-0" onCloseAutoFocus={(event) => event.preventDefault()}>
             <EmojiPicker
               theme={theme}
               emojiStyle="native"
-              onEmojiClick={(obj) => {
-                setText((prevText) => prevText + obj.emoji);
-              }}
+              onEmojiClick={handleEmojiSelect}
               style={{ fontFamily: '"Inter", sans-serif' }}
             />
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </PopoverContent>
+        </Popover>
         <Input
+          ref={inputRef}
           value={text}
           onChange={handleTextChange}
           className="flex-1"
