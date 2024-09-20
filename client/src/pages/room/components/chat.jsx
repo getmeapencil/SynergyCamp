@@ -42,8 +42,12 @@ export const Chat = () => {
     <div className="flex h-full flex-col">
       <div className="flex flex-1 flex-col gap-3 overflow-auto">
         {messages.map((message) => {
-          return (
-            <div className="flex w-full gap-2 p-2 px-4 hover:bg-background" key={message._id}>
+          return message.notification ? (
+            <div key={message._id} className="flex justify-center bg-muted p-1 text-sm text-muted-foreground">
+              {message.text}
+            </div>
+          ) : (
+            <div key={message._id} className="flex w-full gap-2 p-2 px-4 hover:bg-background">
               <div className="">
                 <Avatar className="rounded-lg">
                   <AvatarImage src={message.user?.picture} />
