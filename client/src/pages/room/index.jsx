@@ -13,7 +13,6 @@ export const Room = () => {
   const { joinRoom } = useSocketEmitters();
 
   useEffect(() => {
-    joinRoom({ roomId });
     useRoomStore.getState().setCurrentRoom(roomId);
   }, [roomId, joinRoom]);
 
