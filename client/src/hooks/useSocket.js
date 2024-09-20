@@ -1,9 +1,10 @@
-import { useUserStore } from "@/store/user";
-import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useUserStore } from "@/store/user";
 import { useInvitesStore } from "@/store/invite";
 import { useMessagesStore } from "@/store/messages";
-import { toast } from "sonner";
+import { useRoomStore } from "@/store/room";
 
 export const useSocket = () => {
   const authToken = useUserStore((state) => state.authToken);
@@ -18,6 +19,10 @@ export const useSocket = () => {
     // Handle connection state
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
+      const roomId = useRoomStore.getState().currentRoom;
+      if (roomId) {
+        newSocket.emit("join-room", { roomId });
+      }
     });
 
     newSocket.on("disconnect", (reason) => {
@@ -30,6 +35,10 @@ export const useSocket = () => {
 
     newSocket.on("reconnect", () => {
       console.log("Reconnected to socket server");
+      const roomId = useRoomStore.getState().currentRoom;
+      if (roomId) {
+        newSocket.emit("join-room", { roomId });
+      }
     });
 
     newSocket.on("incoming-invite", (invite) => {

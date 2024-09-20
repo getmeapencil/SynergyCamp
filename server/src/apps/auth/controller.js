@@ -95,6 +95,7 @@ export const logout = async (req, res) => {
 };
 
 export const refreshToken = async (req, res) => {
+
   try {
     const refreshToken = req.cookies?.refreshToken;
 
@@ -109,7 +110,6 @@ export const refreshToken = async (req, res) => {
     }
 
     const { accessToken, refreshToken: newRefreshToken } = await generateToken(user);
-
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
@@ -120,6 +120,7 @@ export const refreshToken = async (req, res) => {
 
     return res.status(200).json({
       accessToken,
+      user,
     });
   } catch (e) {
     console.error(e);
