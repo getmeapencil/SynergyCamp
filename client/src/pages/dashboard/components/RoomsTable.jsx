@@ -71,7 +71,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       <TableCell className="text-center sm:table-cell">
                         <Button
                           onClick={() => {
-                            navigate(`/room/${data._id}`);
+                            window.location.href = `/room/${data._id}`;
                           }}
                         >
                           Enter Room

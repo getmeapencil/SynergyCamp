@@ -10,28 +10,25 @@ import { Button } from "@/components/ui/button";
 import { Laugh, SendHorizontal } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { useRoomStore } from "@/store/room";
+import { useParams } from "react-router-dom";
 
 export const Chat = () => {
   const messages = useMessagesStore((state) => state.messages);
-  const currentRoomId = useRoomStore((state) => state.currentRoom);
   const { theme } = useTheme();
   const [text, setText] = useState("");
   const { sendMessage } = useSocketEmitters();
+  const { roomId } = useParams();
+
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
 
   const handleSendMessage = () => {
-    const _id = uuidv4();
     const message = {
-      _id,
       text,
     };
-    useMessagesStore.getState().sendMessage(message);
-    sendMessage({ message, roomId: currentRoomId });
+    sendMessage({ message, roomId });
     setText("");
   };
 
@@ -45,8 +42,12 @@ export const Chat = () => {
     <div className="flex h-full flex-col">
       <div className="flex flex-1 flex-col gap-3 overflow-auto">
         {messages.map((message) => {
-          return (
-            <div className="flex w-full gap-2 p-2 px-4 hover:bg-background" key={message._id}>
+          return message.notification ? (
+            <div key={message._id} className="flex justify-center bg-muted p-1 text-sm text-muted-foreground">
+              {message.text}
+            </div>
+          ) : (
+            <div key={message._id} className="flex w-full gap-2 p-2 px-4 hover:bg-background">
               <div className="">
                 <Avatar className="rounded-lg">
                   <AvatarImage src={message.user?.picture} />
