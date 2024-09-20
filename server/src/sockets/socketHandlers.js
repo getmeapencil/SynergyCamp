@@ -48,6 +48,18 @@ const registerSocketHandlers = (io, socket) => {
     io.to(roomId).emit("incoming-message", message);
   });
 
+  socket.on("disconnecting", () => {
+    const rooms = Array.from(socket.rooms); // Get the rooms the user was in
+    rooms.forEach((room) => {
+      const message = {
+        _id: uuidv4(),
+        text: `${socket.user.name} left the room!`,
+        notification: true,
+      };
+      io.to(room).emit("incoming-message", message);
+    });
+  });
+
   socket.on("disconnect", () => {
     if (socket.user) {
       socketRegistry.remove(socket.user._id, socket);
