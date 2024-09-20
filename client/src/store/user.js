@@ -10,7 +10,6 @@ export const useUserStore = create((set, get) => ({
   triedTokenRefresh: false,
   setUser: (user) => set({ user }),
   logout: async () => {
-
     try {
       await createApiCall({
         method: "GET",
@@ -42,13 +41,13 @@ export const useUserStore = create((set, get) => ({
   },
   tryTokenRefresh: async () => {
     try {
-      if(get().isAuthenticated) return false;
-      const { accessToken ,user} = await createApiCall({
+      if (get().triedTokenRefresh) return false;
+      const { accessToken, user } = await createApiCall({
         method: "GET",
         route: "/auth/refresh",
         withCredentials: true,
       });
-      set({ accessToken, triedTokenRefresh: true, isAuthenticated: true, user });
+      set({ authToken: accessToken, triedTokenRefresh: true, isAuthenticated: true, user });
       axios.defaults.headers.Authorization = "Bearer " + accessToken;
     } catch (error) {
       console.error(error);
