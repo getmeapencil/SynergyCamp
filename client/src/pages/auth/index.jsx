@@ -5,13 +5,8 @@ import Typewriter from "typewriter-effect";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 
 export const Auth = () => {
-  const { isAuthenticated } = useUserStore();
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
   return (
     <div className="light h-screen w-full lg:flex">
       <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
