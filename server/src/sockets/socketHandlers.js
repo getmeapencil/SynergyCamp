@@ -7,6 +7,13 @@ const registerSocketHandlers = (io, socket) => {
   socket.on("join-room", ({ roomId }) => {
     socket.join(roomId);
     console.log(`User ${socket.user._id} joined room: ${roomId}`);
+
+    const message = {
+      _id: uuidv4(),
+      text: `${socket.user.name} joined the room!`,
+      notification: true,
+    };
+    io.to(roomId).emit("incoming-message", message);
   });
 
   // Handle sending an invite by userId
