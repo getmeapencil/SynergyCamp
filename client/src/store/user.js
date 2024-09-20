@@ -10,6 +10,7 @@ export const useUserStore = create((set, get) => ({
   triedTokenRefresh: false,
   setUser: (user) => set({ user }),
   logout: async () => {
+
     try {
       await createApiCall({
         method: "GET",
@@ -32,7 +33,6 @@ export const useUserStore = create((set, get) => ({
         withCredentials: true,
       });
       if (res?.accessToken) {
-        console.log("res?.access", res?.accessToken, res?.user);
         axios.defaults.headers.Authorization = "Bearer " + res?.accessToken;
         set({ authToken: res?.accessToken, isAuthenticated: true, user: res?.user });
       }
@@ -40,35 +40,16 @@ export const useUserStore = create((set, get) => ({
       console.error(err);
     }
   },
-  fetchUser: async () => {
-    try {
-      const res = await createApiCall({
-        method: "GET",
-        route: "/user",
-        withCredentials: true,
-      });
-      if (res.message === "Unauthorized") {
-        set({ user: null, isAuthenticated: false });
-        return false;
-      } else {
-        set({ user: res, isAuthenticated: true });
-        return true;
-      }
-    } catch (error) {
-      console.error(error);
-      set({ user: null, isAuthenticated: false });
-    }
-  },
   tryTokenRefresh: async () => {
     try {
-      const { accessToken } = await createApiCall({
+      if(get().isAuthenticated) return false;
+      const { accessToken ,user} = await createApiCall({
         method: "GET",
         route: "/auth/refresh",
         withCredentials: true,
       });
-      set({ accessToken, triedTokenRefresh: true });
+      set({ accessToken, triedTokenRefresh: true, isAuthenticated: true, user });
       axios.defaults.headers.Authorization = "Bearer " + accessToken;
-      get().fetchUser();
     } catch (error) {
       console.error(error);
       set({ triedTokenRefresh: true });

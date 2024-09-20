@@ -1,6 +1,7 @@
 import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useNavigate } from "react-router-dom";
 
 // JSON structure
 const navTopItems = [
@@ -47,6 +48,7 @@ const NavItem = ({ item, setActivePanel }) => {
 };
 
 export const SideNav = ({ activePanel, setActivePanel }) => {
+  const navigate = useNavigate();
   return (
     <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -70,7 +72,11 @@ export const SideNav = ({ activePanel, setActivePanel }) => {
           <NavItem item={{ label: "Settings", icon: Settings }} setActivePanel={setActivePanel} />
         )}
         <Tooltip>
-          <TooltipTrigger asChild>
+          <TooltipTrigger asChild
+            onClick={() => {
+              navigate(-1)
+            }}
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:border-destructive hover:text-destructive md:h-8 md:w-8">
               <LogOut className="h-5 w-5" />
               <span className="sr-only">Exit</span>
