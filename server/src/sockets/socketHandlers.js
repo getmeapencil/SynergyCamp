@@ -8,12 +8,6 @@ const registerSocketHandlers = (io, socket) => {
     console.log(`User ${socket.user._id} joined room: ${roomId}`);
   });
 
-  // Handle sending a message to a room
-  socket.on("send-message", (message) => {
-    io.to(message.roomId).emit("receive-message", message);
-    console.log(`Message sent to room ${message.roomId}`);
-  });
-
   // Handle sending an invite by userId
   socket.on("send-invite", async ({ emails, roomId }) => {
     const senderId = String(socket.user._id);
@@ -31,6 +25,17 @@ const registerSocketHandlers = (io, socket) => {
     if (res.failedInvites?.length) {
       io.to(senderId).emit("invite-error", { failedInvites: res.failedInvites });
     }
+  });
+
+  socket.on("send-message", async ({ message, roomId }) => {
+    const user = socket.user;
+    message.user = {
+      _id: user._id,
+      name: user.name,
+      picture: user.picture,
+    };
+
+    socket.to(roomId).emit("incoming-message", message);
   });
 
   socket.on("disconnect", () => {

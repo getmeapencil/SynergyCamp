@@ -2,6 +2,7 @@ import { useUserStore } from "@/store/user";
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useInvitesStore } from "@/store/invite";
+import { useMessagesStore } from "@/store/messages";
 import { toast } from "sonner";
 
 export const useSocket = () => {
@@ -46,6 +47,10 @@ export const useSocket = () => {
           description: error.error,
         });
       }
+    });
+
+    newSocket.on("incoming-message", (message) => {
+      useMessagesStore.getState().recieveMessage(message);
     });
 
     return newSocket;
