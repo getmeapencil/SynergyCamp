@@ -4,6 +4,8 @@ import { ProtectedRoute } from "./components/protected-route";
 import { Auth } from "@/pages/auth";
 import { Dashboard } from "@/pages/dashboard";
 import { Room } from "./pages/room";
+import { Loading } from "./pages/loading";
+// import { Error } from "./pages/error";
 import { useSocket } from "@/hooks/useSocket";
 import { useSocketStore } from "./store/socket";
 import { useUserStore } from "./store/user";
@@ -24,7 +26,7 @@ function App() {
   }, [triedTokenRefresh]);
 
   if (!triedTokenRefresh) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   return (
     <Routes>
@@ -33,7 +35,8 @@ function App() {
         <Route path="/room/:roomId" element={<Room />} />
       </Route>
       <Route path="/auth" element={<Auth />} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      {/* <Route path="/error" element={<Error />} /> */}
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }
