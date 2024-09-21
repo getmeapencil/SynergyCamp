@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/user";
 import { useInvitesStore } from "@/store/invite";
 import { useMessagesStore } from "@/store/messages";
 import { useRoomStore } from "@/store/room";
+import { playSound } from "@/utils/playSound";
 
 export const useSocket = () => {
   const authToken = useUserStore((state) => state.authToken);
@@ -59,7 +60,11 @@ export const useSocket = () => {
     });
 
     newSocket.on("incoming-message", (message) => {
+      if (message.notification?.type === "leaving-room" && message.user?._id === useUserStore.getState().user._id) {
+        return;
+      }
       useMessagesStore.getState().recieveMessage(message);
+      playSound("/message.mp3");
     });
 
     return newSocket;
