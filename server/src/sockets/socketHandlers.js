@@ -11,7 +11,12 @@ const registerSocketHandlers = (io, socket) => {
     const message = {
       _id: uuidv4(),
       text: `${socket.user.name} joined the room!`,
-      notification: true,
+      notification: {
+        type: "joining-room",
+      },
+      user: {
+        _id: socket.user._id,
+      },
     };
     io.to(roomId).emit("incoming-message", message);
   });
@@ -54,9 +59,14 @@ const registerSocketHandlers = (io, socket) => {
       const message = {
         _id: uuidv4(),
         text: `${socket.user.name} left the room!`,
-        notification: true,
+        notification: {
+          type: "leaving-room",
+        },
+        user: {
+          _id: socket.user._id,
+        },
       };
-      io.to(room).emit("incoming-message", message);
+      socket.to(room).emit("incoming-message", message);
     });
   });
 
