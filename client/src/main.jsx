@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")).render(
         <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
           <TooltipProvider>
             <App />
+            <Toaster richColors />
           </TooltipProvider>
         </ThemeProvider>
       </BrowserRouter>

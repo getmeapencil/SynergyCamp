@@ -1,8 +1,9 @@
 import express from "express";
 const router = express.Router();
-import controller from "./controller.js";
+import { googleAuth, logout, refreshToken } from "./controller.js";
 
-router.post("signup", controller.signup);
-router.post("signin", controller.login);
+router.post("/google", googleAuth);
+router.get("/logout", logout);
+router.get("/refresh", refreshToken);
 
 export default router;

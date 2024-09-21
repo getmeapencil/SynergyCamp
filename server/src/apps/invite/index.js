@@ -4,7 +4,8 @@ import checkJWT from "../../middlewares/checkAuthenticated.js";
 
 const router = express.Router();
 
-router.get("/", checkJWT, controller.getUser);
-router.post("/logout", controller.logout);
+router.get("/", checkJWT, controller.getInvites);
+router.post("/accept", checkJWT, controller.acceptInvite);
+router.post("/reject", checkJWT, controller.rejectInvite);
 
 export default router;
