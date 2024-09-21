@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Card, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash } from "lucide-react";
+import { Trash2, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export const Todo = () => {
   const [tasks, setTasks] = useState([]);
@@ -11,7 +11,7 @@ export const Todo = () => {
 
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, { id: tasks.length + 1, title: newTask, priority: "low", completed: false }]);
+      setTasks([...tasks, { id: tasks.length + 1, title: newTask, completed: false }]);
       setNewTask("");
     }
   };
@@ -28,74 +28,91 @@ export const Todo = () => {
     setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
+  const tasksRemaining = tasks.filter((task) => !task.completed);
   const tasksCompleted = tasks.filter((task) => task.completed);
 
+  const handleEnterPress = (event) => {
+    if (event.key === "Enter") {
+      addTask();
+    }
+  };
+
   return (
-    <div className="flex-1 p-4 shadow-lg">
-      <h2 className="mb-4 text-xl font-semibold">To-Do List</h2>
-      <div className="mb-4 flex">
+    <div className="flex-1">
+      <div className="flex gap-2 p-3 pb-1">
         <Input
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add new To-Do"
-          className="flex-1 rounded-md border border-gray-300 p-2"
+          placeholder="Add new tasks"
+          className="flex-1 rounded-md"
+          onKeyDown={handleEnterPress}
         />
-        <Button className="ml-2" onClick={addTask}>
-          Add
+        <Button size="icon" variant="outline" onClick={addTask}>
+          <Plus />
         </Button>
       </div>
-
-      <div className="flex flex-col gap-2">
-        {tasks
-          .filter((task) => !task.completed)
-          .map((task) => (
-            <Card key={task.id} className="flex items-center justify-between border-l-4 p-3 shadow-md">
-              <div className="flex items-center gap-4">
-                <Checkbox
-                  checked={task.completed}
-                  onCheckedChange={(e) => {
-                    if (e) {
-                      completeTask(task.id);
-                    }
-                  }}
-                />
-                <CardTitle className={`text-lg font-medium ${task.completed ? "line-through" : ""} `}>
-                  {task.title}
-                </CardTitle>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="destructive" onClick={() => deleteTask(task.id)} className="rounded-md">
-                  <Trash />
+      <Accordion type="multiple" defaultValue={["remaining"]}>
+        <AccordionItem value="remaining">
+          <AccordionTrigger className="px-4 hover:no-underline">{`${tasksRemaining.length} Remaining`}</AccordionTrigger>
+          <AccordionContent className="text-md">
+            {tasksRemaining.map((task) => (
+              <div key={task.id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
+                <div className="mt-2 flex gap-3">
+                  <Checkbox
+                    id={task.id}
+                    checked={task.completed}
+                    onCheckedChange={(e) => {
+                      if (e) {
+                        completeTask(task.id);
+                      }
+                    }}
+                    className="mt-1"
+                  />
+                  <label htmlFor={task.id} className={"font-medium"}>
+                    {task.title}
+                  </label>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
+                  <Trash2 className="h-4 w-4 text-red-500" />
                 </Button>
               </div>
-            </Card>
-          ))}
-      </div>
-
-      <div className="mt-4 flex flex-col gap-2">
-        <h2 className="mb-2 text-xl font-semibold">Completed Tasks</h2>
-        {tasksCompleted.map((task) => (
-          <Card key={task.id} className="flex items-center justify-between border-l-4 p-3 shadow-md">
-            <div className="flex items-center gap-4">
-              <Checkbox
-                checked={task.completed}
-                onCheckedChange={(e) => {
-                  console.log(e);
-                  if (!e) {
-                    undoCompleteTask(task.id);
-                  }
-                }}
-              />
-              <CardTitle className={`text-lg font-medium`}>{task.title}</CardTitle>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="destructive" onClick={() => deleteTask(task.id)} className="rounded-md">
-                <Trash />
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+            ))}
+            {!tasksRemaining.length && (
+              <div className="flex justify-between gap-3 px-4 py-4 hover:bg-background">No tasks to show here.</div>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="completed">
+          <AccordionTrigger className="px-4 hover:no-underline">{`${tasksCompleted.length} Completed`}</AccordionTrigger>
+          <AccordionContent className="text-md">
+            {tasksCompleted.map((task) => (
+              <div key={task.id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
+                <div className="mt-2 flex gap-3">
+                  <Checkbox
+                    id={task.id}
+                    checked={task.completed}
+                    onCheckedChange={(e) => {
+                      if (!e) {
+                        undoCompleteTask(task.id);
+                      }
+                    }}
+                    className="mt-1"
+                  />
+                  <label htmlFor={task.id} className={"text-md font-medium text-gray-500 line-through"}>
+                    {task.title}
+                  </label>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
+            ))}
+            {!tasksCompleted.length && (
+              <div className="flex justify-between gap-3 px-4 py-4 hover:bg-background">No tasks to show here.</div>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
