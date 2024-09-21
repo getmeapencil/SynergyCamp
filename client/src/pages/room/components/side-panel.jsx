@@ -14,7 +14,7 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
       case "Participants":
         return <Participants />;
       case "ToDo":
-        return <div className="p-4">To-Do list content goes here. <Todo/> </div>;
+        return <Todo/>
       case "Pomodoro":
         return <Pomodoro />;
       case "Calendar":
