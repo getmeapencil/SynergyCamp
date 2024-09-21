@@ -12,6 +12,7 @@ export const Todo = () => {
     { id: 2, title: "Complete Project Report", priority: "medium", dueDate: "2024-09-28", completed: false },
   ]);
   const [newTask, setNewTask] = useState("");
+  const [completedTasks, setCompletedTasks] = useState([]);
 
   const addTask = () => {
     if (newTask.trim()) {
@@ -24,7 +25,13 @@ export const Todo = () => {
   };
 
   const completeTask = (taskId) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)));
+    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, completed: true } : task)));
+    setCompletedTasks((prevCompletedTasks) => [
+      ...prevCompletedTasks,
+      ...tasks.filter((task) => task.id === taskId && !prevCompletedTasks.includes(task)),
+    ]);
+
+    deleteTask(taskId);
   };
 
   const deleteTask = (taskId) => {
@@ -63,16 +70,28 @@ export const Todo = () => {
               <Button onClick={() => completeTask(task.id)} className="rounded-md" variant="secondary">
                 ✔
               </Button>
-              <Button variant="destructive" onClick={() => deleteTask(task.id)} className="rounded-md">
+              {/* <Button variant="destructive" onClick={() => deleteTask(task.id)} className="rounded-md">
                 ✖
-              </Button>
+              </Button> */}
             </div>
           </Card>
         ))}
       </div>
 
-      {/* Progress Bar (optional, if you have progress data) */}
-      <Progress className="mt-4" value={(tasks.filter((task) => task.completed).length / tasks.length) * 100} />
+      {/* <p>Progress</p>
+      <Progress className="mt-4" value={(completeTask.length / tasks.length) * 100} /> */}
+      <div className="mt-4 flex flex-col gap-2">
+        <h2 className="mb-2 text-xl font-semibold">Completed Tasks</h2>
+        {completedTasks.map((task) => (
+          <Card key={task.id} className="flex items-center justify-between border-l-4 p-3 shadow-md">
+            <div>
+              <CardTitle className={`text-lg font-medium`}>{task.title}</CardTitle>
+
+              <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">comleted</span>
+            </div>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
