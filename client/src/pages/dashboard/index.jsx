@@ -21,7 +21,7 @@ export const Dashboard = () => {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="flex items-center justify-between border border-b p-4">
+      <div className="flex items-center justify-between border-b p-4">
         <span className="flex gap-2 text-4xl font-extrabold">
           <img
             src={theme === "light" ? LogoBlack : LogoWhite}
