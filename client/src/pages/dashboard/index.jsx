@@ -41,8 +41,8 @@ export const Dashboard = () => {
           <div className="flex flex-1 flex-col gap-4">
             <RoomsData />
             <div className="flex flex-1 gap-4">
-              <TodoOverview />
               <Streak />
+              <TodoOverview />
               <Inspiration />
             </div>
           </div>
