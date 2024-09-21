@@ -32,11 +32,11 @@ export const Inspiration = () => {
   }, []);
 
   return (
-    <Card className="h-fit w-2/4">
+    <Card className="h-fit w-1/3">
       <CardHeader>
         <CardTitle>Inspiration</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 text-5xl">
+      <CardContent className="flex flex-col gap-4 text-3xl">
         <div
           className={`transition-opacity duration-500 ${isFading && quotes.length > 1 ? "opacity-0" : "opacity-100"}`}
         >

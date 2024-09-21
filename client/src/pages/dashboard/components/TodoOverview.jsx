@@ -68,7 +68,7 @@ export const TodoOverview = () => {
   });
 
   return (
-    <Card className="h-fit w-1/4 max-w-md">
+    <Card className="h-fit w-1/3 max-w-md">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle>ToDo</CardTitle>
