@@ -85,8 +85,8 @@ export const TodoOverview = () => {
           <CardTitle>Tasks</CardTitle>
           <CardDescription>Tasks from all your rooms.</CardDescription>
         </div>
-        <div className="flex gap-2">
-          <span className="text-5xl font-semibold">{incompleteTasksNo}</span>
+        <div className="flex items-end gap-2">
+          <span className="flex justify-end text-5xl font-semibold">{incompleteTasksNo}</span>
           <div className="flex flex-col justify-end pb-1 text-sm text-muted-foreground">
             <span>{incompleteTasksNo === 1 ? "task" : "tasks"}</span>
             <span>remaining</span>
