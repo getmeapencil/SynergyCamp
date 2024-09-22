@@ -3,6 +3,18 @@ import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus,
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 // JSON structure
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
@@ -71,19 +83,35 @@ export const SideNav = ({ activePanel, setActivePanel }) => {
         ) : (
           <NavItem item={{ label: "Settings", icon: Settings }} setActivePanel={setActivePanel} />
         )}
-        <Tooltip>
-          <TooltipTrigger asChild
-            onClick={() => {
-              navigate(-1)
-            }}
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:border-destructive hover:text-destructive md:h-8 md:w-8">
-              <LogOut className="h-5 w-5" />
-              <span className="sr-only">Exit</span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent side="right">Exit</TooltipContent>
-        </Tooltip>
+        <AlertDialog>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <AlertDialogTrigger asChild>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:border-destructive hover:text-destructive md:h-8 md:w-8">
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">Exit</span>
+                </div>
+              </AlertDialogTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="right">Exit</TooltipContent>
+          </Tooltip>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Do you want to exit this room?</AlertDialogTitle>
+              <AlertDialogDescription>Exiting the room will clear the chat history.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </nav>
     </aside>
   );

@@ -5,8 +5,8 @@ import { Barchart } from "./components/Barchart";
 import { DropdownAvatar } from "./components/DropdownAvatar";
 import { CreateRoom } from "./components/CreateRoom";
 import { RoomsData } from "./components/RoomsData";
-import { TodoOverview } from "./components/TodoOverview";
-import { Inspiration } from "./components/Inspiration";
+import { TaskOverview } from "./components/TaskOverview";
+import { Note } from "./components/Note";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Streak } from "./components/Streak";
@@ -42,8 +42,8 @@ export const Dashboard = () => {
             <RoomsData />
             <div className="flex flex-1 gap-4">
               <Streak />
-              <TodoOverview />
-              <Inspiration />
+              <TaskOverview />
+              <Note />
             </div>
           </div>
         </div>
