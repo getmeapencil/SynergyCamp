@@ -6,7 +6,7 @@ import { DropdownAvatar } from "./components/DropdownAvatar";
 import { CreateRoom } from "./components/CreateRoom";
 import { RoomsData } from "./components/RoomsData";
 import { TaskOverview } from "./components/TaskOverview";
-import { Inspiration } from "./components/Inspiration";
+import { Note } from "./components/Note";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Streak } from "./components/Streak";
@@ -43,7 +43,7 @@ export const Dashboard = () => {
             <div className="flex flex-1 gap-4">
               <Streak />
               <TaskOverview />
-              <Inspiration />
+              <Note />
             </div>
           </div>
         </div>
