@@ -4,11 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useRoomStore } from "@/store/room";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import EmojiPicker from "emoji-picker-react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { useTheme } from "@/components/theme-provider";
 
 export const AdminControl = () => {
+  const { theme } = useTheme();
   const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
+  const [roomAvatar, setRoomAvatar] = useState("1f60e");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
   const roomId = useRoomStore((state) => state.currentRoom);
 
@@ -57,6 +64,11 @@ export const AdminControl = () => {
     }
   };
 
+  const handleEmojiSelect = (obj) => {
+    setRoomAvatar(obj.unified);
+    setIsEmojiPickerOpen(false);
+  };
+
   return (
     <div className="flex h-full flex-col gap-3 p-4">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -93,6 +105,34 @@ export const AdminControl = () => {
           Send Invites
         </Button>
       </form>
+      <div className="flex gap-2">
+        <Input
+          id="email-input"
+          type="text"
+          placeholder="Type email address and press Enter key"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          onBlur={addEmail}
+          autocomplete="off"
+        />
+        <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+          <PopoverTrigger asChild>
+            <Button size="icon" variant="outline" className="shrink-0">
+              <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomAvatar} size={20} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="border-0 p-0" align="end">
+            <EmojiPicker
+              theme={theme}
+              emojiStyle="native"
+              onEmojiClick={handleEmojiSelect}
+              style={{ fontFamily: '"Inter", sans-serif' }}
+              lazyLoadEmojis={true}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 };
