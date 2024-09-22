@@ -83,7 +83,7 @@ export const TaskOverview = () => {
       <CardHeader className="flex flex-row justify-between">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>Tasks</CardTitle>
-          <CardDescription>Tasks from all your rooms.</CardDescription>
+          <CardDescription>Tasks from all your rooms</CardDescription>
         </div>
         <div className="flex items-end gap-2">
           <span className="flex justify-end text-5xl font-semibold">{incompleteTasksNo}</span>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,12 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PencilIcon } from "lucide-react";
 import { useUserStore } from "@/store/user";
+import { useNoteStore } from "@/store/note";
 
-export const Inspiration = () => {
-  const [note, setNote] = useState("");
-  const [fontSize, setFontSize] = useState(16);
+export const Note = () => {
+  const user = useUserStore((state) => state.user);
+  const { note, setNote, fontSize, setFontSize } = useNoteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { user } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,10 +25,15 @@ export const Inspiration = () => {
   };
 
   const firstName = user?.name?.split(" ")[0] || "there";
+
   return (
     <Card className="h-fit w-1/3">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-2xl font-bold">Note</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="flex flex-col gap-2">
+          <CardTitle>Note</CardTitle>
+          <CardDescription>Your personalized note</CardDescription>
+        </div>
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -61,16 +66,14 @@ export const Inspiration = () => {
           </DialogContent>
         </Dialog>
       </CardHeader>
-      <CardContent>
-        <p style={{ fontSize: `${fontSize}px` }} className="text-center">
-          {note || (
-            <>
-              Hello, {firstName}
-              <br />
-              Let’s be productive today.
-            </>
-          )}
-        </p>
+      <CardContent style={{ fontSize: `${fontSize}px` }} className="whitespace-pre-line leading-tight">
+        {note || (
+          <>
+            Hello, {firstName}
+            <br />
+            Let’s be productive today.
+          </>
+        )}
       </CardContent>
     </Card>
   );
