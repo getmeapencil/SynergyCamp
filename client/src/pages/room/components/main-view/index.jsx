@@ -11,32 +11,38 @@ import { useTheme } from "@/components/theme-provider";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
+import { Companions } from "./components/Companions";
 
 const themes = [
+  {
+    label: "Companions",
+  },
+  {
+    label: "Breathe",
+  },
   {
     label: "Library",
   },
   {
     label: "Tea",
   },
-  {
-    label: "Breathe",
-  },
 ];
 
 export const MainView = () => {
   const [open, setOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState("");
+  const [currentTheme, setCurrentTheme] = useState("Companions");
   const { theme: appTheme } = useTheme();
 
   const renderTheme = () => {
     switch (currentTheme) {
+      case "Breathe":
+        return <Breathe />;
+      case "Companions":
+        return <Companions setCurrentTheme={setCurrentTheme} />;
       case "Library":
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-1.jpg')] bg-cover"></div>;
       case "Tea":
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-2.jpg')] bg-cover"></div>;
-      case "Breathe":
-        return <Breathe/>
       default:
         return null;
     }
