@@ -109,15 +109,15 @@ export const Pomodoro = () => {
     }
   }, [isTimerRunning, start]);
 
-  useEffect(() => {
-    return () => {
-      console.log("Pomodoro Component is unmounting");
-      const now = new Date();
-      const timeElapsed = now.getTime() - expiryTime.getTime();
-      const newExpiryTime = new Date(timeElapsed + expiryTime.getTime());
-      setExpiryTime(newExpiryTime);
-    };
-  }, [expiryTime, setExpiryTime]);
+  // useEffect(() => {
+  //   return () => {
+  //     console.log("Pomodoro Component is unmounting");
+  //     const now = new Date();
+  //     const timeElapsed = now.getTime() - expiryTime.getTime();
+  //     const newExpiryTime = new Date(timeElapsed + expiryTime.getTime());
+  //     setExpiryTime(newExpiryTime);
+  //   };
+  // }, [expiryTime, setExpiryTime]);
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
