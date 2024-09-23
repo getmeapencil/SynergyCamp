@@ -4,7 +4,7 @@ import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
 import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
-import { Todo } from "./Todo";
+import { Task } from "./Task";
 
 export const SidePanel = ({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
@@ -13,8 +13,8 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
         return <Chat />;
       case "Participants":
         return <Participants />;
-      case "ToDo":
-        return <Todo/>
+      case "Task":
+        return <Task />;
       case "Pomodoro":
         return <Pomodoro />;
       case "Calendar":

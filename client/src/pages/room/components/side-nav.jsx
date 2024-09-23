@@ -19,7 +19,7 @@ import {
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
   { label: "Participants", icon: SquareUserRound },
-  { label: "ToDo", icon: ListTodo },
+  { label: "Task", icon: ListTodo },
   { label: "Pomodoro", icon: Timer },
   { label: "Calendar", icon: Calendar },
 ];
