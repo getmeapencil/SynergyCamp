@@ -5,8 +5,8 @@ import { Barchart } from "./components/Barchart";
 import { DropdownAvatar } from "./components/DropdownAvatar";
 import { CreateRoom } from "./components/CreateRoom";
 import { RoomsData } from "./components/RoomsData";
-import { TodoOverview } from "./components/TodoOverview";
-import { Inspiration } from "./components/Inspiration";
+import { TaskOverview } from "./components/TaskOverview";
+import { Note } from "./components/Note";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Streak } from "./components/Streak";
@@ -21,7 +21,7 @@ export const Dashboard = () => {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="flex items-center justify-between border border-b p-4">
+      <div className="flex items-center justify-between border-b p-4">
         <span className="flex gap-2 text-4xl font-extrabold">
           <img
             src={theme === "light" ? LogoBlack : LogoWhite}
@@ -41,9 +41,9 @@ export const Dashboard = () => {
           <div className="flex flex-1 flex-col gap-4">
             <RoomsData />
             <div className="flex flex-1 gap-4">
-              <TodoOverview />
               <Streak />
-              <Inspiration />
+              <TaskOverview />
+              <Note />
             </div>
           </div>
         </div>

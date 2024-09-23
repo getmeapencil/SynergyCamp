@@ -28,8 +28,9 @@ export const Chat = () => {
   };
 
   const handleSendMessage = () => {
+    if (text.trim() === "") return;
     const message = {
-      text,
+      text: text.trim(),
     };
     sendMessage({ message, roomId });
     setText("");

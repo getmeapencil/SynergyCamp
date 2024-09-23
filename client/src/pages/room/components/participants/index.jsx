@@ -19,14 +19,16 @@ import {
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Participant = ({ member }) => {
   const [banDuration, setBanDuration] = useState("");
@@ -114,42 +116,38 @@ const Participant = ({ member }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog open={isTempBanDialogOpen} onOpenChange={() => setIsTempBanDialogOpen(!isTempBanDialogOpen)}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Do you want to temporarily ban this user?</DialogTitle>
-                <DialogDescription>
+
+          {/* Temporary Ban AlertDialog */}
+          <AlertDialog open={isTempBanDialogOpen} onOpenChange={setIsTempBanDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Do you want to temporarily ban this user?</AlertDialogTitle>
+                <AlertDialogDescription>
                   This action will restrict their access for {banDuration}. Do you want to proceed?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="secondary">Cancel</Button>
-                </DialogClose>
-                <Button type="submit" variant="destructive">
-                  Yes
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-          <Dialog open={isPermBanDialogOpen} onOpenChange={() => setIsPermBanDialogOpen(!isPermBanDialogOpen)}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Do you want to permanently ban this user? </DialogTitle>
-                <DialogDescription>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Permanent Ban AlertDialog */}
+          <AlertDialog open={isPermBanDialogOpen} onOpenChange={setIsPermBanDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Do you want to permanently ban this user?</AlertDialogTitle>
+                <AlertDialogDescription>
                   This action will revoke their access indefinitely and cannot be undone. Do you want to proceed?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="secondary">Cancel</Button>
-                </DialogClose>
-                <Button type="submit" variant="destructive">
-                  Yes
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </div>
