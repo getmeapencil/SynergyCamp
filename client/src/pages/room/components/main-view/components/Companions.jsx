@@ -35,7 +35,7 @@ export const Companions = () => {
               alt={`Companion ${index}`}
               className="absolute inset-0 h-full w-full rounded-2xl border object-cover"
             />
-            <span className="absolute bottom-2 left-2 rounded-md bg-black/75 px-2">{companion.name}</span>
+            <span className="absolute bottom-2 left-2 rounded-md bg-background/75 px-2">{companion.name}</span>
           </div>
         ))}
       </div>
