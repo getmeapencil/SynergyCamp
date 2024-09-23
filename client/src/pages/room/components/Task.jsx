@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from "lucide-react";
@@ -11,14 +11,6 @@ export const Task = () => {
       id: 1,
       text: "Make notes on C",
       room: "SynergyCamp",
-      completed: false,
-      completedAt: null,
-      createdAt: Date.now() - 1000,
-    },
-    {
-      id: 2,
-      text: "Work on backend of OB Work on backend of OB Work on backend of OB Work on backend of OB",
-      room: "StudyHub",
       completed: false,
       completedAt: null,
       createdAt: Date.now(),
