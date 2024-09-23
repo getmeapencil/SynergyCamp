@@ -4,23 +4,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useRoomStore } from "@/store/room";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import EmojiPicker from "emoji-picker-react";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Laugh } from "lucide-react";
-import EmojiPicker from "emoji-picker-react";
-
 export const AdminControl = () => {
+  const { theme } = useTheme();
   const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
+  const [roomAvatar, setRoomAvatar] = useState("1f60e");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
   const roomId = useRoomStore((state) => state.currentRoom);
   const [roomName, setRoomName] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
     roomName: "",
@@ -31,7 +32,7 @@ export const AdminControl = () => {
       if (value.length >= 100) {
         setInputWarnings((prev) => ({
           ...prev,
-          roomDescription: "Should be less than 100 characters",
+          roomDescription: "Maximum 100 characters allowed",
         }));
         setRoomDescription(value.slice(0, 100));
       } else {
@@ -46,7 +47,7 @@ export const AdminControl = () => {
       if (value.length >= 30) {
         setInputWarnings((prev) => ({
           ...prev,
-          roomName: "maximum 30 characters allowed",
+          roomName: "Maximum 30 characters allowed",
         }));
         setRoomName(value.slice(0, 30));
       } else {
@@ -103,16 +104,25 @@ export const AdminControl = () => {
     }
   };
 
+  const handleEmojiSelect = (obj) => {
+    setRoomAvatar(obj.unified);
+    setIsEmojiPickerOpen(false);
+  };
+
+  const handleRoomProfileSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>
-          <CardTitle>Invite Friends</CardTitle>
+          <CardTitle className="text-md">Invite Friends</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
-              {/* <Label htmlFor="email-input">Invite Friends</Label> */}
+              <Label htmlFor="email-input">Emails</Label>
               <Input
                 id="email-input"
                 type="text"
@@ -148,40 +158,42 @@ export const AdminControl = () => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Admin Control</CardTitle>
+          <CardTitle className="text-md">Room Profile</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-center gap-4">
-              <div className="flex-1">
-                <Label htmlFor="room-name">Room Name</Label>
-                <div className="flex items-center justify-center gap-4">
-                  <Input
-                    id="room-name"
-                    value={roomName}
-                    onChange={(e) => handleChange(e, "roomName")}
-                    maxLength={30}
-                    placeholder="Enter room name"
-                  />
-                  <Popover open={isOpen} onOpenChange={setIsOpen}>
-                    <PopoverTrigger asChild>
-                      <Button size="icon" className="p-2" variant="outline">
-                        <Laugh />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="border-0 p-0" onCloseAutoFocus={(event) => event.preventDefault()}>
-                      <EmojiPicker emojiStyle="native" style={{ fontFamily: '"Inter", sans-serif' }} />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                {inputWarnings.roomName && <p className="mt-1 p-1 text-xs text-red-400">{inputWarnings.roomName}</p>}
-                {/* <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Room Avatar" />
-                </Avatar> */}
+          <form onSubmit={handleRoomProfileSubmit} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="room-name">Name</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="room-name"
+                  className="flex-1"
+                  value={roomName}
+                  onChange={(e) => handleChange(e, "roomName")}
+                  maxLength={30}
+                  placeholder="Enter room name"
+                />
+                <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button size="icon" variant="outline" className="shrink-0">
+                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomAvatar} size={20} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="border-0 p-0" align="end">
+                    <EmojiPicker
+                      theme={theme}
+                      emojiStyle="native"
+                      onEmojiClick={handleEmojiSelect}
+                      style={{ fontFamily: '"Inter", sans-serif' }}
+                      lazyLoadEmojis={true}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
+              {inputWarnings.roomName && <p className="text-xs text-red-400">{inputWarnings.roomName}</p>}
             </div>
-            <div>
-              <Label htmlFor="room-description">Room Description</Label>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="room-description">Description</Label>
               <Textarea
                 id="room-description"
                 value={roomDescription}
@@ -192,12 +204,12 @@ export const AdminControl = () => {
                 placeholder="Enter room description"
                 rows={3}
               />
-              {inputWarnings.roomDescription && (
-                <p className="mt-1 p-1 text-xs text-red-400">{inputWarnings.roomDescription}</p>
-              )}
+              {inputWarnings.roomDescription && <p className="text-xs text-red-400">{inputWarnings.roomDescription}</p>}
             </div>
-            <Button className="w-full">Save</Button>
-          </div>
+            <Button type="submit" className="w-full">
+              Save
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>
