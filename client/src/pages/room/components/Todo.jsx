@@ -11,7 +11,7 @@ export const Todo = () => {
 
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, { id: tasks.length + 1, title: newTask, completed: false }]);
+      setTasks([...tasks, { id: tasks.length + 1, text: newTask, completed: false }]);
       setNewTask("");
     }
   };
@@ -69,7 +69,7 @@ export const Todo = () => {
                     className="mt-1"
                   />
                   <label htmlFor={task.id} className={"font-medium"}>
-                    {task.title}
+                    {task.text}
                   </label>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
@@ -99,7 +99,7 @@ export const Todo = () => {
                     className="mt-1"
                   />
                   <label htmlFor={task.id} className={"text-md font-medium text-gray-500 line-through"}>
-                    {task.title}
+                    {task.text}
                   </label>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
