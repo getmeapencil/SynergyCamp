@@ -78,13 +78,26 @@ export const updateRoom = async (req, res) => {
 };
 
 export const getRole = async (userId, roomId) => {
-  try{
+  try {
     const room = await RoomModel.findById(roomId);
-    const member= room.members.find((member) => member.userId.toString() === userId.toString());
+    const member = room.members.find((member) => member.userId.toString() === userId.toString());
     return member.role;
-  }catch(e){
+  } catch (e) {
     console.log(e);
   }
+};
 
-}
-;
+export const editRoomProfile = async (req, res) => {
+  const { roomProfile, roomId } = req.body;
+  const { roomName, roomDescription, roomAvatar } = roomProfile;
+  try {
+    const room = await RoomModel.findById(roomId);
+    room.name = roomName;
+    room.description = roomDescription;
+    room.avatar = roomAvatar;
+    const updatedRoom = await room.save();
+    res.json(updatedRoom);
+  } catch (error) {
+    console.log(error);
+  }
+};

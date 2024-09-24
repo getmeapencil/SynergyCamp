@@ -112,6 +112,7 @@ export const Chat = () => {
               emojiStyle="native"
               onEmojiClick={handleEmojiSelect}
               style={{ fontFamily: '"Inter", sans-serif' }}
+              lazyLoadEmojis={true}
             />
           </PopoverContent>
         </Popover>

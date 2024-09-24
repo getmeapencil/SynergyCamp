@@ -1,9 +1,8 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
 import { usePomodoroStore } from "./pomodoro";
-import { useUserStore } from "./user";
 
-export const useRoomStore = create((set) => ({
+export const useRoomStore = create((set, get) => ({
   rooms: [],
   currentRoom: undefined,
   createRoom: async ({ name, description, timezone }) => {
@@ -29,7 +28,7 @@ export const useRoomStore = create((set) => ({
         route: `/room/${roomId}`,
         withCredentials: true,
       });
-      set({currentRoom});
+      set({ currentRoom });
       usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
     } catch (error) {
       console.error(error);
@@ -57,6 +56,20 @@ export const useRoomStore = create((set) => ({
       set({ currentRoom: room });
     } catch (error) {
       console.error(error);
+    }
+  },
+  editRoomProfile: async ({ roomProfile, roomId }) => {
+    try {
+      const newRoom = await createApiCall({
+        method: "POST",
+        route: "/room/edit-room-profile",
+        withCredentials: true,
+        data: { roomProfile, roomId },
+      });
+      const rooms = get().rooms.filter((room) => room != newRoom._id);
+      set({ rooms: [...rooms, newRoom] });
+    } catch (error) {
+      console.error("Error updating room profile", error);
     }
   },
 }));
