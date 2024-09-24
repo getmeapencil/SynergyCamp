@@ -117,7 +117,7 @@ export const AdminControl = () => {
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-md" className="text-md">
+          <CardTitle className="text-md" >
             Invite Friends
           </CardTitle>
         </CardHeader>
