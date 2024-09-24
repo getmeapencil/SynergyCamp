@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTimer } from "react-timer-hook";
-import { Play, Pause, Square, RotateCcw } from "lucide-react";
+import { Play, Pause, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -36,29 +36,20 @@ export const Pomodoro = () => {
   const { seconds, minutes, hours, isRunning, pause, resume, restart } = useTimer({
     expiryTimestamp: expiryTime,
     autoStart: false,
-    onExpire: () => handleTimerExpire(),
+    onExpire: () => toggleSession(),
   });
-
-  // Handle Timer Expiry (when a session finishes)
-  const handleTimerExpire = () => {
-    if (isLooping) {
-      toggleSession();
-    }
-  };
 
   // Toggle between work and break sessions
   const toggleSession = async () => {
     const nextSession = isWorkSession ? breakTime : workTime;
-    console.log("toggleSession ~ nextSession:", nextSession);
     const duration = calculateDurationInSeconds(nextSession);
-    console.log("toggleSession ~ duration:", duration);
     const newExpiryTime = await new Date();
-    console.log("toggleSession ~ newExpiryTime:", newExpiryTime);
     newExpiryTime.setSeconds(newExpiryTime.getSeconds() + duration);
-    console.log("hello");
-    console.log("toggleSession ~ newExpiryTime:", newExpiryTime);
-    restart(newExpiryTime, true);
     setIsWorkSession(!isWorkSession);
+    restart(newExpiryTime, true);
+    if (!isLooping) {
+      pause();
+    }
   };
 
   // Safe division to handle progress calculation
@@ -161,14 +152,14 @@ export const Pomodoro = () => {
             </TooltipTrigger>
             <TooltipContent side="top">Stop</TooltipContent>
           </Tooltip>
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipTrigger asChild>
               <Button size="icon" onClick={toggleSession}>
                 <RotateCcw />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top">Restart</TooltipContent>
-          </Tooltip>
+          </Tooltip> */}
         </CardContent>
       </Card>
 
