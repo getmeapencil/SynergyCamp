@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -19,78 +19,17 @@ const timezones = moment.tz.names();
 export const Pomodoro = () => {
   const pomodoroType = usePomodoroStore((state) => state.pomodoroType);
   const timezone = usePomodoroStore((state) => state.timezone);
-  const remainingTime = usePomodoroStore((state) => state.remainingTime);
-  const setRemainingTime = usePomodoroStore((state) => state.setRemainingTime);
-  const isWorkPeriod = usePomodoroStore((state) => state.isWorkPeriod);
-  const setIsWorkPeriod = usePomodoroStore((state) => state.setIsWorkPeriod);
+  const pomodoro = usePomodoroStore((state) => state.pomodoro);
 
-  const pushPomodoroMessage = usePomodoroStore((state) => state.pushPomodoroMessage);
   const currentRoomUser = useUserStore((state) => state.currentRoomUser);
 
   const { editPomodoro } = useSocketEmitters();
   const { roomId } = useParams();
 
-  const [pomodoroTypeSetting, setPomodoroTypeSetting] = useState("25-5");
-  const [timezoneSetting, setTimezoneSetting] = useState(moment.tz.guess());
+  const [pomodoroTypeSetting, setPomodoroTypeSetting] = useState(pomodoroType);
+  const [timezoneSetting, setTimezoneSetting] = useState(timezone);
 
   const [open, setOpen] = useState(false);
-
-  // Define work and break durations based on pomodoro type
-  const workDuration = pomodoroType === "25-5" ? 25 * 60 : 50 * 60;
-  const breakDuration = pomodoroType === "25-5" ? 5 * 60 : 10 * 60;
-
-  // Safe division to handle progress calculation
-  const safeDivide = (numerator, denominator) => (denominator === 0 ? 0 : numerator / denominator);
-
-  const hours = 0;
-  const minutes = Math.floor(remainingTime / 60);
-  const seconds = remainingTime % 60;
-
-  const sessionDuration = isWorkPeriod ? workDuration : breakDuration;
-  const chartHourValue = 100 - safeDivide(hours, Math.min(sessionDuration / (60 * 60), 24)) * 100;
-  const chartMinuteValue = 100 - safeDivide(minutes, Math.min(sessionDuration / 60, 60)) * 100;
-  const chartSecondValue = 100 - safeDivide(seconds, Math.min(sessionDuration, 60)) * 100;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = moment().tz(timezone);
-
-      const minutes = now.minutes();
-      const seconds = now.seconds();
-      const totalSeconds = minutes * 60 + seconds;
-
-      if (isWorkPeriod) {
-        // Work period: Timer counts down from 25 or 50 minutes from start of the hour
-        const secondsLeftInWorkPeriod = workDuration - (totalSeconds % (workDuration + breakDuration));
-        if (secondsLeftInWorkPeriod < 0 || secondsLeftInWorkPeriod > workDuration) {
-          pushPomodoroMessage({ completed: "work" });
-          setIsWorkPeriod(false); // Switch to break when work period ends
-          return;
-        }
-        setRemainingTime(secondsLeftInWorkPeriod);
-      } else {
-        // Break period: Timer counts down from 5 or 10 minutes after work period
-        const secondsLeftInBreakPeriod = workDuration + breakDuration - (totalSeconds % (workDuration + breakDuration));
-        if (secondsLeftInBreakPeriod < 0 || secondsLeftInBreakPeriod > breakDuration) {
-          pushPomodoroMessage({ completed: "break" });
-          setIsWorkPeriod(true); // Switch to work when break period ends
-          return;
-        }
-        setRemainingTime(secondsLeftInBreakPeriod);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [
-    timezone,
-    isWorkPeriod,
-    pomodoroType,
-    breakDuration,
-    workDuration,
-    pushPomodoroMessage,
-    setRemainingTime,
-    setIsWorkPeriod,
-  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,36 +41,36 @@ export const Pomodoro = () => {
     <div className="flex flex-1 flex-col gap-4 p-4">
       <Card>
         <CardHeader className="p-4">
-          <CardTitle>{isWorkPeriod ? "Work" : "Break"}</CardTitle>
+          <CardTitle>{pomodoro.isWorkPeriod ? "Work" : "Break"}</CardTitle>
           <CardDescription className="flex flex-col font-mono">
             {pomodoroType === "25-5" ? <span>25:00 work, 05:00 break</span> : <span>50:00 work, 10:00 break</span>}
             <span>{timezone}</span>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2 border-t p-4">
-          <Progress className="h-10 rounded-lg [&>*]:bg-violet-500" value={chartHourValue} />
-          <Progress className="h-10 rounded-lg [&>*]:bg-emerald-500" value={chartMinuteValue} />
-          <Progress className="h-10 rounded-lg [&>*]:bg-amber-500" value={chartSecondValue} />
+          <Progress className="h-10 rounded-lg [&>*]:bg-violet-500" value={pomodoro.chartHourValue} />
+          <Progress className="h-10 rounded-lg [&>*]:bg-emerald-500" value={pomodoro.chartMinuteValue} />
+          <Progress className="h-10 rounded-lg [&>*]:bg-amber-500" value={pomodoro.chartSecondValue} />
         </CardContent>
         <CardContent className="flex border-t p-4">
           <div className="flex w-full items-center gap-2">
             <div className="grid flex-1 auto-rows-min gap-0.5">
               <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {hours}
+                {pomodoro.hours}
                 <span className="text-sm font-normal text-violet-600 dark:text-violet-400">hr</span>
               </div>
             </div>
             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
             <div className="grid flex-1 auto-rows-min gap-0.5">
               <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {minutes}
+                {pomodoro.minutes}
                 <span className="text-sm font-normal text-emerald-600 dark:text-emerald-400">min</span>
               </div>
             </div>
             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
             <div className="grid flex-1 auto-rows-min gap-0.5">
               <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {seconds}
+                {pomodoro.seconds}
                 <span className="text-sm font-normal text-amber-600 dark:text-amber-400">sec</span>
               </div>
             </div>
