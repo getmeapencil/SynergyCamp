@@ -9,18 +9,29 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePomodoroStore } from "@/store/pomodoro";
 import moment from "moment-timezone";
-
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { useParams } from "react-router-dom";
+import { useUserStore } from "@/store/user";
 const timezones = moment.tz.names();
 
 export const Pomodoro = () => {
-  const [pomodoroType, setPomodoroType] = useState("25-5");
-  const [timezone, setTimezone] = useState(moment.tz.guess());
+  const pomodoroType = usePomodoroStore((state) => state.pomodoroType);
+  const timezone = usePomodoroStore((state) => state.timezone);
+  const remainingTime = usePomodoroStore((state) => state.remainingTime);
+  const setRemainingTime = usePomodoroStore((state) => state.setRemainingTime);
+  const isWorkPeriod = usePomodoroStore((state) => state.isWorkPeriod);
+  const setIsWorkPeriod = usePomodoroStore((state) => state.setIsWorkPeriod);
+
+  const pushPomodoroMessage = usePomodoroStore((state) => state.pushPomodoroMessage);
+  const currentRoomUser = useUserStore((state) => state.currentRoomUser);
+
+  const { editPomodoro } = useSocketEmitters();
+  const { roomId } = useParams();
+
   const [pomodoroTypeSetting, setPomodoroTypeSetting] = useState("25-5");
   const [timezoneSetting, setTimezoneSetting] = useState(moment.tz.guess());
-
-  const [remainingTime, setRemainingTime] = useState(0);
-  const [isWorkPeriod, setIsWorkPeriod] = useState(true);
 
   const [open, setOpen] = useState(false);
 
@@ -44,40 +55,47 @@ export const Pomodoro = () => {
     const interval = setInterval(() => {
       const now = moment().tz(timezone);
 
-      const hours = now.hours();
       const minutes = now.minutes();
       const seconds = now.seconds();
       const totalSeconds = minutes * 60 + seconds;
-      console.log(hours, minutes, seconds, timezone);
 
       if (isWorkPeriod) {
         // Work period: Timer counts down from 25 or 50 minutes from start of the hour
         const secondsLeftInWorkPeriod = workDuration - (totalSeconds % (workDuration + breakDuration));
-        setRemainingTime(secondsLeftInWorkPeriod);
-        if (secondsLeftInWorkPeriod <= 0 || secondsLeftInWorkPeriod > workDuration) {
+        if (secondsLeftInWorkPeriod < 0 || secondsLeftInWorkPeriod > workDuration) {
+          pushPomodoroMessage({ completed: "work" });
           setIsWorkPeriod(false); // Switch to break when work period ends
+          return;
         }
+        setRemainingTime(secondsLeftInWorkPeriod);
       } else {
         // Break period: Timer counts down from 5 or 10 minutes after work period
         const secondsLeftInBreakPeriod = workDuration + breakDuration - (totalSeconds % (workDuration + breakDuration));
-        setRemainingTime(secondsLeftInBreakPeriod);
-        if (secondsLeftInBreakPeriod <= 0 || secondsLeftInBreakPeriod > breakDuration) {
+        if (secondsLeftInBreakPeriod < 0 || secondsLeftInBreakPeriod > breakDuration) {
+          pushPomodoroMessage({ completed: "break" });
           setIsWorkPeriod(true); // Switch to work when break period ends
+          return;
         }
+        setRemainingTime(secondsLeftInBreakPeriod);
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timezone, isWorkPeriod, pomodoroType, breakDuration, workDuration]);
+  }, [
+    timezone,
+    isWorkPeriod,
+    pomodoroType,
+    breakDuration,
+    workDuration,
+    pushPomodoroMessage,
+    setRemainingTime,
+    setIsWorkPeriod,
+  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!timezones.includes(timezoneSetting)) return;
-
-    setPomodoroType(pomodoroTypeSetting);
-    setTimezone(timezoneSetting);
-    console.log("Submitted:", { pomodoroType, timezone });
-    // Here you would typically send this data to your backend or perform other actions
+    editPomodoro({ pomodoroType: pomodoroTypeSetting, timezone: timezoneSetting, roomId: roomId });
   };
 
   return (
@@ -85,8 +103,9 @@ export const Pomodoro = () => {
       <Card>
         <CardHeader className="p-4">
           <CardTitle>{isWorkPeriod ? "Work" : "Break"}</CardTitle>
-          <CardDescription className="flex flex-wrap gap-1 font-mono">
+          <CardDescription className="flex flex-col font-mono">
             {pomodoroType === "25-5" ? <span>25:00 work, 05:00 break</span> : <span>50:00 work, 10:00 break</span>}
+            <span>{timezone}</span>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2 border-t p-4">
@@ -120,66 +139,68 @@ export const Pomodoro = () => {
         </CardContent>
       </Card>
 
-      <Card className="mx-auto w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="pomodoro-type">Pomodoro Type</Label>
-              <Select value={pomodoroTypeSetting} onValueChange={setPomodoroTypeSetting}>
-                <SelectTrigger id="pomodoro-type">
-                  <SelectValue placeholder="Select a Pomodoro type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="25-5">25 min work, 5 min break</SelectItem>
-                  <SelectItem value="50-10">50 min work, 10 min break</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
-                    {timezoneSetting ? timezoneSetting : "Select timezone..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
-                  <Command>
-                    <CommandInput placeholder="Search timezone..." />
-                    <CommandList>
-                      <CommandGroup>
-                        {timezones.map((tz) => (
-                          <CommandItem
-                            key={tz}
-                            value={tz}
-                            onSelect={(currentValue) => {
-                              setTimezoneSetting(currentValue);
-                              setOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn("mr-2 h-4 w-4", timezoneSetting === tz ? "opacity-100" : "opacity-0")}
-                            />
-                            {tz}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                      <CommandEmpty>No timezone found.</CommandEmpty>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
+      {currentRoomUser.role === "admin" && (
+        <Card className="mx-auto w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="pomodoro-type">Pomodoro Type</Label>
+                <Select value={pomodoroTypeSetting} onValueChange={setPomodoroTypeSetting}>
+                  <SelectTrigger id="pomodoro-type">
+                    <SelectValue placeholder="Select a Pomodoro type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="25-5">25 min work, 5 min break</SelectItem>
+                    <SelectItem value="50-10">50 min work, 10 min break</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+                      {timezoneSetting ? timezoneSetting : "Select timezone..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput placeholder="Search timezone..." />
+                      <CommandList>
+                        <CommandGroup>
+                          {timezones.map((tz) => (
+                            <CommandItem
+                              key={tz}
+                              value={tz}
+                              onSelect={(currentValue) => {
+                                setTimezoneSetting(currentValue);
+                                setOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn("mr-2 h-4 w-4", timezoneSetting === tz ? "opacity-100" : "opacity-0")}
+                              />
+                              {tz}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                        <CommandEmpty>No timezone found.</CommandEmpty>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            <Button type="submit" className="w-full">
-              Save Settings
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <Button type="submit" className="w-full">
+                Save Settings
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
