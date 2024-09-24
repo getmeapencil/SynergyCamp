@@ -1,28 +1,35 @@
 import { create } from "zustand";
+import moment from "moment-timezone";
+import { useMessagesStore } from "./messages";
+import { v4 as uuidv4 } from "uuid";
+import { playSound } from "@/utils/playSound";
 
 export const usePomodoroStore = create((set) => ({
-  workTime: { hours: 0, minutes: 10, seconds: 0 },
-  setWorkTime: (workTime) => {
-    set({ workTime });
+  pomodoroType: "25-5",
+  timezone: moment.tz.guess(),
+  setPomodoro: ({ pomodoroType, timezone }) => {
+    set({ pomodoroType });
+    set({ timezone });
   },
-  breakTime: { hours: 0, minutes: 0, seconds: 10 },
-  setBreakTime: (breakTime) => {
-    set({ breakTime });
+  remainingTime: 0,
+  isWorkPeriod: true,
+  setRemainingTime: (remainingTime) => {
+    set({ remainingTime });
   },
-  isLooping: false,
-  setIsLooping: (isLooping) => {
-    set({ isLooping });
+  setIsWorkPeriod: (isWorkPeriod) => {
+    set({ isWorkPeriod });
   },
-  isWorkSession: true,
-  setIsWorkSession: (isWorkSession) => {
-    set({ isWorkSession });
-  },
-  expiryTime: null,
-  setExpiryTime: (expiryTime) => {
-    set({ expiryTime });
-  },
-  isTimerRunning: false,
-  setIsTimerRunning: (isTimerRunning) => {
-    set({ isTimerRunning });
+  pushPomodoroMessage: ({ completed }) => {
+    const text = completed === "work" ? "Work session completed. Take a break!" : "Break is over. Get back to work!";
+    const sound = completed === "work" ? "/pomodoro-complete-work.wav" : "/pomodoro-complete-break.wav";
+    const message = {
+      _id: uuidv4(),
+      text: text,
+      notification: {
+        type: "pomodoro-alert",
+      },
+    };
+    useMessagesStore.getState().pushMessage(message);
+    playSound(sound);
   },
 }));
