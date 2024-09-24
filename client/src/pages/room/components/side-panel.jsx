@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
@@ -7,13 +6,15 @@ import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Todo } from "./Todo";
 
-export const SidePanel = memo(({ activePanel, setActivePanel }) => {
+export const SidePanel = ({ activePanel, setActivePanel,members }) => {
   const renderPanelContent = () => {
     switch (activePanel) {
       case "Chat":
         return <Chat />;
       case "Participants":
-        return <Participants />;
+        return <Participants
+        allmembers={members}
+        />;
       case "ToDo":
         return <Todo />;
       case "Pomodoro":
@@ -42,5 +43,5 @@ export const SidePanel = memo(({ activePanel, setActivePanel }) => {
       <div className="flex flex-1 flex-col overflow-auto">{renderPanelContent()}</div>
     </div>
   );
-});
-SidePanel.displayName = "SidePanel";
+};
+

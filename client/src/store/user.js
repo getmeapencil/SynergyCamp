@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const useUserStore = create((set, get) => ({
   user: null,
-  currentRoomUser: null,
   isAuthenticated: false,
   authToken: null,
   users: [],
@@ -55,9 +54,5 @@ export const useUserStore = create((set, get) => ({
       set({ triedTokenRefresh: true });
     }
   },
-  setCurrentRoomUser: (currentRoom) => {
-    const userId = get().user._id;
-    const currentRoomUser = currentRoom.members.find((member) => member.userId === userId);
-    set({ currentRoomUser });
-  },
+ 
 }));

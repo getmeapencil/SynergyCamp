@@ -7,6 +7,7 @@ import { useMessagesStore } from "@/store/messages";
 import { useRoomStore } from "@/store/room";
 import { usePomodoroStore } from "@/store/pomodoro";
 import { playSound } from "@/utils/playSound";
+import { useMembersStore } from "@/store/members";
 
 export const useSocket = () => {
   const authToken = useUserStore((state) => state.authToken);
@@ -25,6 +26,9 @@ export const useSocket = () => {
       if (roomId) {
         newSocket.emit("join-room", { roomId });
       }
+    });
+    newSocket.on("user-status", (users) => {
+      useMembersStore.getState().setMembers(users);
     });
 
     newSocket.on("disconnect", (reason) => {

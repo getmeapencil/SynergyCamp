@@ -70,7 +70,7 @@ export const AdminControl = () => {
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             onBlur={addEmail}
-            autocomplete="off"
+            autoComplete="off"
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
         </div>

@@ -29,8 +29,7 @@ export const useRoomStore = create((set) => ({
         route: `/room/${roomId}`,
         withCredentials: true,
       });
-      set({ currentRoom });
-      useUserStore.getState().setCurrentRoomUser(currentRoom);
+      set({currentRoom});
       usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
     } catch (error) {
       console.error(error);
@@ -44,6 +43,18 @@ export const useRoomStore = create((set) => ({
         withCredentials: true,
       });
       set({ rooms });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  getRoom: async (roomId) => {
+    try {
+      const room = await createApiCall({
+        method: "GET",
+        route: `/room/${roomId}`,
+        withCredentials: true,
+      });
+      set({ currentRoom: room });
     } catch (error) {
       console.error(error);
     }
