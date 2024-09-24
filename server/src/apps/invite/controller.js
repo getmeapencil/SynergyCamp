@@ -9,8 +9,9 @@ export const invite = async ({ emails, roomId, senderId }) => {
 
     for (let email of emails) {
       const user = await UserModel.findOne({ email });
+      console.log("user",user)
       const invite = await InviteModel.findOne({ roomId, invitee: user?._id });
-
+      console.log("I am invite",invite)
       if (user && !invite) {
         const invite = new InviteModel({
           invitee: user._id,

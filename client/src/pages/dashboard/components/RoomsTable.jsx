@@ -9,12 +9,14 @@ import { useRoomStore } from "@/store/room";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms } = useRoomStore();
+  const { rooms,allUsers } = useRoomStore();
   const { user } = useUserStore();
   const [filteredData, setFilteredData] = useState([]);
   const userId = user?._id;
+  const {joinRoom}=useSocketEmitters();
   const navigate = useNavigate();
   useEffect(() => {
     if (filterRole?.length === 0) {
@@ -25,6 +27,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
       });
     }
   }, [filterRole]);
+
   useEffect(() => {
     useRoomStore.getState().getRooms();
   }, []);
@@ -71,7 +74,8 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       <TableCell className="text-center sm:table-cell">
                         <Button
                           onClick={() => {
-                            window.location.href = `/room/${data._id}`;
+                            navigate(`/room/${data._id}`);
+                            joinRoom({roomId:data._id});
                           }}
                         >
                           Enter Room

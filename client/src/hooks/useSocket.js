@@ -6,6 +6,7 @@ import { useInvitesStore } from "@/store/invite";
 import { useMessagesStore } from "@/store/messages";
 import { useRoomStore } from "@/store/room";
 import { playSound } from "@/utils/playSound";
+import { useMembersStore } from "@/store/members";
 
 export const useSocket = () => {
   const authToken = useUserStore((state) => state.authToken);
@@ -20,10 +21,14 @@ export const useSocket = () => {
     // Handle connection state
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
-      const roomId = useRoomStore.getState().currentRoom;
+      const room = useRoomStore.getState().currentRoom;
+      const roomId=room._id
       if (roomId) {
         newSocket.emit("join-room", { roomId });
       }
+    });
+    newSocket.on("user-status", (users) => {
+      useMembersStore.getState().setMembers(users);
     });
 
     newSocket.on("disconnect", (reason) => {
@@ -36,7 +41,8 @@ export const useSocket = () => {
 
     newSocket.on("reconnect", () => {
       console.log("Reconnected to socket server");
-      const roomId = useRoomStore.getState().currentRoom;
+      const room = useRoomStore.getState().currentRoom;
+      const roomId=room._id
       if (roomId) {
         newSocket.emit("join-room", { roomId });
       }

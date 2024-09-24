@@ -6,13 +6,15 @@ import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Todo } from "./Todo";
 
-export const SidePanel = ({ activePanel, setActivePanel }) => {
+export const SidePanel = ({ activePanel, setActivePanel,members }) => {
   const renderPanelContent = () => {
     switch (activePanel) {
       case "Chat":
         return <Chat />;
       case "Participants":
-        return <Participants />;
+        return <Participants
+        allmembers={members}
+        />;
       case "ToDo":
         return <Todo/>
       case "Pomodoro":

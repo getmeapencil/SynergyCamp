@@ -4,6 +4,7 @@ import { createApiCall } from "@/utils/createApiCall";
 export const useRoomStore = create((set) => ({
   rooms: [],
   currentRoom: undefined,
+
   createRoom: async (name, description) => {
     try {
       const room = await createApiCall({
@@ -21,6 +22,7 @@ export const useRoomStore = create((set) => ({
   setCurrentRoom: (roomId) => {
     set({ currentRoom: roomId });
   },
+
   getRooms: async () => {
     try {
       const rooms = await createApiCall({
@@ -29,6 +31,18 @@ export const useRoomStore = create((set) => ({
         withCredentials: true,
       });
       set({ rooms });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  getRoom: async (roomId) => {
+    try {
+      const room = await createApiCall({
+        method: "GET",
+        route: `/room/${roomId}`,
+        withCredentials: true,
+      });
+      set({ currentRoom: room });
     } catch (error) {
       console.error(error);
     }
