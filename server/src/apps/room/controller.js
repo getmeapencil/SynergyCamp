@@ -27,3 +27,19 @@ export const getRooms = async (req, res) => {
     console.log(e);
   }
 };
+
+export const editRoomProfile = async (req, res) => {
+  const { roomProfile, currentRoom } = req.body;
+  const { roomName, roomDescription, Avatar } = roomProfile;
+  try {
+    const updateRoom = await RoomModel.findById(currentRoom);
+    updateRoom.name = roomName;
+    updateRoom.description = roomDescription;
+    updateRoom.Avatar = Avatar;
+    const updatedRoom = await updateRoom.save();
+    res.json(updatedRoom);
+    console.log(updatedRoom);
+  } catch (error) {
+    console.log(error);
+  }
+};

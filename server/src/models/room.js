@@ -32,6 +32,10 @@ const RoomSchema = new mongoose.Schema({
     default: "", // Optional room description
     trim: true,
   },
+  Avatar: {
+    type: String,
+    default: "", // Default room avatar
+  },
   temporaryBanned: {
     user: {
       type: [mongoose.Schema.Types.ObjectId],

@@ -20,8 +20,6 @@ export const AdminControl = () => {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
   const roomId = useRoomStore((state) => state.currentRoom);
-  const [roomName, setRoomName] = useState("");
-  const [roomDescription, setRoomDescription] = useState("");
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
     roomName: "",
@@ -32,15 +30,22 @@ export const AdminControl = () => {
       if (value.length >= 100) {
         setInputWarnings((prev) => ({
           ...prev,
+
           roomDescription: "Maximum 100 characters allowed",
         }));
-        setRoomDescription(value.slice(0, 100));
+        setRoomProfile((prev) => ({
+          ...prev,
+          roomDescription: e.target.value.slice(0, 100),
+        }));
       } else {
         setInputWarnings((prev) => ({
           ...prev,
           roomDescription: "",
         }));
-        setRoomDescription(value);
+        setRoomProfile((prev) => ({
+          ...prev,
+          roomDescription: e.target.value,
+        }));
       }
     }
     if (type === "roomName") {
@@ -49,13 +54,19 @@ export const AdminControl = () => {
           ...prev,
           roomName: "Maximum 30 characters allowed",
         }));
-        setRoomName(value.slice(0, 30));
+        setRoomProfile((prev) => ({
+          ...prev,
+          roomName: e.target.value.slice(0, 30),
+        }));
       } else {
         setInputWarnings((prev) => ({
           ...prev,
           roomName: "",
         }));
-        setRoomName(value);
+        setRoomProfile((prev) => ({
+          ...prev,
+          roomName: e.target.value,
+        }));
       }
     }
   };
@@ -107,19 +118,32 @@ export const AdminControl = () => {
   const handleEmojiSelect = (obj) => {
     setRoomAvatar(obj.unified);
     setIsEmojiPickerOpen(false);
+    setRoomProfile((prev) => ({
+      ...prev,
+      Avatar: obj.unified,
+    }));
   };
 
   const handleRoomProfileSubmit = (e) => {
     e.preventDefault();
   };
 
+  const [roomProfile, setRoomProfile] = useState({
+    roomName: "",
+    roomDescription: "",
+    Avatar: "1f601",
+  });
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+
+  const handleRoomProfile = async () => {
+    await useRoomStore.getState().editRoomProfile(roomProfile, currentRoom);
+  };
+
   return (
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-md" >
-            Invite Friends
-          </CardTitle>
+          <CardTitle className="text-md">Invite Friends</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -170,8 +194,10 @@ export const AdminControl = () => {
                 <Input
                   id="room-name"
                   className="flex-1"
-                  value={roomName}
-                  onChange={(e) => handleChange(e, "roomName")}
+                  value={roomProfile.roomName}
+                  onChange={(e) => {
+                    handleChange(e, "roomName");
+                  }}
                   maxLength={30}
                   placeholder="Enter room name"
                 />
@@ -198,7 +224,7 @@ export const AdminControl = () => {
               <Label htmlFor="room-description">Description</Label>
               <Textarea
                 id="room-description"
-                value={roomDescription}
+                value={roomProfile.roomDescription}
                 onChange={(e) => {
                   handleChange(e, "roomDescription");
                 }}
@@ -208,7 +234,7 @@ export const AdminControl = () => {
               />
               {inputWarnings.roomDescription && <p className="text-xs text-red-400">{inputWarnings.roomDescription}</p>}
             </div>
-            <Button type="submit" className="w-full">
+            <Button onClick={handleRoomProfile} type="submit" className="w-full">
               Save
             </Button>
           </form>
