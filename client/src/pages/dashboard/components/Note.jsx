@@ -26,6 +26,14 @@ export const Note = () => {
 
   const firstName = user?.name?.split(" ")[0] || "there";
 
+  const gradientText = (text) => {
+    return (
+      <span className="animate-gradient-x bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+        {text}
+      </span>
+    );
+  };
+
   return (
     <Card className="h-fit w-1/3">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -69,9 +77,9 @@ export const Note = () => {
       <CardContent style={{ fontSize: `${fontSize}px` }} className="whitespace-pre-line leading-tight">
         {note || (
           <>
-            Hello, {firstName}
+            <strong className="font-bold">{gradientText(`Hello, ${firstName}`)}</strong>
             <br />
-            Let’s be productive today.
+            Let&apos;s be productive today.
           </>
         )}
       </CardContent>
