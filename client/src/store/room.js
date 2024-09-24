@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
 import { usePomodoroStore } from "./pomodoro";
+import { toast } from "sonner";
 
 export const useRoomStore = create((set, get) => ({
   rooms: [],
@@ -68,8 +69,10 @@ export const useRoomStore = create((set, get) => ({
       });
       const rooms = get().rooms.filter((room) => room != newRoom._id);
       set({ rooms: [...rooms, newRoom] });
+      toast.success("Room profile updated!");
     } catch (error) {
       console.error("Error updating room profile", error);
+      toast.error("Failed to update room profile!");
     }
   },
 }));
