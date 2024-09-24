@@ -31,7 +31,7 @@ export const AdminControl = () => {
       if (value.length >= 100) {
         setInputWarnings((prev) => ({
           ...prev,
-          roomDescription: "Should be less than 100 characters",
+          roomDescription: "Maximum 100 characters allowed",
         }));
         setRoomDescription(value.slice(0, 100));
       } else {
@@ -46,7 +46,7 @@ export const AdminControl = () => {
       if (value.length >= 30) {
         setInputWarnings((prev) => ({
           ...prev,
-          roomName: "maximum 30 characters allowed",
+          roomName: "Maximum 30 characters allowed",
         }));
         setRoomName(value.slice(0, 30));
       } else {
@@ -107,7 +107,7 @@ export const AdminControl = () => {
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>
-          <CardTitle>Invite Friends</CardTitle>
+          <CardTitle className='text-md'>Invite Friends</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -148,7 +148,7 @@ export const AdminControl = () => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Admin Control</CardTitle>
+          <CardTitle className='text-md'>Room Profile</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
