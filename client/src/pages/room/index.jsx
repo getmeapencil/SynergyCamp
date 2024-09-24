@@ -46,7 +46,6 @@ export const Room = () => {
     currentRoom?.members?.map((member) => {
       return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
     }) || [];
-    console.log("memebrs",members,currentRoom)
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
       {blocker.state === "blocked" ? (
