@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const Participant = ({ member }) => {
+  
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
@@ -154,19 +155,16 @@ const Participant = ({ member }) => {
   );
 };
 
-export const Participants = () => {
-  const members = useMembersStore((state) => state.members);
-
-  const onlineMembers = members.filter((member) => member.online);
-  const offlineMembers = members.filter((member) => !member.online);
-
+export const Participants = ({allmembers}) => {
+  const { members } = useMembersStore();
+  const offlineMembers= allmembers.filter((member) => !members.find((m) => m._id === member._id));
   return (
     <div className="flex h-full flex-col gap-3">
       <Accordion type="multiple" defaultValue={["online", "offline"]}>
         <AccordionItem value="online">
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
-            {onlineMembers.map((member) => (
+            {members.map((member) => (
               <Participant key={member._id} member={member} />
             ))}
           </AccordionContent>

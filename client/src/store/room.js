@@ -1,18 +1,18 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
+import { usePomodoroStore } from "./pomodoro";
 
 export const useRoomStore = create((set, get) => ({
   rooms: [],
   currentRoom: undefined,
-  createRoom: async (name, description) => {
+  createRoom: async ({ name, description, timezone }) => {
     try {
       const room = await createApiCall({
         method: "POST",
         route: "/room",
-        data: { name, description },
+        data: { name, description, timezone },
         withCredentials: true,
       });
-      console.log("Room Created:", room); // Add this line to check if room is returned properly
       set((state) => ({ rooms: [...state.rooms, room] }));
     } catch (error) {
       console.error("Error creating room:", error); // Add this line to catch and display errors
@@ -20,6 +20,19 @@ export const useRoomStore = create((set, get) => ({
   },
   setCurrentRoom: (roomId) => {
     set({ currentRoom: roomId });
+  },
+  getCurrentRoom: async (roomId) => {
+    try {
+      const currentRoom = await createApiCall({
+        method: "GET",
+        route: `/room/${roomId}`,
+        withCredentials: true,
+      });
+      set({ currentRoom });
+      usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
+    } catch (error) {
+      console.error(error);
+    }
   },
   getRooms: async () => {
     try {
@@ -33,7 +46,18 @@ export const useRoomStore = create((set, get) => ({
       console.error(error);
     }
   },
-
+  getRoom: async (roomId) => {
+    try {
+      const room = await createApiCall({
+        method: "GET",
+        route: `/room/${roomId}`,
+        withCredentials: true,
+      });
+      set({ currentRoom: room });
+    } catch (error) {
+      console.error(error);
+    }
+  },
   editRoomProfile: async ({ roomProfile, roomId }) => {
     try {
       const newRoom = await createApiCall({
@@ -42,10 +66,8 @@ export const useRoomStore = create((set, get) => ({
         withCredentials: true,
         data: { roomProfile, roomId },
       });
-      console.log(newRoom);
-      const rooms = get().rooms;
-      const newRooms = rooms.filter((room) => room != newRoom._id);
-      set({ rooms: [...newRooms, newRoom] });
+      const rooms = get().rooms.filter((room) => room != newRoom._id);
+      set({ rooms: [...rooms, newRoom] });
     } catch (error) {
       console.error("Error updating room profile", error);
     }

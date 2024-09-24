@@ -5,6 +5,7 @@ import Typewriter from "typewriter-effect";
 import { useRoomStore } from "@/store/room";
 import { useState } from "react";
 import { toast } from "sonner";
+import moment from "moment-timezone";
 
 export const CreateRoom = () => {
   const [name, setName] = useState("");
@@ -14,7 +15,7 @@ export const CreateRoom = () => {
       toast.error("Room name can't be empty or whitespace!");
       return;
     }
-    await useRoomStore.getState().createRoom(name.trim(), "");
+    await useRoomStore.getState().createRoom({ name: name.trim(), description: "", timezone: moment.tz.guess() });
   };
 
   return (
