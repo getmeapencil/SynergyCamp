@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -59,8 +60,9 @@ const NavItem = ({ item, setActivePanel }) => {
   );
 };
 
-export const SideNav = ({ activePanel, setActivePanel }) => {
+export const SideNav = memo(({ activePanel, setActivePanel }) => {
   const navigate = useNavigate();
+
   return (
     <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -115,4 +117,5 @@ export const SideNav = ({ activePanel, setActivePanel }) => {
       </nav>
     </aside>
   );
-};
+});
+SideNav.displayName = "SideNav";

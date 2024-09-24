@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 
 import { Check, ChevronsUpDown } from "lucide-react";
 
@@ -28,7 +28,7 @@ const themes = [
   },
 ];
 
-export const MainView = () => {
+export const MainView = memo(() => {
   const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("Companions");
   const { theme: appTheme } = useTheme();
@@ -96,4 +96,5 @@ export const MainView = () => {
       {renderTheme()}
     </div>
   );
-};
+});
+MainView.displayName = "MainView";
