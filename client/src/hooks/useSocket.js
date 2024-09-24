@@ -5,6 +5,7 @@ import { useUserStore } from "@/store/user";
 import { useInvitesStore } from "@/store/invite";
 import { useMessagesStore } from "@/store/messages";
 import { useRoomStore } from "@/store/room";
+import { usePomodoroStore } from "@/store/pomodoro";
 import { playSound } from "@/utils/playSound";
 
 export const useSocket = () => {
@@ -20,7 +21,7 @@ export const useSocket = () => {
     // Handle connection state
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
-      const roomId = useRoomStore.getState().currentRoom;
+      const roomId = useRoomStore.getState().currentRoom?._id;
       if (roomId) {
         newSocket.emit("join-room", { roomId });
       }
@@ -36,7 +37,7 @@ export const useSocket = () => {
 
     newSocket.on("reconnect", () => {
       console.log("Reconnected to socket server");
-      const roomId = useRoomStore.getState().currentRoom;
+      const roomId = useRoomStore.getState().currentRoom?._id;
       if (roomId) {
         newSocket.emit("join-room", { roomId });
       }
@@ -65,6 +66,10 @@ export const useSocket = () => {
       }
       useMessagesStore.getState().recieveMessage(message);
       playSound("/message.mp3");
+    });
+
+    newSocket.on("edit-pomodoro", ({ pomodoroType, timezone }) => {
+      usePomodoroStore.getState().setPomodoro({ pomodoroType, timezone });
     });
 
     return newSocket;
