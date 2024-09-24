@@ -62,7 +62,7 @@ export const useRoomStore = create((set, get) => ({
     try {
       const newRoom = await createApiCall({
         method: "POST",
-        route: "/room/edit-room",
+        route: "/room/edit-room-profile",
         withCredentials: true,
         data: { roomProfile, roomId },
       });
