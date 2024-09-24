@@ -5,6 +5,7 @@ import { Chat } from "./chat";
 import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Task } from "./Task";
+import { Settings } from "./settings";
 
 export const SidePanel = ({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
@@ -22,7 +23,7 @@ export const SidePanel = ({ activePanel, setActivePanel }) => {
       case "Admin Control":
         return <AdminControl />;
       case "Settings":
-        return <div className="p-4">Settings content goes here.</div>;
+        return <Settings />;
       default:
         return null;
     }
