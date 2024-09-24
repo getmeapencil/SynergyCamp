@@ -4,7 +4,7 @@ export const useMembersStore = create((set, get) => ({
   members: [],
   setMembers: (members) => set({ members }),
   addMember: (member) => {
-    if (get().members.find((m) => m._id === member._id)) return;
+    if (get().members?.find((m) => m._id === member._id)) return;
     set((state) => ({ members: [...state.members, member] }));
   },
   removeMember: (id) => set((state) => ({ members: state.members.filter((member) => member.userId !== id) })),
