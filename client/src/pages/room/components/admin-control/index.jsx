@@ -10,20 +10,71 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { useParams } from "react-router-dom";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
+  const { roomId } = useParams();
   const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
-  const [roomAvatar, setRoomAvatar] = useState("1f60e");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
-  const roomId = useRoomStore((state) => state.currentRoom);
+  const [roomProfile, setRoomProfile] = useState({
+    roomName: "",
+    roomDescription: "",
+    roomAvatar: "1f601",
+  });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
     roomName: "",
   });
+
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setError(null);
+  };
+
+  const handleInputKeyDown = (e) => {
+    if (["Enter", "Tab", ","].includes(e.key)) {
+      e.preventDefault();
+      addEmail();
+    }
+  };
+
+  const addEmail = () => {
+    const trimmedEmail = inputValue.trim();
+    if (trimmedEmail && validateEmail(trimmedEmail)) {
+      if (!emails.includes(trimmedEmail)) {
+        setEmails([...emails, trimmedEmail]);
+        setInputValue("");
+      } else {
+        setError("This email has already been added.");
+      }
+    } else if (trimmedEmail) {
+      setError("Please enter a valid email address.");
+    }
+  };
+
+  const removeEmail = (emailToRemove) => {
+    setEmails(emails.filter((email) => email !== emailToRemove));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (emails.length > 0) {
+      sendInvites({ emails, roomId });
+      setEmails([]);
+    } else {
+      setError("Please add at least one valid email address.");
+    }
+  };
+
   const handleChange = (e, type) => {
     const value = e.target.value;
     if (type === "roomDescription") {
@@ -70,73 +121,18 @@ export const AdminControl = () => {
       }
     }
   };
-  const validateEmail = (email) => {
-    const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-    setError(null);
-  };
-
-  const handleInputKeyDown = (e) => {
-    if (["Enter", "Tab", ","].includes(e.key)) {
-      e.preventDefault();
-      addEmail();
-    }
-  };
-
-  const addEmail = () => {
-    const trimmedEmail = inputValue.trim();
-    if (trimmedEmail && validateEmail(trimmedEmail)) {
-      if (!emails.includes(trimmedEmail)) {
-        setEmails([...emails, trimmedEmail]);
-        setInputValue("");
-      } else {
-        setError("This email has already been added.");
-      }
-    } else if (trimmedEmail) {
-      setError("Please enter a valid email address.");
-    }
-  };
-
-  const removeEmail = (emailToRemove) => {
-    setEmails(emails.filter((email) => email !== emailToRemove));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (emails.length > 0) {
-      sendInvites({ emails, roomId });
-      setEmails([]);
-    } else {
-      setError("Please add at least one valid email address.");
-    }
-  };
 
   const handleEmojiSelect = (obj) => {
-    setRoomAvatar(obj.unified);
     setIsEmojiPickerOpen(false);
     setRoomProfile((prev) => ({
       ...prev,
-      Avatar: obj.unified,
+      roomAvatar: obj.unified,
     }));
   };
 
-  const handleRoomProfileSubmit = (e) => {
+  const handleRoomProfileSubmit = async (e) => {
     e.preventDefault();
-  };
-
-  const [roomProfile, setRoomProfile] = useState({
-    roomName: "",
-    roomDescription: "",
-    Avatar: "1f601",
-  });
-  const currentRoom = useRoomStore((state) => state.currentRoom);
-
-  const handleRoomProfile = async () => {
-    await useRoomStore.getState().editRoomProfile(roomProfile, currentRoom);
+    await useRoomStore.getState().editRoomProfile({ roomProfile, roomId });
   };
 
   return (
@@ -204,7 +200,7 @@ export const AdminControl = () => {
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button size="icon" variant="outline" className="shrink-0">
-                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomAvatar} size={20} />
+                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomProfile.roomAvatar} size={20} />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="border-0 p-0" align="end">
@@ -234,7 +230,7 @@ export const AdminControl = () => {
               />
               {inputWarnings.roomDescription && <p className="text-xs text-red-400">{inputWarnings.roomDescription}</p>}
             </div>
-            <Button onClick={handleRoomProfile} type="submit" className="w-full">
+            <Button type="submit" className="w-full">
               Save
             </Button>
           </form>

@@ -29,16 +29,15 @@ export const getRooms = async (req, res) => {
 };
 
 export const editRoomProfile = async (req, res) => {
-  const { roomProfile, currentRoom } = req.body;
-  const { roomName, roomDescription, Avatar } = roomProfile;
+  const { roomProfile, roomId } = req.body;
+  const { roomName, roomDescription, roomAvatar } = roomProfile;
   try {
-    const updateRoom = await RoomModel.findById(currentRoom);
-    updateRoom.name = roomName;
-    updateRoom.description = roomDescription;
-    updateRoom.Avatar = Avatar;
-    const updatedRoom = await updateRoom.save();
+    const room = await RoomModel.findById(roomId);
+    room.name = roomName;
+    room.description = roomDescription;
+    room.avatar = roomAvatar;
+    const updatedRoom = await room.save();
     res.json(updatedRoom);
-    console.log(updatedRoom);
   } catch (error) {
     console.log(error);
   }

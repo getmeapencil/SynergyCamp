@@ -1,7 +1,5 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
-import { method } from "lodash";
-import { data } from "autoprefixer";
 
 export const useRoomStore = create((set, get) => ({
   rooms: [],
@@ -36,22 +34,20 @@ export const useRoomStore = create((set, get) => ({
     }
   },
 
-  editRoomProfile: async (roomProfile,currentRoom) => {
-    //make a api call using formData and get newRoom in response
-    
+  editRoomProfile: async ({ roomProfile, roomId }) => {
     try {
       const newRoom = await createApiCall({
         method: "POST",
-        route: "/room/editroom",
+        route: "/room/edit-room",
         withCredentials: true,
-        data : {roomProfile,currentRoom}
+        data: { roomProfile, roomId },
       });
-      console.log(newRoom)
+      console.log(newRoom);
       const rooms = get().rooms;
       const newRooms = rooms.filter((room) => room != newRoom._id);
       set({ rooms: [...newRooms, newRoom] });
     } catch (error) {
-      console.error("error updating room profile", error);
+      console.error("Error updating room profile", error);
     }
   },
 }));

@@ -6,5 +6,5 @@ const router = express.Router();
 
 router.post("/", checkJWT, controller.createRoom);
 router.get("/", checkJWT, controller.getRooms);
-router.post("/editroom",checkJWT,controller.editRoomProfile )
+router.post("/edit-room", checkJWT, controller.editRoomProfile);
 export default router;
