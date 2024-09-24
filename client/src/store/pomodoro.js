@@ -7,9 +7,13 @@ import { playSound } from "@/utils/playSound";
 export const usePomodoroStore = create((set) => ({
   pomodoroType: "25-5",
   timezone: moment.tz.guess(),
-  setPomodoro: ({ pomodoroType, timezone }) => {
+  setPomodoroTypeAndTZ: ({ pomodoroType, timezone }) => {
     set({ pomodoroType });
     set({ timezone });
+  },
+  pomodoro: null,
+  setPomodoro: (pomodoro) => {
+    set({ pomodoro });
   },
   remainingTime: 0,
   isWorkPeriod: true,

@@ -31,7 +31,7 @@ export const useRoomStore = create((set) => ({
       });
       set({ currentRoom });
       useUserStore.getState().setCurrentRoomUser(currentRoom);
-      usePomodoroStore.getState().setPomodoro(currentRoom.pomodoro);
+      usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
     } catch (error) {
       console.error(error);
     }
