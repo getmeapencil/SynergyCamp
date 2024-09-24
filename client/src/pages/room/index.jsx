@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useParams } from "react-router-dom";
 import { useRoomStore } from "@/store/room";
+import { usePomodoro } from "@/hooks/usePomodoro";
 
 export const Room = () => {
   const [activePanel, setActivePanel] = useState("Chat");
@@ -15,6 +16,8 @@ export const Room = () => {
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
   }, [roomId, joinRoom]);
+
+  usePomodoro();
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
