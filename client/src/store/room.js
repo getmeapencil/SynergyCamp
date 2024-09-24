@@ -1,18 +1,19 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
+import { usePomodoroStore } from "./pomodoro";
+import { useUserStore } from "./user";
 
 export const useRoomStore = create((set) => ({
   rooms: [],
   currentRoom: undefined,
-  createRoom: async (name, description) => {
+  createRoom: async ({ name, description, timezone }) => {
     try {
       const room = await createApiCall({
         method: "POST",
         route: "/room",
-        data: { name, description },
+        data: { name, description, timezone },
         withCredentials: true,
       });
-      console.log("Room Created:", room); // Add this line to check if room is returned properly
       set((state) => ({ rooms: [...state.rooms, room] }));
     } catch (error) {
       console.error("Error creating room:", error); // Add this line to catch and display errors
@@ -20,6 +21,20 @@ export const useRoomStore = create((set) => ({
   },
   setCurrentRoom: (roomId) => {
     set({ currentRoom: roomId });
+  },
+  getCurrentRoom: async (roomId) => {
+    try {
+      const currentRoom = await createApiCall({
+        method: "GET",
+        route: `/room/${roomId}`,
+        withCredentials: true,
+      });
+      set({ currentRoom });
+      useUserStore.getState().setCurrentRoomUser(currentRoom);
+      usePomodoroStore.getState().setPomodoro(currentRoom.pomodoro);
+    } catch (error) {
+      console.error(error);
+    }
   },
   getRooms: async () => {
     try {

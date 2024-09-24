@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post("/", checkJWT, controller.createRoom);
 router.get("/", checkJWT, controller.getRooms);
+router.get("/:roomId", checkJWT, controller.getCurrentRoom);
 
 export default router;
