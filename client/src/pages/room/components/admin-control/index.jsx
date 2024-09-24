@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { useRoomStore } from "@/store/room";
+import { useParams } from "react-router-dom";
 
 export const AdminControl = () => {
   const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
   const { sendInvites } = useSocketEmitters();
-  const roomId = useRoomStore((state) => state.currentRoom);
+  const { roomId } = useParams();
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;

@@ -8,4 +8,10 @@ export const useMessagesStore = create((set, get) => ({
     message.createdAt = date.toUTCString();
     set({ messages: [...messages, message] });
   },
+  pushMessage: (message) => {
+    const messages = get().messages;
+    const date = new Date();
+    message.createdAt = date.toUTCString();
+    set({ messages: [...messages, message] });
+  },
 }));

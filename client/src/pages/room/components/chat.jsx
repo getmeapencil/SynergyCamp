@@ -46,7 +46,6 @@ export const Chat = () => {
     setText((prevText) => prevText + obj.emoji);
 
     if (inputRef.current) {
-      console.log("handleEmojiSelect ~ inputRef.current:", inputRef.current);
       inputRef.current.focus();
     }
 
@@ -107,7 +106,7 @@ export const Chat = () => {
               <Laugh />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="border-0 p-0" onCloseAutoFocus={(event) => event.preventDefault()}>
+          <PopoverContent className="border-0 p-0">
             <EmojiPicker
               theme={theme}
               emojiStyle="native"

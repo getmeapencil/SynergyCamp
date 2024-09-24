@@ -43,8 +43,15 @@ const RoomSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "user",
   },
-  pomodoroStartTimes: {
-    type: [Date],
+  pomodoro: {
+    pomodoroType: {
+      type: String,
+      enum: ["25-5", "50-10"],
+      default: "25-5",
+    },
+    timezone: {
+      type: String,
+    },
   },
   members: [MemberSchema], // Array of members with their roles
   createdAt: {

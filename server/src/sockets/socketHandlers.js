@@ -1,5 +1,6 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
+import { editPomodoro } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 
 const registerSocketHandlers = (io, socket) => {
@@ -50,6 +51,22 @@ const registerSocketHandlers = (io, socket) => {
       picture: user.picture,
     };
 
+    io.to(roomId).emit("incoming-message", message);
+  });
+
+  socket.on("edit-pomodoro", async ({ pomodoroType, timezone, roomId }) => {
+    const message = {
+      _id: uuidv4(),
+      text: `Pomodoro set to ${pomodoroType}, ${timezone}`,
+      notification: {
+        type: "edit-pomodoro",
+      },
+      user: {
+        _id: socket.user._id,
+      },
+    };
+    await editPomodoro({ pomodoroType, timezone, roomId });
+    io.to(roomId).emit("edit-pomodoro", { pomodoroType, timezone });
     io.to(roomId).emit("incoming-message", message);
   });
 
