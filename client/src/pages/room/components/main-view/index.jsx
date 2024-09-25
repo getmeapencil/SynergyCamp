@@ -36,6 +36,7 @@ export const MainView = memo(() => {
   const currentRoom = useRoomStore((state) => state.currentRoom);
   if (!currentRoom) return null;
   const avatar = currentRoom.avatar ? currentRoom.avatar : "1f6a4";
+  const roomName = currentRoom.name ? currentRoom.name : ""
   const renderTheme = () => {
     switch (currentTheme) {
       case "Breathe":
@@ -56,7 +57,7 @@ export const MainView = memo(() => {
       <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
         <span className="flex gap-2 text-2xl font-extrabold">
           <span dangerouslySetInnerHTML={{ __html: `&#x${avatar};` }}></span>
-          MindMesh
+          {roomName}
         </span>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
