@@ -12,6 +12,7 @@ import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
 import { Companions } from "./components/Companions";
+import { useRoomStore } from "@/store/room";
 
 const themes = [
   {
@@ -32,7 +33,9 @@ export const MainView = memo(() => {
   const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("Companions");
   const { theme: appTheme } = useTheme();
-
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+  if (!currentRoom) return null;
+  const avatar = currentRoom.avatar ? currentRoom.avatar : "1f6a4";
   const renderTheme = () => {
     switch (currentTheme) {
       case "Breathe":
@@ -52,11 +55,7 @@ export const MainView = memo(() => {
     <div className="flex flex-1 flex-col">
       <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
         <span className="flex gap-2 text-2xl font-extrabold">
-          <img
-            src={appTheme === "light" ? LogoBlack : LogoWhite}
-            alt="MindMesh"
-            className="grid aspect-square w-5 place-content-center"
-          />
+          <span dangerouslySetInnerHTML={{ __html: `&#x${avatar};` }}></span>
           MindMesh
         </span>
         <Popover open={open} onOpenChange={setOpen}>
