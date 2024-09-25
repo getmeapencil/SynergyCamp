@@ -12,6 +12,7 @@ import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
 import { Companions } from "./components/Companions";
+import { Clock } from "./components/Clock";
 
 const themes = [
   {
@@ -25,6 +26,9 @@ const themes = [
   },
   {
     label: "Tea",
+  },
+  {
+    label: "Clock",
   },
 ];
 
@@ -43,6 +47,8 @@ export const MainView = memo(() => {
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-1.jpg')] bg-cover"></div>;
       case "Tea":
         return <div className="flex-1 bg-[url('@/assets/main-view-bg-2.jpg')] bg-cover"></div>;
+      case "Clock":
+        return <Clock />;
       default:
         return null;
     }
