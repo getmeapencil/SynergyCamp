@@ -1,49 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useTaskStore } from "@/store/task";
+import { useParams } from "react-router-dom";
 
-export const Task = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      text: "Make notes on C",
-      room: "SynergyCamp",
-      completed: false,
-      completedAt: null,
-      createdAt: Date.now(),
-    },
-  ]);
+export const Todo = () => {
   const [newTask, setNewTask] = useState("");
-
+  const tasks = useTaskStore((state) => state.tasks);
+  const { roomId } = useParams();
   const addTask = () => {
     if (newTask.trim()) {
-      const newTaskObj = {
-        id: tasks.length + 1,
-        text: newTask,
-        room: "Default", // You can modify this as needed
-        completed: false,
-        completedAt: null,
-        createdAt: Date.now(),
-      };
-      setTasks([newTaskObj, ...tasks]);
+      useTaskStore.getState().addTask({ title: newTask, roomId: roomId });
       setNewTask("");
     }
   };
 
   const completeTask = (taskId) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, completed: true, completedAt: Date.now() } : task)));
+    useTaskStore.getState().updateTask({ id: taskId, data: { completed: true , completedAt: Date.now() } });
   };
 
   const undoCompleteTask = (taskId) => {
-    setTasks(tasks.map((task) => (task.id === taskId ? { ...task, completed: false, completedAt: null } : task)));
+    useTaskStore.getState().updateTask({ id: taskId, data: { completed: false } });
   };
 
   const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+    useTaskStore.getState().deleteTask(taskId);
   };
+  
 
   const sortTasks = (tasksToSort) => {
     return tasksToSort.sort((a, b) => {
@@ -59,6 +45,11 @@ export const Task = () => {
 
   const tasksRemaining = sortTasks(tasks.filter((task) => !task.completed));
   const tasksCompleted = sortTasks(tasks.filter((task) => task.completed));
+  useEffect(() => {
+    if (roomId) {
+      useTaskStore.getState().fetchTasks(roomId);
+    }
+  }, [roomId]);
 
   const handleEnterPress = (event) => {
     if (event.key === "Enter") {
@@ -87,23 +78,23 @@ export const Task = () => {
           </AccordionTrigger>
           <AccordionContent className="text-md">
             {tasksRemaining.map((task) => (
-              <div key={task.id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
+              <div key={task._id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
                 <div className="mt-2 flex gap-3">
                   <Checkbox
-                    id={`task-${task.id}`}
+                    id={task._id}
                     checked={task.completed}
                     onCheckedChange={(e) => {
                       if (e) {
-                        completeTask(task.id);
+                        completeTask(task._id);
                       }
                     }}
                     className="mt-1"
                   />
-                  <label htmlFor={`task-${task.id}`} className="font-medium">
-                    {task.text}
+                  <label htmlFor={task._id} className={"font-medium"}>
+                    {task.title}
                   </label>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => deleteTask(task._id)} className="shrink-0">
                   <Trash2 className="h-4 w-4 text-red-500" />
                 </Button>
               </div>
@@ -119,23 +110,23 @@ export const Task = () => {
           </AccordionTrigger>
           <AccordionContent className="text-md">
             {tasksCompleted.map((task) => (
-              <div key={task.id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
+              <div key={task._id} className="flex justify-between gap-3 px-4 py-2 hover:bg-background">
                 <div className="mt-2 flex gap-3">
                   <Checkbox
-                    id={`task-${task.id}`}
+                    id={task._id}
                     checked={task.completed}
                     onCheckedChange={(e) => {
                       if (!e) {
-                        undoCompleteTask(task.id);
+                        undoCompleteTask(task._id);
                       }
                     }}
                     className="mt-1"
                   />
-                  <label htmlFor={`task-${task.id}`} className="text-md font-medium text-gray-500 line-through">
-                    {task.text}
+                  <label htmlFor={task._id} className={"text-md font-medium text-gray-500 line-through"}>
+                    {task.title}
                   </label>
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => deleteTask(task.id)} className="shrink-0">
+                <Button variant="ghost" size="icon" onClick={() => deleteTask(task._id)} className="shrink-0">
                   <Trash2 className="h-4 w-4 text-red-500" />
                 </Button>
               </div>
