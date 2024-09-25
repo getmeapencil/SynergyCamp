@@ -7,10 +7,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useTaskStore } from "@/store/task";
 import { useParams } from "react-router-dom";
 
-export const Todo = () => {
+export const Task = () => {
   const [newTask, setNewTask] = useState("");
   const tasks = useTaskStore((state) => state.tasks);
   const { roomId } = useParams();
+
   const addTask = () => {
     if (newTask.trim()) {
       useTaskStore.getState().addTask({ title: newTask, roomId: roomId });
@@ -19,7 +20,7 @@ export const Todo = () => {
   };
 
   const completeTask = (taskId) => {
-    useTaskStore.getState().updateTask({ id: taskId, data: { completed: true , completedAt: Date.now() } });
+    useTaskStore.getState().updateTask({ id: taskId, data: { completed: true, completedAt: Date.now() } });
   };
 
   const undoCompleteTask = (taskId) => {
@@ -29,7 +30,6 @@ export const Todo = () => {
   const deleteTask = (taskId) => {
     useTaskStore.getState().deleteTask(taskId);
   };
-  
 
   const sortTasks = (tasksToSort) => {
     return tasksToSort.sort((a, b) => {
@@ -45,6 +45,7 @@ export const Todo = () => {
 
   const tasksRemaining = sortTasks(tasks.filter((task) => !task.completed));
   const tasksCompleted = sortTasks(tasks.filter((task) => task.completed));
+
   useEffect(() => {
     if (roomId) {
       useTaskStore.getState().fetchTasks(roomId);

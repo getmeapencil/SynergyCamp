@@ -28,57 +28,60 @@ export const Room = () => {
   const { members: activeMembers } = useMembersStore();
   const { leaveRoom, joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
+
   let blocker = useBlocker(({ currentLocation, nextLocation }) => {
     setModalOpen(true);
     return !allownavigation && currentLocation.pathname !== nextLocation.pathname;
   });
+
   useEffect(() => {
     if (activeMembers.length === 0) {
       joinRoom({ roomId });
     }
-  }, [activeMembers]);
+  }, [activeMembers, joinRoom, roomId]);
 
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
   }, [roomId]);
+
   usePomodoro();
+
   const members =
     currentRoom?.members?.map((member) => {
       return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
     }) || [];
+
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
-      {blocker.state === "blocked" ? (
-        <>
-          <AlertDialog open={modalOpen}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Do you want to exit this room?</AlertDialogTitle>
-                <AlertDialogDescription>Exiting the room will clear the chat history.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel
-                  onClick={() => {
-                    setModalOpen(false);
-                  }}
-                >
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    setAllownavigation(true);
-                    setModalOpen(false);
-                    navigate(-1);
-                    leaveRoom({ roomId });
-                  }}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </>
-      ) : null}
+      {blocker.state === "blocked" && (
+        <AlertDialog open={modalOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Do you want to exit this room?</AlertDialogTitle>
+              <AlertDialogDescription>Exiting the room will clear the chat history.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => {
+                  setModalOpen(false);
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  setAllownavigation(true);
+                  setModalOpen(false);
+                  navigate(-1);
+                  leaveRoom({ roomId });
+                }}
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <main className="flex max-h-screen flex-1">
         <MainView />
         <SidePanel members={members} activePanel={activePanel} setActivePanel={setActivePanel} />

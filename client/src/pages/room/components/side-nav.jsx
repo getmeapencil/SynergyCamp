@@ -2,7 +2,7 @@ import { memo } from "react";
 import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 import {
@@ -61,7 +61,7 @@ const NavItem = ({ item, setActivePanel }) => {
   );
 };
 
-export const SideNav = ({ activePanel, setActivePanel, roomId, setAllownavigation }) => {
+export const SideNav = memo(({ activePanel, setActivePanel, roomId, setAllownavigation }) => {
   const { leaveRoom } = useSocketEmitters();
   const navigate = useNavigate();
 
@@ -121,5 +121,5 @@ export const SideNav = ({ activePanel, setActivePanel, roomId, setAllownavigatio
       </nav>
     </aside>
   );
-};
-
+});
+SideNav.displayName = "SideNav";
