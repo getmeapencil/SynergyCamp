@@ -10,8 +10,10 @@ import { useParams } from "react-router-dom";
 export const Task = () => {
   const [newTask, setNewTask] = useState("");
   const tasks = useTaskStore((state) => state.tasks);
+  console.log("Task ~ tasks:", tasks);
   const { roomId } = useParams();
   const tasksToUse = tasks.filter((task) => task.roomId === roomId);
+
   const addTask = () => {
     if (newTask.trim()) {
       useTaskStore.getState().addTask({ title: newTask, roomId: roomId });

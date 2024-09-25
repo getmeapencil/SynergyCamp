@@ -20,14 +20,13 @@ import {
 import { useMembersStore } from "@/store/members";
 
 export const Room = () => {
+  const { roomId } = useParams();
+  const navigate = useNavigate();
   const [activePanel, setActivePanel] = useState("Chat");
   const [allownavigation, setAllownavigation] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const { roomId } = useParams();
-  const { currentRoom } = useRoomStore();
-  const { members: activeMembers } = useMembersStore();
+  const members = useMembersStore((state) => state.members);
   const { leaveRoom, joinRoom } = useSocketEmitters();
-  const navigate = useNavigate();
 
   let blocker = useBlocker(({ currentLocation, nextLocation }) => {
     setModalOpen(true);
@@ -35,21 +34,16 @@ export const Room = () => {
   });
 
   useEffect(() => {
-    if (activeMembers.length === 0) {
+    if (members.length === 0) {
       joinRoom({ roomId });
     }
-  }, [activeMembers, joinRoom, roomId]);
+  }, [members, joinRoom, roomId]);
 
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
   }, [roomId]);
 
   usePomodoro();
-
-  const members =
-    currentRoom?.members?.map((member) => {
-      return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
-    }) || [];
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
@@ -84,7 +78,7 @@ export const Room = () => {
       )}
       <main className="flex max-h-screen flex-1">
         <MainView />
-        <SidePanel members={members} activePanel={activePanel} setActivePanel={setActivePanel} />
+        <SidePanel activePanel={activePanel} setActivePanel={setActivePanel} />
       </main>
       <SideNav
         setAllownavigation={setAllownavigation}
