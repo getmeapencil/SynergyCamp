@@ -11,13 +11,19 @@ export const Task = () => {
   const [newTask, setNewTask] = useState("");
   const tasks = useTaskStore((state) => state.tasks);
   const { roomId } = useParams();
-
+  const tasksToUse = tasks.filter((task) => task.roomId === roomId);
   const addTask = () => {
     if (newTask.trim()) {
       useTaskStore.getState().addTask({ title: newTask, roomId: roomId });
       setNewTask("");
     }
   };
+
+  useEffect(() => {
+    if (tasks.length === 0) {
+      useTaskStore.getState().fetchAllTasks();
+    }
+  }, [roomId, tasks]);
 
   const completeTask = (taskId) => {
     useTaskStore.getState().updateTask({ id: taskId, data: { completed: true, completedAt: Date.now() } });
@@ -43,14 +49,8 @@ export const Task = () => {
     });
   };
 
-  const tasksRemaining = sortTasks(tasks.filter((task) => !task.completed));
-  const tasksCompleted = sortTasks(tasks.filter((task) => task.completed));
-
-  useEffect(() => {
-    if (roomId) {
-      useTaskStore.getState().fetchTasks(roomId);
-    }
-  }, [roomId]);
+  const tasksRemaining = sortTasks(tasksToUse.filter((task) => !task.completed));
+  const tasksCompleted = sortTasks(tasksToUse.filter((task) => task.completed));
 
   const handleEnterPress = (event) => {
     if (event.key === "Enter") {

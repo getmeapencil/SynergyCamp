@@ -4,23 +4,31 @@ import { createApiCall } from "@/utils/createApiCall";
 export const useTaskStore = create((set, get) => ({
   tasks: [],
   setTasks: (tasks) => set({ tasks }),
-  fetchTasks: async (roomId) => {
-    console.log("fetch task",roomId)
+  fetchTasksByRoomId: async (roomId) => {
     try {
       const res = await createApiCall({
         method: "GET",
-        route: `/task`,
-        query: { roomId },
+        route: `/task/${roomId}`,
         withCredentials: true,
       });
       set({ tasks: res.data });
-      console.log(res.data,res)
     } catch (error) {
       console.error(error);
     }
   },
-  addTask: async ({roomId, title}) => {
-    console.log(title,roomId,"I am called addtaslk")
+  fetchAllTasks: async () => {
+    try {
+      const res = await createApiCall({
+        method: "GET",
+        route: `/task`,
+        withCredentials: true,
+      });
+      set({ tasks: res.data });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  addTask: async ({ roomId, title }) => {
     try {
       const res = await createApiCall({
         method: "POST",
@@ -28,13 +36,12 @@ export const useTaskStore = create((set, get) => ({
         data: { roomId, title },
         withCredentials: true,
       });
-      console.log(res.data,res)
       set({ tasks: [...get().tasks, res.data] });
     } catch (error) {
       console.error(error);
     }
   },
-  updateTask: async ({id, data}) => {
+  updateTask: async ({ id, data }) => {
     try {
       const res = await createApiCall({
         method: "PATCH",
@@ -42,8 +49,16 @@ export const useTaskStore = create((set, get) => ({
         data,
         withCredentials: true,
       });
-      console.log(res.data,res)
-      set({ tasks: get().tasks.map((task) => (task._id === id ? res.data : task)) });
+      if (res.data) {
+        // only update completed at , completed and title
+        set({
+          tasks: get().tasks.map((task) =>
+            task._id === id
+              ? { ...task, completedAt: res.data.completedAt, completed: res.data.completed, title: res.data.title }
+              : task,
+          ),
+        });
+      }
     } catch (error) {
       console.error(error);
     }

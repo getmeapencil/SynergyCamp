@@ -4,7 +4,6 @@ import { TaskModel } from "../../models/task.js";
 export const addTask = async (req, res) => {
   const userId = req.user._id;
   const { title, roomId } = req.body;
-  console.log(title, roomId);
   try {
     if (!title) {
       return res.json({ message: "no title given" }).status(400);
@@ -32,7 +31,6 @@ export const addTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   const { id } = req.params;
   const { completed, title, completedAt } = req.body;
-  console.log("update task", id, completed, title);
   try {
     const task = await TaskModel.findById(id);
     if (title) {
@@ -52,10 +50,9 @@ export const updateTask = async (req, res) => {
   }
 };
 
-export const getTasks = async (req, res) => {
-  const { roomId } = req.query;
+export const getTasksByRoom = async (req, res) => {
+  const { roomId } = req.params;
   const userId = req.user._id;
-  console.log("get task", roomId);
   try {
     if (!roomId) {
       return res.json({ message: "no roomId given" }).status(400);
@@ -64,6 +61,24 @@ export const getTasks = async (req, res) => {
     const tasks = await TaskModel.find({ room: roomId, user: userId });
     return res.json({ message: "successfully fetched tasks", data: tasks }).status(200);
   } catch (err) {
+    return res.json({ message: "Internal Server Error" }).status(500);
+  }
+};
+export const getTasks = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    console.log("get task");
+    let tasks = await TaskModel.find({ user: userId }).populate("room");
+    tasks = tasks.map((task) => {
+      if (task.room) {
+        return { ...task._doc, room: task.room.name, roomId: task.room._id };
+      } else {
+        return { ...task._doc, room: "", roomId: "" };
+      }
+    });
+    return res.json({ message: "successfully fetched tasks", data: tasks }).status(200);
+  } catch (err) {
+    console.log(err);
     return res.json({ message: "Internal Server Error" }).status(500);
   }
 };
