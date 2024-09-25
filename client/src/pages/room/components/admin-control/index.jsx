@@ -20,15 +20,17 @@ export const AdminControl = () => {
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
+  const currentRoom = useRoomStore((state) => state.currentRoom); 
   const [roomProfile, setRoomProfile] = useState({
-    roomName: "",
-    roomDescription: "",
-    roomAvatar: "1f601",
+    roomName: `${currentRoom.name}`,
+    roomDescription:  `${currentRoom.description ? currentRoom.description : ""}`,
+    roomAvatar:  `${currentRoom.avatar? currentRoom.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
     roomName: "",
   });
+  
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
