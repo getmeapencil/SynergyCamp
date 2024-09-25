@@ -10,13 +10,14 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { data } from "autoprefixer";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms,allUsers } = useRoomStore();
+  const { rooms, allUsers } = useRoomStore();
   const { user } = useUserStore();
   const [filteredData, setFilteredData] = useState([]);
   const userId = user?._id;
-  const {joinRoom}=useSocketEmitters();
+  const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
   useEffect(() => {
     if (filterRole?.length === 0) {
@@ -61,10 +62,10 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                        <div className="flex items-center justify-center rounded-full border border-slate-600">
+                          <span className="p-1 text-2xl" dangerouslySetInnerHTML={{ __html: `&#x${data.avatar};` }}></span>
+                        </div>
+
                         <div className="font-medium">{data.name}</div>
                       </TableCell>
                       <TableCell className="text-center capitalize sm:table-cell">
@@ -75,7 +76,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                         <Button
                           onClick={() => {
                             navigate(`/room/${data._id}`);
-                            joinRoom({roomId:data._id});
+                            joinRoom({ roomId: data._id });
                           }}
                         >
                           Enter Room
