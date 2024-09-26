@@ -8,4 +8,5 @@ router.get("/", checkJWT, controller.getRooms);
 router.get("/:roomId", checkJWT, controller.getCurrentRoom);
 router.put("/:roomId", checkJWT, controller.updateRoom);
 router.post("/edit-room-profile", checkJWT, controller.editRoomProfile);
+router.delete('/deleteRoom/:roomId',checkJWT, controller.deleteRoom)
 export default router;

@@ -80,8 +80,8 @@ export const updateRoom = async (req, res) => {
 export const getRole = async (userId, roomId) => {
   try {
     const room = await RoomModel.findById(roomId);
-    const member = room.members.find((member) => member.userId.toString() === userId.toString());
-    return member.role;
+    const member = room?.members.find((member) => member.userId.toString() === userId.toString());
+    return member?.role;
   } catch (e) {
     console.log(e);
   }
@@ -99,5 +99,19 @@ export const editRoomProfile = async (req, res) => {
     res.json(updatedRoom);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deleteRoom = async (req, res) => {
+  try {
+    const RoomId = req.params.roomId;
+    console.log(RoomId, "server param");
+    const data = await RoomModel.findByIdAndDelete(RoomId);
+    if (!data) {
+      return res.json("Room deletion failed ");
+    }
+    res.send("Room deleted successfully");
+  } catch (error) {
+    console.log("error", error);
   }
 };

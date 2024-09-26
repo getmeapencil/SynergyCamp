@@ -10,7 +10,9 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { useParams } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
+import { Trash } from "lucide-react";
+import { createApiCall } from "@/utils/createApiCall";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
@@ -20,17 +22,16 @@ export const AdminControl = () => {
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
-  const currentRoom = useRoomStore((state) => state.currentRoom); 
+  const currentRoom = useRoomStore((state) => state.currentRoom);
   const [roomProfile, setRoomProfile] = useState({
     roomName: `${currentRoom.name}`,
-    roomDescription:  `${currentRoom.description ? currentRoom.description : ""}`,
-    roomAvatar:  `${currentRoom.avatar? currentRoom.avatar : "1f6a4"}`,
+    roomDescription: `${currentRoom.description ? currentRoom.description : ""}`,
+    roomAvatar: `${currentRoom.avatar ? currentRoom.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
     roomName: "",
   });
-  
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -136,6 +137,20 @@ export const AdminControl = () => {
     e.preventDefault();
     await useRoomStore.getState().editRoomProfile({ roomProfile, roomId });
   };
+const navigate = useNavigate();
+  const handleDeleteRoom = async () => {
+    const id = currentRoom._id;
+    const response = await createApiCall({
+      method: "DELETE",
+      route: `/room/deleteroom/${id}`,
+      withCredentials: true,
+    });
+    if (response) {
+      navigate("/dashboard");
+    }
+
+    console.log(response);
+  };
 
   return (
     <div className="flex h-full flex-col gap-3 p-4">
@@ -238,6 +253,10 @@ export const AdminControl = () => {
           </form>
         </CardContent>
       </Card>
+      <Button onClick={handleDeleteRoom} className="w-full gap-2" variant="destructive">
+        <Trash />
+        Delete Room
+      </Button>
     </div>
   );
 };
