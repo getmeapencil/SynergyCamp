@@ -1,3 +1,4 @@
+import { InviteModel } from "../../models/invite.js";
 import { RoomModel } from "../../models/room.js";
 import { UserModel } from "../../models/user.js";
 
@@ -107,7 +108,8 @@ export const deleteRoom = async (req, res) => {
     const RoomId = req.params.roomId;
     console.log(RoomId, "server param");
     const data = await RoomModel.findByIdAndDelete(RoomId);
-    if (!data) {
+    const inviteDelete = await InviteModel.deleteMany({ roomId: RoomId });
+    if (!data || !inviteDelete) {
       return res.json("Room deletion failed ");
     }
     res.send("Room deleted successfully");
