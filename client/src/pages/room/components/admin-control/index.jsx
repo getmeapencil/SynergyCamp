@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
 import { DeleteDialog } from "./components/DeleteDialog";
-import { useUserStore } from "@/store/user";
 
 export const AdminControl = () => {
   const { theme } = useTheme();

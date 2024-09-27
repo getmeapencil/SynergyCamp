@@ -16,11 +16,6 @@ import { useNavigate } from "react-router-dom";
 import { Trash } from "lucide-react";
 
 export const DeleteDialog = ({ currentRoom }) => {
-  const [dialogOpen, setDialogOpen] = useState(false); // State to control dialog visibility
-  const handleCancel = () => {
-    setDialogOpen(false);
-  };
-
   const navigate = useNavigate();
   const handleDeleteRoom = async () => {
     const id = currentRoom._id;
@@ -35,31 +30,30 @@ export const DeleteDialog = ({ currentRoom }) => {
 
     console.log(response);
   };
-  const handleContinue = () => {
-    setDialogOpen(false);
-    handleDeleteRoom();
-  };
 
   return (
     <div>
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive" className="w-full m-1 gap-2" onClick={() => setDialogOpen(true)}>
-            <Trash/>
+          <Button variant="destructive" className="w-full gap-2">
+            <Trash className="h-4 w-4" />
             Delete Room
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are You Sure You Want to Delete This Room?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Deleting this room will remove all its content, including tasks, notes, and participant data. This action
-              cannot be undone. Are you certain you want to proceed?
-            </AlertDialogDescription>
+            <AlertDialogTitle>Are you sure you want to delete this room?</AlertDialogTitle>
+            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleContinue}>Continue</AlertDialogAction>
+            <AlertDialogCancel asChild>
+              <Button variant="outline">Cancel</Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button onClick={handleDeleteRoom} variant="destructive">
+                Continue
+              </Button>
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

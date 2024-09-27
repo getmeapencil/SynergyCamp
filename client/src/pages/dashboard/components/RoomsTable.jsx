@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
@@ -10,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { data } from "autoprefixer";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
   const { rooms, allUsers } = useRoomStore();
@@ -62,8 +61,8 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
-                        <div className="flex items-center justify-center rounded-full border border-slate-600">
-                          <span className="p-1 text-2xl" dangerouslySetInnerHTML={{ __html: `&#x${data.avatar};` }}></span>
+                        <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
+                          <Emoji emojiStyle={EmojiStyle.NATIVE} unified={data.avatar} size={20} />
                         </div>
 
                         <div className="font-medium">{data.name}</div>
