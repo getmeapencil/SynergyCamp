@@ -11,31 +11,30 @@ import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 
-export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms, allUsers } = useRoomStore();
+export const RoomsTable = ({ filterRoles, searchName }) => {
+  const { rooms } = useRoomStore();
   const { user } = useUserStore();
   const [filteredData, setFilteredData] = useState([]);
   const userId = user?._id;
   const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (filterRole?.length === 0) {
-      setFilteredData(rooms);
-    } else {
-      setFilteredData(() => {
-        return rooms.filter((data) => data.role === filterRole);
-      });
-    }
-  }, [filterRole]);
+    const filteredRooms = rooms.filter((room) => {
+      const memberRole = room.members.find((member) => member.userId === userId)?.role;
+      const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
+      const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
+
+      return matchesRole && matchesSearch;
+    });
+
+    setFilteredData(filteredRooms);
+  }, [filterRoles, searchName, rooms, userId]);
 
   useEffect(() => {
     useRoomStore.getState().getRooms();
   }, []);
-  useEffect(() => {
-    if (rooms) {
-      setFilteredData(rooms);
-    }
-  }, [rooms]);
+
   return (
     <Card>
       <CardHeader>

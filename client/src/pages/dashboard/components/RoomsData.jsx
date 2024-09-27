@@ -57,15 +57,15 @@ export function RoomsData() {
               <DropdownMenuLabel>Role</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Admin")}
+                checked={filter.selectedRole.includes("admin")}
                 onCheckedChange={() => {
                   setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Admin");
+                    const isSelected = prevFilter.selectedRole.includes("admin");
                     return {
                       ...prevFilter,
                       selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Admin")
-                        : [...prevFilter.selectedRole, "Admin"],
+                        ? prevFilter.selectedRole.filter((role) => role !== "admin")
+                        : [...prevFilter.selectedRole, "admin"],
                     };
                   });
                 }}
@@ -73,15 +73,15 @@ export function RoomsData() {
                 Admin
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Moderator")}
+                checked={filter.selectedRole.includes("moderator")}
                 onCheckedChange={() => {
                   setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Moderator");
+                    const isSelected = prevFilter.selectedRole.includes("moderator");
                     return {
                       ...prevFilter,
                       selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Moderator")
-                        : [...prevFilter.selectedRole, "Moderator"],
+                        ? prevFilter.selectedRole.filter((role) => role !== "moderator")
+                        : [...prevFilter.selectedRole, "moderator"],
                     };
                   });
                 }}
@@ -89,15 +89,15 @@ export function RoomsData() {
                 Moderator
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Member")}
+                checked={filter.selectedRole.includes("member")}
                 onCheckedChange={() => {
                   setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Member");
+                    const isSelected = prevFilter.selectedRole.includes("member");
                     return {
                       ...prevFilter,
                       selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Member")
-                        : [...prevFilter.selectedRole, "Member"],
+                        ? prevFilter.selectedRole.filter((role) => role !== "member")
+                        : [...prevFilter.selectedRole, "member"],
                     };
                   });
                 }}
