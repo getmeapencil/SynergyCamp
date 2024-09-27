@@ -117,3 +117,24 @@ export const deleteRoom = async (req, res) => {
     console.log("error", error);
   }
 };
+
+export const leaveRoomPermanetly = async (req, res) => {
+  const { roomId, memberId } = req.body;
+
+  try {
+    const room = await RoomModel.findById(roomId);
+    if (memberId === room.createdBy.toString()) {
+      return res.json("Admin cannot delete his own room ");
+    }
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+    room.members = room.members.filter((member) => member.userId.toString() !== memberId);
+    await room.save();
+
+    res.status(200).json({ message: "Member removed successfully", room });
+  } catch (error) {
+    console.error("Error removing member:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
