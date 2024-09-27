@@ -55,7 +55,7 @@ export const TaskOverview = () => {
           </div>
         ) : (
           sortedTasks?.map((task) => (
-            <div key={task.id} className="flex items-start justify-between gap-2">
+            <div key={task._id} className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-1 items-start gap-2">
                 <Checkbox
                   id={`task-${task._id}`}
@@ -67,7 +67,7 @@ export const TaskOverview = () => {
                 />
                 <div className="min-w-0 flex-1">
                   <label
-                    htmlFor={`task-${task.id}`}
+                    htmlFor={`task-${task._id}`}
                     className={`break-words text-sm font-medium leading-tight peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
                       task.completed ? "text-gray-500 line-through" : ""
                     }`}
