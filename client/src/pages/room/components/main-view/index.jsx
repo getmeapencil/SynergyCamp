@@ -99,7 +99,7 @@ export const MainView = memo(() => {
       <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
         <div className="flex gap-2 text-2xl font-extrabold">
           <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
-            <Emoji emojiStyle={EmojiStyle.NATIVE} unified={avatar} size={20} />
+            <Emoji emojiStyle={EmojiStyle.APPLE} unified={avatar} size={20} />
           </div>
           {roomName}
         </div>
