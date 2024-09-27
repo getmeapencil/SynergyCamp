@@ -2,8 +2,7 @@ import { memo } from "react";
 import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useNavigate, useParams } from "react-router-dom";
-import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { useNavigate } from "react-router-dom";
 
 import {
   AlertDialog,
@@ -21,7 +20,7 @@ import {
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
   { label: "Participants", icon: SquareUserRound },
-  { label: "ToDo", icon: ListTodo },
+  { label: "Task", icon: ListTodo },
   { label: "Pomodoro", icon: Timer },
   { label: "Calendar", icon: Calendar },
 ];
@@ -61,8 +60,7 @@ const NavItem = ({ item, setActivePanel }) => {
   );
 };
 
-export const SideNav = ({ activePanel, setActivePanel, roomId, setAllownavigation }) => {
-  const { leaveRoom } = useSocketEmitters();
+export const SideNav = memo(({ activePanel, setActivePanel }) => {
   const navigate = useNavigate();
 
   return (
@@ -108,8 +106,6 @@ export const SideNav = ({ activePanel, setActivePanel, roomId, setAllownavigatio
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  setAllownavigation(true);
-                  leaveRoom({ roomId });
                   navigate(-1);
                 }}
               >
@@ -121,5 +117,5 @@ export const SideNav = ({ activePanel, setActivePanel, roomId, setAllownavigatio
       </nav>
     </aside>
   );
-};
-
+});
+SideNav.displayName = "SideNav";

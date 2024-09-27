@@ -27,11 +27,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useRoomStore } from "@/store/room";
 
 const Participant = ({ member }) => {
-  
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
@@ -155,16 +154,23 @@ const Participant = ({ member }) => {
   );
 };
 
-export const Participants = ({allmembers}) => {
-  const { members } = useMembersStore();
-  const offlineMembers= allmembers.filter((member) => !members.find((m) => m._id === member._id));
+export const Participants = () => {
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+  const allmembers =
+    currentRoom?.members?.map((member) => {
+      return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
+    }) || [];
+
+  const members = useMembersStore((state) => state.members);
+  const offlineMembers = allmembers.filter((member) => !members?.find((m) => m._id === member._id));
+
   return (
     <div className="flex h-full flex-col gap-3">
       <Accordion type="multiple" defaultValue={["online", "offline"]}>
         <AccordionItem value="online">
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
-            {members.map((member) => (
+            {members?.map((member) => (
               <Participant key={member._id} member={member} />
             ))}
           </AccordionContent>

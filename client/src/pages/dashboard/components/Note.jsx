@@ -11,7 +11,7 @@ import { useNoteStore } from "@/store/note";
 
 export const Note = () => {
   const user = useUserStore((state) => state.user);
-  const { note, setNote, fontSize, setFontSize } = useNoteStore();
+  const { dashboardNote, setDashboardNote } = useNoteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSubmit = (e) => {
@@ -19,12 +19,19 @@ export const Note = () => {
     const formData = new FormData(e.target);
     const newNote = formData.get("note");
     const newFontSize = parseInt(formData.get("fontSize"), 10);
-    setNote(newNote);
-    setFontSize(newFontSize);
+    setDashboardNote({ note: newNote, fontSize: newFontSize });
     setIsDialogOpen(false);
   };
 
   const firstName = user?.name?.split(" ")[0] || "there";
+
+  const gradientText = (text) => {
+    return (
+      <span className="animate-gradient-x bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+        {text}
+      </span>
+    );
+  };
 
   return (
     <Card className="h-fit w-1/3">
@@ -52,12 +59,19 @@ export const Note = () => {
                   id="note"
                   name="note"
                   placeholder="Anything from favorite quote to your goals"
-                  defaultValue={note}
+                  defaultValue={dashboardNote.note}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="fontSize">Font Size (px)</Label>
-                <Input id="fontSize" name="fontSize" type="number" defaultValue={fontSize} min={8} max={72} />
+                <Input
+                  id="fontSize"
+                  name="fontSize"
+                  type="number"
+                  defaultValue={dashboardNote.fontSize}
+                  min={8}
+                  max={72}
+                />
               </div>
               <Button type="submit" className="w-full">
                 Save Note
@@ -66,12 +80,12 @@ export const Note = () => {
           </DialogContent>
         </Dialog>
       </CardHeader>
-      <CardContent style={{ fontSize: `${fontSize}px` }} className="whitespace-pre-line leading-tight">
-        {note || (
+      <CardContent style={{ fontSize: `${dashboardNote.fontSize}px` }} className="whitespace-pre-line leading-tight">
+        {dashboardNote.note || (
           <>
-            Hello, {firstName}
+            <strong className="font-bold">{gradientText(`Hello, ${firstName}`)}</strong>
             <br />
-            Let’s be productive today.
+            Let&apos;s be productive today.
           </>
         )}
       </CardContent>
