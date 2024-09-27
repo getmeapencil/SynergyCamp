@@ -9,11 +9,13 @@ import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useMembersStore } from "@/store/members";
 import { useMessagesStore } from "@/store/messages";
+import { Error } from "../error";
 
 export const Room = () => {
   const { roomId } = useParams();
   const [activePanel, setActivePanel] = useState("Chat");
   const members = useMembersStore((state) => state.members);
+  const currentRoom = useRoomStore((state) => state.currentRoom);
   const { joinRoom, leaveRoom } = useSocketEmitters();
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export const Room = () => {
   }, [leaveRoom, roomId]);
 
   usePomodoro();
+
+  if (!currentRoom) return <Error errorMessage="You currently don't belong to this room :/" />;
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
