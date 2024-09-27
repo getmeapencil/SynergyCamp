@@ -162,7 +162,7 @@ export const Participants = () => {
     }) || [];
 
   const members = useMembersStore((state) => state.members);
-  const offlineMembers = allmembers.filter((member) => !members.find((m) => m._id === member._id));
+  const offlineMembers = allmembers.filter((member) => !members?.find((m) => m._id === member._id));
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -170,7 +170,7 @@ export const Participants = () => {
         <AccordionItem value="online">
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
-            {members.map((member) => (
+            {members?.map((member) => (
               <Participant key={member._id} member={member} />
             ))}
           </AccordionContent>

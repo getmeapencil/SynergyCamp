@@ -34,7 +34,7 @@ export const Room = () => {
   });
 
   useEffect(() => {
-    if (members.length === 0) {
+    if (members?.length === 0) {
       joinRoom({ roomId });
     }
   }, [members, joinRoom, roomId]);
