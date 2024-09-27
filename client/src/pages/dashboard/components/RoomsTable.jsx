@@ -35,6 +35,10 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
     useRoomStore.getState().getRooms();
   }, []);
 
+  const calculateTotalMembers = (data) => {
+    const length = data.members.length;
+    return length;
+  };
   return (
     <Card>
       <CardHeader>
@@ -50,7 +54,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                 <TableRow>
                   <TableHead className="sm:table-cell">Room</TableHead>
                   <TableHead className="text-center sm:table-cell">Role</TableHead>
-                  <TableHead className="text-center sm:table-cell">Online</TableHead>
+                  <TableHead className="text-center sm:table-cell">Total Members</TableHead>
                   <TableHead className="text-center sm:table-cell">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -69,7 +73,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                       <TableCell className="text-center capitalize sm:table-cell">
                         <Badge variant={"outline"}>{role}</Badge>
                       </TableCell>
-                      <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
+                      <TableCell className="text-center sm:table-cell">{calculateTotalMembers(data)} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
                         <Button
                           onClick={() => {
