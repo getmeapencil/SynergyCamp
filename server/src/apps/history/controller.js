@@ -47,13 +47,62 @@ export const getStreak = async (req, res) => {
       user.longestStreak = streak;
       await user.save();
     }
-
     res.status(200).json(streak);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to get streak" });
   }
 };
+export const getLast7daysHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const history = await HistoryModel.find({ userId, leftAt: { $exists: true } }).sort({ joinedAt: -1 });
+
+    const last7days = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to midnight
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i); // Get each date for the last 7 days
+
+      // Get the start and end of the day for this particular date
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // Filter the history for the current day and calculate total hours spanned
+      const totalHours = history.reduce((acc, h) => {
+        const joinedAtDate = new Date(h.joinedAt).getTime();
+        const leftAtDate = new Date(h.leftAt).getTime();
+
+        if (joinedAtDate >= startOfDay.getTime() && leftAtDate <= endOfDay.getTime()) {
+          // Calculate hours spanned and add to accumulator
+          const hours = (leftAtDate - joinedAtDate) / (1000 * 60 * 60); // Convert milliseconds to hours
+          return acc + hours;
+        }
+        return acc;
+      }, 0);
+
+      // Add to last7days list
+      last7days.unshift({
+        date: date.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+        hoursSpanned: totalHours.toFixed(2) // Total hours spanned rounded to 2 decimal places
+      });
+    }
+
+    console.log(last7days);
+    res.status(200).json(last7days);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get last 7 days history" });
+  }
+};
+
+
+
 
 
 export const trackJoin = async ({ roomId, userId }) => {
