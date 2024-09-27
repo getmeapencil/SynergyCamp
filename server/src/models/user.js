@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    longestStreak: {
+      type: Number,
+      default: 1,
+    },
   },
   {
     timestamps: true,

@@ -35,7 +35,7 @@ export const googleAuth = async (req, res) => {
       },
       { new: true, upsert: true },
     );
-
+    console.log(user);
     const { accessToken, refreshToken } = await generateToken(user);
 
     res.cookie("refreshToken", refreshToken, {

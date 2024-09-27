@@ -180,6 +180,7 @@ const registerSocketHandlers = (io, socket) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
     });
+    console.log("leave room",roomId)
     socket.leave(roomId);
     io.to(roomId).emit("user-status", users[roomId]);
     trackLeave({ roomId, userId: socket.user._id });
@@ -210,9 +211,13 @@ const registerSocketHandlers = (io, socket) => {
           _id: socket.user._id,
         },
       };
+      if(!users[room]?.includes(socket.user._id)){
+        return
+      }
       users[room] = users[room]?.filter((user) => {
         return user._id.toString() !== socket.user._id.toString();
       });
+      console.log("leave room 2nd",room)
       trackLeave({ roomId: room, userId: socket.user._id });
       socket.to(room).emit("user-status", users[room]);
       socket.to(room).emit("incoming-message", message);
