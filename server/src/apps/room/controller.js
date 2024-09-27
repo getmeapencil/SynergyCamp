@@ -1,6 +1,5 @@
 import { InviteModel } from "../../models/invite.js";
 import { RoomModel } from "../../models/room.js";
-import { UserModel } from "../../models/user.js";
 
 export const createRoom = async (req, res) => {
   try {
@@ -23,12 +22,41 @@ export const createRoom = async (req, res) => {
   }
 };
 
+export const verifyMember = async ({ userId, roomId }) => {
+  try {
+    const room = await RoomModel.findById(roomId);
+
+    if (!room) {
+      // Handle case where room is not found
+      console.log(`Room with id ${roomId} not found`);
+      return false;
+    }
+
+    // Check if any member's ObjectId equals the userObjectId
+    const isMember = room.members.some((member) => {
+      return String(member.userId) === String(userId);
+    });
+    console.log("verifyMember ~ isMember:", isMember);
+
+    return isMember; // Return true if userId exists in room.members, otherwise false
+  } catch (e) {
+    console.log(e);
+    return false; // Return false in case of any error
+  }
+};
+
 export const getCurrentRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
+    const user = req.user;
+
+    const isMember = await verifyMember({ userId: user._id, roomId });
+    if (!isMember) {
+      return res.status(401).json({ message: "You are not a member of this room!}" });
+    }
+
     const room = await RoomModel.findById(roomId).populate("members.userId");
     // check if user temp banned
-    const user = req.user;
     const banned = room.temporaryBanned.find((ban) => ban.user.toString() === user._id.toString());
     if (banned) {
       return res.status(401).json({ message: "You are temporarily banned from this room}" });
@@ -174,6 +202,7 @@ export const tempBanUserRoom = async ({ userId, roomId, banEndTime }) => {
     console.log(e);
   }
 };
+
 export const removeUserFromRoom = async ({ userId, roomId }) => {
   try {
     console.log(userId, roomId, "mai mileha");
@@ -190,20 +219,20 @@ export const removeUserFromRoom = async ({ userId, roomId }) => {
 };
 
 export const leaveRoomPermanetly = async (req, res) => {
-  const { roomId, memberId } = req.body;
+  const { roomId, userId } = req.body;
 
   try {
     const room = await RoomModel.findById(roomId);
-    if (memberId === room.createdBy.toString()) {
-      return res.json("Admin cannot delete his own room ");
+    if (userId === room.createdBy.toString()) {
+      return res.json("Admin cannot delete his own room!");
     }
     if (!room) {
-      return res.status(404).json({ message: "Room not found" });
+      return res.status(404).json({ message: "Room not found!" });
     }
-    room.members = room.members.filter((member) => member.userId.toString() !== memberId);
+    room.members = room.members.filter((member) => member.userId.toString() !== userId);
     await room.save();
 
-    res.status(200).json({ message: "Member removed successfully", room });
+    res.status(200).json({ message: "Member removed successfully!", room });
   } catch (error) {
     console.error("Error removing member:", error);
     res.status(500).json({ message: "Internal server error" });

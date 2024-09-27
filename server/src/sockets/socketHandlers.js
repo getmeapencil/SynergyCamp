@@ -1,6 +1,6 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
-import { editPomodoro, removeUserFromRoom, tempBanUserRoom } from "../apps/room/controller.js";
+import { editPomodoro, removeUserFromRoom, tempBanUserRoom, verifyMember } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { getRole } from "../apps/room/controller.js";
 
@@ -9,6 +9,9 @@ const users = {};
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
   socket.on("join-room", async ({ roomId }) => {
+    const isMember = await verifyMember({ userId: socket.user._id, roomId });
+    if (!isMember) return;
+
     socket.join(roomId);
     const role = await getRole(socket.user._id, roomId);
     if (users[roomId]) {
