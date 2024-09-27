@@ -18,6 +18,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useMembersStore } from "@/store/members";
+import { useMessagesStore } from "@/store/messages";
 
 export const Room = () => {
   const { roomId } = useParams();
@@ -68,6 +69,7 @@ export const Room = () => {
                   setModalOpen(false);
                   navigate(-1);
                   leaveRoom({ roomId });
+                  useMessagesStore.getState().clearMessages();
                 }}
               >
                 Continue

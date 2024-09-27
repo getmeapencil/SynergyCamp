@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useMessagesStore } from "@/store/messages";
 
 // JSON structure
 const navTopItems = [
@@ -111,6 +112,7 @@ export const SideNav = memo(({ activePanel, setActivePanel, roomId, setAllownavi
                   setAllownavigation(true);
                   leaveRoom({ roomId });
                   navigate(-1);
+                  useMessagesStore.getState().clearMessages();
                 }}
               >
                 Continue

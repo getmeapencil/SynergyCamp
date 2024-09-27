@@ -64,7 +64,7 @@ export const Pomodoro = () => {
             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
             <div className="grid flex-1 auto-rows-min gap-0.5">
               <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {pomodoro.minutes}
+                {pomodoro?.minutes}
                 <span className="text-sm font-normal text-emerald-600 dark:text-emerald-400">min</span>
               </div>
             </div>
