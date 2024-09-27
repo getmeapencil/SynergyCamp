@@ -44,22 +44,8 @@ export const AdminControl = () => {
 
   const handleInputKeyDown = (e) => {
     if (["Enter", "Tab", ","].includes(e.key)) {
-      e.preventDefault();
-      addEmail();
-    }
-  };
-
-  const addEmail = () => {
-    const trimmedEmail = inputValue.trim();
-    if (trimmedEmail && validateEmail(trimmedEmail)) {
-      if (!emails.includes(trimmedEmail)) {
-        setEmails([...emails, trimmedEmail]);
-        setInputValue("");
-      } else {
-        setError("This email has already been added.");
-      }
-    } else if (trimmedEmail) {
-      setError("Please enter a valid email address.");
+      // e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -69,16 +55,22 @@ export const AdminControl = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (emails.length > 0) {
-      sendInvites({ emails, roomId });
-      setEmails([]);
+    const trimmedEmail = inputValue.trim();
+    console.log(trimmedEmail);
+    console.log(validateEmail(trimmedEmail));
+    if (trimmedEmail && validateEmail(trimmedEmail)) {
+      sendInvites({ emails: [trimmedEmail], roomId });
+      setInputValue(""); // Clear input after sending invite
+      toast("Invite sent successfully");
     } else {
-      setError("Please add at least one valid email address.");
+      setError("Please enter a valid email address.");
+      toast("Please enter a valid email address.");
     }
   };
 
   const handleChange = (e, type) => {
     const value = e.target.value;
+
     if (type === "roomDescription") {
       if (value.length >= 100) {
         setInputWarnings((prev) => ({
@@ -153,27 +145,12 @@ export const AdminControl = () => {
                 placeholder="Type email address and press Enter key"
                 value={inputValue}
                 onChange={handleInputChange}
-                onKeyDown={handleInputKeyDown}
-                onBlur={addEmail}
-                autocomplete="off"
+                onKeyDown={(e) => handleInputKeyDown(e)}
+                autoComplete="off"
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
-            {!!emails.length && (
-              <div className="flex flex-wrap gap-2 text-sm">
-                {emails.map((email) => (
-                  <div
-                    key={email}
-                    className="flex items-center gap-1 rounded bg-secondary px-2 py-1 text-secondary-foreground"
-                  >
-                    <span>{email}</span>
-                    <button type="button" onClick={() => removeEmail(email)} className="text-secondary-foreground">
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+
             <Button type="submit" className="w-full">
               Send Invites
             </Button>
