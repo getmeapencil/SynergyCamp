@@ -58,6 +58,11 @@ export const RoomsTable = ({ filterRole, searchName }) => {
               <TableBody>
                 {filteredData.map((data) => {
                   const role = data?.members?.find((member) => member.userId === userId)?.role;
+                  const temp=data?.temporaryBanned?.find((member)=>member.user===userId);
+                  let banned=false
+                  if(temp){
+                    banned=true;
+                  }
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
@@ -73,6 +78,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
                         <Button
+                          disabled={banned}
                           onClick={() => {
                             navigate(`/room/${data._id}`);
                             joinRoom({ roomId: data._id });

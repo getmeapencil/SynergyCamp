@@ -8,6 +8,7 @@ export const useRoomStore = create((set, get) => ({
   rooms: [],
   currentRoom: undefined,
   userRole: undefined,
+  isTempBanDialogOpen: false,
   createRoom: async ({ name, description, timezone }) => {
     try {
       const room = await createApiCall({
@@ -30,7 +31,7 @@ export const useRoomStore = create((set, get) => ({
       });
       set({ currentRoom });
       // get user role
-      const userId= useUserStore.getState().user._id;
+      const userId = useUserStore.getState().user._id;
       const userRole = currentRoom.members.find((member) => member.userId._id === userId).role;
       set({ userRole });
       usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
@@ -65,6 +66,23 @@ export const useRoomStore = create((set, get) => ({
     } catch (error) {
       console.error("Error updating room profile", error);
       toast.error("Failed to update room profile!");
+    }
+  },
+  changeUserRole: async ({ userId, roomId, role }) => {
+    try {
+      const updatedRoom = await createApiCall({
+        method: "POST",
+        route: "/room/change-user-role",
+        data: { userId, roomId, role },
+        withCredentials: true,
+      });
+      const rooms = get().rooms.filter((room) => room._id !== updatedRoom._id);
+      set({ rooms: [...rooms, updatedRoom] });
+      set({ currentRoom: updatedRoom });
+      toast.success("User role updated!");
+    } catch (error) {
+      console.error("Error updating user role", error);
+      toast.error("Failed to update user role!");
     }
   },
 }));
