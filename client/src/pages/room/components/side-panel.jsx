@@ -6,15 +6,13 @@ import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Todo } from "./Todo";
 
-export const SidePanel = ({ activePanel, setActivePanel,members }) => {
+export const SidePanel = ({ activePanel, setActivePanel, members }) => {
   const renderPanelContent = () => {
     switch (activePanel) {
       case "Chat":
         return <Chat />;
       case "Participants":
-        return <Participants
-        allmembers={members}
-        />;
+        return <Participants allmembers={members} />;
       case "ToDo":
         return <Todo />;
       case "Pomodoro":
@@ -22,7 +20,7 @@ export const SidePanel = ({ activePanel, setActivePanel,members }) => {
       case "Calendar":
         return <div className="p-4">Calendar content goes here.</div>;
       case "Admin Control":
-        return <AdminControl />;
+        return <AdminControl allmembers={members} />;
       case "Settings":
         return <div className="p-4">Settings content goes here.</div>;
       default:
@@ -44,4 +42,3 @@ export const SidePanel = ({ activePanel, setActivePanel,members }) => {
     </div>
   );
 };
-

@@ -10,12 +10,11 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { redirect, useNavigate, useParams } from "react-router-dom";
-import { Trash } from "lucide-react";
-import { createApiCall } from "@/utils/createApiCall";
+import { useParams } from "react-router-dom";
 import { DeleteDialog } from "./components/DeleteDialog";
+import { useUserStore } from "@/store/user";
 
-export const AdminControl = () => {
+export const AdminControl = ({ allmembers }) => {
   const { theme } = useTheme();
   const { roomId } = useParams();
   const [emails, setEmails] = useState([]);
@@ -138,9 +137,12 @@ export const AdminControl = () => {
     e.preventDefault();
     await useRoomStore.getState().editRoomProfile({ roomProfile, roomId });
   };
+  const currentUser = useUserStore((state) => state.user);
+  const isAdmin = allmembers.find((member) => member.id === currentUser.id && member.role === "admin");
 
-  
   return (
+
+    // {isAdmin ? <p></p>:(<p>dddd</p>)}
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>
@@ -246,8 +248,7 @@ export const AdminControl = () => {
         Delete Room
       </Button> */}
       <Card>
-
-      <DeleteDialog currentRoom={currentRoom} />
+        <DeleteDialog currentRoom={currentRoom} />
       </Card>
     </div>
   );
