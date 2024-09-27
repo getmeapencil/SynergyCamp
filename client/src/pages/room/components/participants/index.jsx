@@ -36,7 +36,7 @@ const Participant = ({ member, currentRoomId }) => {
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
-  const { permanentBanUser } = useSocketEmitters();
+  const { permanentBanUser, temporaryBanUser } = useSocketEmitters();
   return (
     <div className="flex justify-between px-4 py-2 hover:bg-background">
       <div className="flex gap-2">
@@ -68,13 +68,25 @@ const Participant = ({ member, currentRoomId }) => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        useRoomStore
+                          .getState()
+                          .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "moderator" });
+                      }}
+                    >
                       <Check
                         className={cn("mr-2 h-4 w-4", member.role === "moderator" ? "opacity-100" : "opacity-0")}
                       />
                       <span>Moderator</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        useRoomStore
+                          .getState()
+                          .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "member" });
+                      }}
+                    >
                       <Check className={cn("mr-2 h-4 w-4", member.role === "member" ? "opacity-100" : "opacity-0")} />
                       <span>Member</span>
                     </DropdownMenuItem>
@@ -132,7 +144,14 @@ const Participant = ({ member, currentRoomId }) => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => {
+                    temporaryBanUser({ userId: member._id, roomId: currentRoomId, banDuration: banDuration });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -171,9 +190,14 @@ export const Participants = () => {
     currentRoom?.members?.map((member) => {
       return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
     }) || [];
+  const bannedMembers = allmembers.filter((member) =>
+    currentRoom?.temporaryBanned?.find((mem) => mem.user === member._id),
+  );
 
   const members = useMembersStore((state) => state.members);
-  const offlineMembers = allmembers.filter((member) => !members?.find((m) => m._id === member._id));
+  const offlineMembers = allmembers.filter(
+    (member) => !members?.find((m) => m._id === member._id) && !bannedMembers?.find((m) => m._id === member._id),
+  );
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -194,6 +218,16 @@ export const Participants = () => {
             ))}
           </AccordionContent>
         </AccordionItem>
+        {bannedMembers.length > 0 && (
+          <AccordionItem value="temporarily banned">
+            <AccordionTrigger className="p-4 hover:no-underline">Temporarily Banned</AccordionTrigger>
+            <AccordionContent>
+              {bannedMembers.map((member) => (
+                <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        )}
       </Accordion>
       <div className="p-4 text-transparent">
         I will like to thank Suruchi for helping me to write this code by providing emotional support and sending
