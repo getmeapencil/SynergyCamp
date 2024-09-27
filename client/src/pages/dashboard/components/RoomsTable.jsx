@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
@@ -10,13 +9,15 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms,allUsers } = useRoomStore();
+  const { rooms, allUsers } = useRoomStore();
   const { user } = useUserStore();
   const [filteredData, setFilteredData] = useState([]);
   const userId = user?._id;
-  const {joinRoom}=useSocketEmitters();
+  const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
   useEffect(() => {
     if (filterRole?.length === 0) {
@@ -58,13 +59,18 @@ export const RoomsTable = ({ filterRole, searchName }) => {
               <TableBody>
                 {filteredData.map((data) => {
                   const role = data?.members?.find((member) => member.userId === userId)?.role;
+                  const temp = data?.temporaryBanned?.find((member) => member.user === userId);
+                  let banned = false;
+                  if (temp) {
+                    banned = true;
+                  }
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                        <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
+                          <Emoji emojiStyle={EmojiStyle.APPLE} unified={data.avatar} size={20} />
+                        </div>
+
                         <div className="font-medium">{data.name}</div>
                       </TableCell>
                       <TableCell className="text-center capitalize sm:table-cell">
@@ -72,14 +78,24 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       </TableCell>
                       <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
-                        <Button
-                          onClick={() => {
-                            navigate(`/room/${data._id}`);
-                            joinRoom({roomId:data._id});
-                          }}
-                        >
-                          Enter Room
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger className="text-xs text-muted-foreground">
+                              <Button
+                                disabled={banned}
+                                onClick={() => {
+                                  navigate(`/room/${data._id}`);
+                                  joinRoom({ roomId: data._id });
+                                }}
+                              >
+                                Enter Room
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {banned ? "You are temporarily banned from this room" : "Click to go inside room"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
                   );

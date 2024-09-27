@@ -36,17 +36,19 @@ const RoomSchema = new mongoose.Schema({
     type: String,
     default: "1f601",
   },
-  temporaryBanned: {
-    user: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "user",
+  temporaryBanned: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+      banEndTime: { type: Date },
     },
-    banEndTime: { type: Date },
-  },
-  permanentBanned: {
+  ],
+  permanentBanned: [{
     type: [mongoose.Schema.Types.ObjectId],
     ref: "user",
-  },
+  }],
   pomodoro: {
     pomodoroType: {
       type: String,

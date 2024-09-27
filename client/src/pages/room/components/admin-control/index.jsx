@@ -11,6 +11,8 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { DeleteDialog } from "./components/DeleteDialog";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
@@ -20,10 +22,11 @@ export const AdminControl = () => {
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
+  const currentRoom = useRoomStore((state) => state.currentRoom);
   const [roomProfile, setRoomProfile] = useState({
-    roomName: "",
-    roomDescription: "",
-    roomAvatar: "1f601",
+    roomName: `${currentRoom?.name}`,
+    roomDescription: `${currentRoom?.description ? currentRoom?.description : ""}`,
+    roomAvatar: `${currentRoom?.avatar ? currentRoom?.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
@@ -70,8 +73,10 @@ export const AdminControl = () => {
     if (emails.length > 0) {
       sendInvites({ emails, roomId });
       setEmails([]);
+      toast("Invites sent successfully");
     } else {
       setError("Please add at least one valid email address.");
+      toast("Please add at least one valid email address.");
     }
   };
 
@@ -153,7 +158,7 @@ export const AdminControl = () => {
                 onChange={handleInputChange}
                 onKeyDown={handleInputKeyDown}
                 onBlur={addEmail}
-                autocomplete="off"
+                autoComplete="off"
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
@@ -172,7 +177,7 @@ export const AdminControl = () => {
                 ))}
               </div>
             )}
-            <Button type="submit" className="w-full">
+            <Button type="submit" disabled={emails.length === 0} className="w-full">
               Send Invites
             </Button>
           </form>
@@ -200,7 +205,7 @@ export const AdminControl = () => {
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button size="icon" variant="outline" className="shrink-0">
-                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomProfile.roomAvatar} size={20} />
+                      <Emoji emojiStyle={EmojiStyle.APPLE} unified={roomProfile.roomAvatar} size={20} />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="border-0 p-0" align="end">
@@ -235,6 +240,13 @@ export const AdminControl = () => {
             </Button>
           </form>
         </CardContent>
+      </Card>
+      {/* <Button onClick={handleDeleteRoom} className="w-full gap-2" variant="destructive">
+        <Trash />
+        Delete Room
+      </Button> */}
+      <Card>
+        <DeleteDialog currentRoom={currentRoom} />
       </Card>
     </div>
   );

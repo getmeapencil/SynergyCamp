@@ -5,9 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useTheme } from "@/components/theme-provider";
-import LogoBlack from "/logo-black.svg";
-import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
 import { Companions } from "./components/Companions";
 import { Clock } from "./components/Clock";
@@ -19,6 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Pomodoro } from "./components/Pomodoro";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useRoomStore } from "@/store/room";
+
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 const themes = [
   {
@@ -47,10 +47,12 @@ const themes = [
 export const MainView = memo(() => {
   const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("Companions");
-  const { theme: appTheme } = useTheme();
-
-  const { roomNote, setRoomNote } = useNoteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const roomNote = useNoteStore((state) => state.roomNote);
+  const setRoomNote = useNoteStore((state) => state.setRoomNote);
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+  const avatar = currentRoom?.avatar ? currentRoom?.avatar : "1f6a4";
+  const roomName = currentRoom?.name ? currentRoom?.name : "";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,22 +93,22 @@ export const MainView = memo(() => {
     }
   };
 
+  if (!currentRoom) return null;
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
-        <span className="flex gap-2 text-2xl font-extrabold">
-          <img
-            src={appTheme === "light" ? LogoBlack : LogoWhite}
-            alt="MindMesh"
-            className="grid aspect-square w-5 place-content-center"
-          />
-          MindMesh
-        </span>
+        <div className="flex gap-2 text-2xl font-extrabold">
+          <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
+            <Emoji emojiStyle={EmojiStyle.APPLE} unified={avatar} size={20} />
+          </div>
+          {roomName}
+        </div>
         <div className="flex items-center gap-2">
           {currentTheme === "Note" && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="outline" size="icon">
                   <PencilIcon className="h-4 w-4" />
                   <span className="sr-only">Edit note</span>
                 </Button>

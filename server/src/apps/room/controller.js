@@ -1,3 +1,4 @@
+import { InviteModel } from "../../models/invite.js";
 import { RoomModel } from "../../models/room.js";
 import { UserModel } from "../../models/user.js";
 
@@ -26,6 +27,12 @@ export const getCurrentRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
     const room = await RoomModel.findById(roomId).populate("members.userId");
+    // check if user temp banned
+    const user = req.user;
+    const banned = room.temporaryBanned.find((ban) => ban.user.toString() === user._id.toString());
+    if (banned) {
+      return res.status(401).json({ message: "You are temporarily banned from this room}" });
+    }
     res.json(room);
   } catch (e) {
     console.log(e);
@@ -36,6 +43,14 @@ export const getRooms = async (req, res) => {
   try {
     const user = req.user;
     const rooms = await RoomModel.find({ "members.userId": user?._id });
+    for(let room of rooms){
+      if(room.temporaryBanned&& room.temporaryBanned.length>0){
+        room.temporaryBanned = room.temporaryBanned.filter((ban) => {
+          return ban.banEndTime > Date.now();
+        });
+       await room.save();
+      }
+    }
     res.json(rooms);
   } catch (e) {
     console.log(e);
@@ -80,8 +95,8 @@ export const updateRoom = async (req, res) => {
 export const getRole = async (userId, roomId) => {
   try {
     const room = await RoomModel.findById(roomId);
-    const member = room.members.find((member) => member.userId.toString() === userId.toString());
-    return member.role;
+    const member = room?.members.find((member) => member.userId.toString() === userId.toString());
+    return member?.role;
   } catch (e) {
     console.log(e);
   }
@@ -99,5 +114,77 @@ export const editRoomProfile = async (req, res) => {
     res.json(updatedRoom);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deleteRoom = async (req, res) => {
+  try {
+    const RoomId = req.params.roomId;
+    console.log(RoomId, "server param");
+    const data = await RoomModel.findByIdAndDelete(RoomId);
+    const inviteDelete = await InviteModel.deleteMany({ roomId: RoomId });
+    if (!data || !inviteDelete) {
+      return res.json("Room deletion failed ");
+    }
+    res.send("Room deleted successfully");
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const changeUserRole = async (req,res) => {
+  const { userId, roomId, role } = req.body;
+  try {
+    const room = await RoomModel.findById(roomId).populate("members.userId");;
+    if(!room){
+      return  res.status(400).json({ message: "Room not found" });
+    }
+    if(!role||!userId){
+      return res.status(400).json({ message: "Role or userId not found" });
+    }
+    room.members=room.members.map((member)=>{
+      if(member.userId?._id.toString()===userId.toString()){
+        member.role=role;
+      }
+      return member;
+    })
+    await room.save();
+    res.json(room);
+  }catch(e){
+    console.log(e);
+  }
+}
+export const tempBanUserRoom = async ({ userId, roomId, banEndTime }) => {
+  try {
+    let room = await RoomModel.findById(roomId);
+    if(!room){
+      return;
+    }
+    // if(room.temporaryBanned.map((mem)=>mem.user).includes(userId)){
+    //   return
+    // }
+    console.log(banEndTime, "banDuration");
+    room.temporaryBanned.push({ user: userId, banEndTime: banEndTime });
+    // // remove temporary ban after banDuration
+    // room.temporaryBanned=room.temporaryBanned.filter((ban) => {
+    //   return ban.banEndTime < Date.now();
+    // });
+    await room.save();
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const removeUserFromRoom = async ({ userId, roomId }) => {
+  try {
+    console.log(userId, roomId, "mai mileha");
+    const room = await RoomModel.findById(roomId);
+    console.log(room, room.members);
+    room.members = room.members.filter((member) => member.userId.toString() !== userId.toString());
+    // delete invite of the user
+    await InviteModel.deleteOne({ invitee: userId, roomId: roomId });
+
+    await room.save();
+  } catch (e) {
+    console.log(e);
   }
 };

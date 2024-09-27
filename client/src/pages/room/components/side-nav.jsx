@@ -15,6 +15,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useMessagesStore } from "@/store/messages";
+import { useRoomStore } from "@/store/room";
 
 // JSON structure
 const navTopItems = [
@@ -62,7 +64,7 @@ const NavItem = ({ item, setActivePanel }) => {
 
 export const SideNav = memo(({ activePanel, setActivePanel }) => {
   const navigate = useNavigate();
-
+  const userRole = useRoomStore((state) => state.userRole);
   return (
     <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -75,11 +77,12 @@ export const SideNav = memo(({ activePanel, setActivePanel }) => {
         })}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        {activePanel === "Admin Control" ? (
-          <ActiveNavItem item={{ label: "Admin Control", icon: ShieldPlus }} />
-        ) : (
-          <NavItem item={{ label: "Admin Control", icon: ShieldPlus }} setActivePanel={setActivePanel} />
-        )}
+        {userRole === "admin" &&
+          (activePanel === "Admin Control" ? (
+            <ActiveNavItem item={{ label: "Admin Control", icon: ShieldPlus }} />
+          ) : (
+            <NavItem item={{ label: "Admin Control", icon: ShieldPlus }} setActivePanel={setActivePanel} />
+          ))}
         {activePanel === "Settings" ? (
           <ActiveNavItem item={{ label: "Settings", icon: Settings }} />
         ) : (
@@ -107,6 +110,7 @@ export const SideNav = memo(({ activePanel, setActivePanel }) => {
               <AlertDialogAction
                 onClick={() => {
                   navigate(-1);
+                  useMessagesStore.getState().clearMessages();
                 }}
               >
                 Continue
