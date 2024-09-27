@@ -135,7 +135,20 @@ const registerSocketHandlers = (io, socket) => {
     });
     socket.leave(roomId);
     io.to(roomId).emit("user-status", users[roomId]);
+
+    const message = {
+      _id: uuidv4(),
+      text: `${socket.user.name} left the room!`,
+      notification: {
+        type: "leaving-room",
+      },
+      user: {
+        _id: socket.user._id,
+      },
+    };
+    socket.to(roomId).emit("incoming-message", message);
   });
+
   socket.on("disconnecting", () => {
     const rooms = Array.from(socket.rooms); // Get the rooms the user was in
     rooms.forEach((room) => {

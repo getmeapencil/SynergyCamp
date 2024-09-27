@@ -3,7 +3,6 @@ import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus,
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
-import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 import {
   AlertDialog,
@@ -62,8 +61,7 @@ const NavItem = ({ item, setActivePanel }) => {
   );
 };
 
-export const SideNav = memo(({ activePanel, setActivePanel, roomId, setAllownavigation }) => {
-  const { leaveRoom } = useSocketEmitters();
+export const SideNav = memo(({ activePanel, setActivePanel }) => {
   const navigate = useNavigate();
 
   return (
@@ -109,8 +107,6 @@ export const SideNav = memo(({ activePanel, setActivePanel, roomId, setAllownavi
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  setAllownavigation(true);
-                  leaveRoom({ roomId });
                   navigate(-1);
                   useMessagesStore.getState().clearMessages();
                 }}

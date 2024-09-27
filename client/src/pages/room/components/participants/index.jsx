@@ -171,7 +171,7 @@ export const Participants = () => {
     }) || [];
 
   const members = useMembersStore((state) => state.members);
-  const offlineMembers = allmembers.filter((member) => !members.find((m) => m._id === member._id));
+  const offlineMembers = allmembers.filter((member) => !members?.find((m) => m._id === member._id));
 
   return (
     <div className="flex h-full flex-col gap-3">
