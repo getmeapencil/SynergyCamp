@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
@@ -13,24 +13,18 @@ import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const RoomsTable = ({ filterRoles, searchName }) => {
-  const { rooms } = useRoomStore();
-  const { user } = useUserStore();
-  const [filteredData, setFilteredData] = useState([]);
+  const rooms = useRoomStore((state) => state.rooms);
+  const user = useUserStore((state) => state.user);
   const userId = user?._id;
   const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
+  const filteredData = rooms.filter((room) => {
+    const memberRole = room.members.find((member) => member.userId === userId)?.role;
+    const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
+    const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
 
-  useEffect(() => {
-    const filteredRooms = rooms.filter((room) => {
-      const memberRole = room.members.find((member) => member.userId === userId)?.role;
-      const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
-      const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
-
-      return matchesRole && matchesSearch;
-    });
-
-    setFilteredData(filteredRooms);
-  }, [filterRoles, searchName, rooms, userId]);
+    return matchesRole && matchesSearch;
+  });
 
   useEffect(() => {
     useRoomStore.getState().getRooms();
@@ -40,6 +34,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
     const length = data.members.length;
     return length;
   };
+
   return (
     <Card>
       <CardHeader>
@@ -105,7 +100,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                 })}
               </TableBody>
             </Table>
-          ) : filteredData?.length === 0 ? (
+          ) : filteredData?.length === 0 && searchName.length ? (
             <EmptyTable variant={"room"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
