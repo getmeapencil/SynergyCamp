@@ -4,7 +4,7 @@ import { editPomodoro } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { getRole } from "../apps/room/controller.js";
 
-const users={}
+const users = {};
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
@@ -12,8 +12,8 @@ const registerSocketHandlers = (io, socket) => {
     socket.join(roomId);
     const role = await getRole(socket.user._id, roomId);
     if (users[roomId]) {
-      if(users[roomId].map((user)=>user._id.toString()).includes(socket.user._id.toString())){
-        return
+      if (users[roomId].map((user) => user._id.toString()).includes(socket.user._id.toString())) {
+        return;
       }
       users[roomId].push({
         _id: socket.user._id,
@@ -93,12 +93,25 @@ const registerSocketHandlers = (io, socket) => {
     io.to(roomId).emit("incoming-message", message);
   });
 
-  socket.on("leave-room", ({roomId}) => {
+  socket.on("leave-room", ({ roomId }) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
     });
     io.to(roomId).emit("user-status", users[roomId]);
+
+    const message = {
+      _id: uuidv4(),
+      text: `${socket.user.name} left the room!`,
+      notification: {
+        type: "leaving-room",
+      },
+      user: {
+        _id: socket.user._id,
+      },
+    };
+    socket.to(roomId).emit("incoming-message", message);
   });
+
   socket.on("disconnecting", () => {
     const rooms = Array.from(socket.rooms); // Get the rooms the user was in
     rooms.forEach((room) => {
