@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
@@ -10,13 +9,14 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms,allUsers } = useRoomStore();
+  const { rooms, allUsers } = useRoomStore();
   const { user } = useUserStore();
   const [filteredData, setFilteredData] = useState([]);
   const userId = user?._id;
-  const {joinRoom}=useSocketEmitters();
+  const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
   useEffect(() => {
     if (filterRole?.length === 0) {
@@ -61,10 +61,10 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage src="https://github.com/shadcn.png" />
-                          <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
+                        <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
+                          <Emoji emojiStyle={EmojiStyle.NATIVE} unified={data.avatar} size={20} />
+                        </div>
+
                         <div className="font-medium">{data.name}</div>
                       </TableCell>
                       <TableCell className="text-center capitalize sm:table-cell">
@@ -75,7 +75,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                         <Button
                           onClick={() => {
                             navigate(`/room/${data._id}`);
-                            joinRoom({roomId:data._id});
+                            joinRoom({ roomId: data._id });
                           }}
                         >
                           Enter Room

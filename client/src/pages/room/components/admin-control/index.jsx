@@ -11,6 +11,7 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
+import { DeleteDialog } from "./components/DeleteDialog";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
@@ -20,10 +21,11 @@ export const AdminControl = () => {
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { sendInvites } = useSocketEmitters();
+  const currentRoom = useRoomStore((state) => state.currentRoom);
   const [roomProfile, setRoomProfile] = useState({
-    roomName: "",
-    roomDescription: "",
-    roomAvatar: "1f601",
+    roomName: `${currentRoom.name}`,
+    roomDescription: `${currentRoom.description ? currentRoom.description : ""}`,
+    roomAvatar: `${currentRoom.avatar ? currentRoom.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
@@ -235,6 +237,13 @@ export const AdminControl = () => {
             </Button>
           </form>
         </CardContent>
+      </Card>
+      {/* <Button onClick={handleDeleteRoom} className="w-full gap-2" variant="destructive">
+        <Trash />
+        Delete Room
+      </Button> */}
+      <Card>
+        <DeleteDialog currentRoom={currentRoom} />
       </Card>
     </div>
   );
