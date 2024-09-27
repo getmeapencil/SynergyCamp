@@ -71,12 +71,17 @@ export const useSocket = () => {
       useMessagesStore.getState().recieveMessage(message);
       playSound("/message.mp3");
     });
-    newSocket.on("permanent-banned", () => {
-      toast("You have been permanently banned from the room", {
-        type: "error",
-      });
-      // Redirect to home page
-      window.location.href = "/dashboard";
+    newSocket.on("permanent-banned", (data) => {
+      if(data?.userId===useUserStore.getState().user._id){
+        toast("You have been permanently banned from the room", {
+          type: "error",
+        });
+        // Redirect to home page
+        window.location.href = "/dashboard";
+       
+      }else{
+        useMembersStore.getState().removeMember(data?.userId)
+      }
     });
     newSocket.on("edit-pomodoro", ({ pomodoroType, timezone }) => {
       usePomodoroStore.getState().setPomodoro({ pomodoroType, timezone });

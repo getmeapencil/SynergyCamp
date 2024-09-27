@@ -1,3 +1,4 @@
+import { InviteModel } from "../../models/invite.js";
 import { RoomModel } from "../../models/room.js";
 import { UserModel } from "../../models/user.js";
 
@@ -80,7 +81,7 @@ export const updateRoom = async (req, res) => {
 export const getRole = async (userId, roomId) => {
   try {
     const room = await RoomModel.findById(roomId);
-    const member = room.members.find((member) => member.userId.toString() === userId.toString());
+    const member = room?.members.find((member) => member.userId.toString() === userId.toString());
     return member.role;
   } catch (e) {
     console.log(e);
@@ -104,10 +105,13 @@ export const editRoomProfile = async (req, res) => {
 
 export const removeUserFromRoom = async ({ userId, roomId }) => {
   try {
-    console.log(userId, roomId,"mai mileha");
+    console.log(userId, roomId, "mai mileha");
     const room = await RoomModel.findById(roomId);
-    console.log(room,room.members)
+    console.log(room, room.members);
     room.members = room.members.filter((member) => member.userId.toString() !== userId.toString());
+    // delete invite of the user
+    await InviteModel.deleteOne({ invitee: userId, roomId: roomId });
+
     await room.save();
   } catch (e) {
     console.log(e);

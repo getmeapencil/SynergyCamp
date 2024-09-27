@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
 import { usePomodoroStore } from "./pomodoro";
 import { toast } from "sonner";
+import { useUserStore } from "./user";
 
 export const useRoomStore = create((set, get) => ({
   rooms: [],
   currentRoom: undefined,
+  userRole: undefined,
   createRoom: async ({ name, description, timezone }) => {
     try {
       const room = await createApiCall({
@@ -30,6 +32,10 @@ export const useRoomStore = create((set, get) => ({
         withCredentials: true,
       });
       set({ currentRoom });
+      // get user role
+      const userId= useUserStore.getState().user._id;
+      const userRole = currentRoom.members.find((member) => member.userId._id === userId).role;
+      set({ userRole });
       usePomodoroStore.getState().setPomodoroTypeAndTZ(currentRoom.pomodoro);
     } catch (error) {
       console.error(error);
@@ -43,18 +49,6 @@ export const useRoomStore = create((set, get) => ({
         withCredentials: true,
       });
       set({ rooms });
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  getRoom: async (roomId) => {
-    try {
-      const room = await createApiCall({
-        method: "GET",
-        route: `/room/${roomId}`,
-        withCredentials: true,
-      });
-      set({ currentRoom: room });
     } catch (error) {
       console.error(error);
     }

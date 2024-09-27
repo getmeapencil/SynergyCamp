@@ -32,10 +32,10 @@ import { useRoomStore } from "@/store/room";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 const Participant = ({ member, currentRoomId }) => {
+  const { userRole } = useRoomStore();
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
-  console.log("currentRoomId", currentRoomId);  
   const { permanentBanUser } = useSocketEmitters();
   return (
     <div className="flex justify-between px-4 py-2 hover:bg-background">
@@ -51,7 +51,7 @@ const Participant = ({ member, currentRoomId }) => {
           </Badge>
         </div>
       </div>
-      {member.role !== "admin" && (
+      {member.role !== "admin" && userRole === "admin" && (
         <>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>

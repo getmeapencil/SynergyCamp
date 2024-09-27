@@ -51,6 +51,7 @@ const registerSocketHandlers = (io, socket) => {
   // Handle sending an invite by userId
   socket.on("send-invite", async ({ emails, roomId }) => {
     const senderId = String(socket.user._id);
+    console.log(emails, roomId, senderId);
     const res = await invite({ emails, roomId, senderId });
 
     if (res.error) {
@@ -96,9 +97,15 @@ const registerSocketHandlers = (io, socket) => {
   });
   socket.on("permanent-ban-user", async ({ userId, roomId }) => {
     console.log("permanent ban user", userId, roomId);
+    // get socket io of user from userslist
+    const userSocket = users[roomId].find((user) => {
+      return user._id.toString() === userId.toString();
+    });
+    const socketId = userSocket.socketid;
+    const username = userSocket.name;
     const message = {
       _id: uuidv4(),
-      text: `User has been permanently banned`,
+      text: `${username} has been permanently banned`,
       notification: {
         type: "permanent-ban",
       },
@@ -107,23 +114,17 @@ const registerSocketHandlers = (io, socket) => {
       },
     };
     io.to(roomId).emit("incoming-message", message);
-    
-    // get socket io of user from userslist
-    const userSocket = users[roomId].find((user) => {
-      return user._id.toString() === userId.toString();
-    });
-    const socketId = userSocket.socketid;
 
     // remove user from room
     io.sockets.sockets.get(socketId).leave(roomId);
     // emit banned message to user
-    io.to(socketId).emit("permanent-banned", { message: "You have been banned from the room" });
-    // remove user from users list
+    io.to(roomId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
+   
+    io.to(socketId).emit("permanent-banned",{ message: "You have been banned from the room", userId: userId });
+    
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== userId.toString();
     });
-
-
     io.to(roomId).emit("user-status", users[roomId]);
     // remove user from room members list
     await removeUserFromRoom({ userId, roomId });

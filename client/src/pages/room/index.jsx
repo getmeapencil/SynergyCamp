@@ -28,7 +28,6 @@ export const Room = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const members = useMembersStore((state) => state.members);
   const { leaveRoom, joinRoom } = useSocketEmitters();
-
   let blocker = useBlocker(({ currentLocation, nextLocation }) => {
     setModalOpen(true);
     return !allownavigation && currentLocation.pathname !== nextLocation.pathname;
