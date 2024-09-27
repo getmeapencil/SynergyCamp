@@ -84,7 +84,12 @@ export const MainView = memo(() => {
         return <Clock />;
       case "Note":
         return (
-          <Note note={roomNote.note} fontSize={roomNote.fontSize} align={roomNote.align} position={roomNote.position} />
+          <Note
+            note={roomNote.note.trim()}
+            fontSize={roomNote.fontSize}
+            align={roomNote.align}
+            position={roomNote.position}
+          />
         );
       case "Pomodoro":
         return <Pomodoro />;
