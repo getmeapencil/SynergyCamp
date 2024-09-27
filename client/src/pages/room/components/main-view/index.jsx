@@ -92,7 +92,7 @@ export const MainView = memo(() => {
     }
   };
 
-  // if (!currentRoom) return null;
+  if (!currentRoom) return null;
 
   return (
     <div className="flex flex-1 flex-col">
