@@ -29,12 +29,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRoomStore } from "@/store/room";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
-const Participant = ({ member }) => {
+const Participant = ({ member, currentRoomId, isBanned }) => {
+  const { userRole } = useRoomStore();
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
-
+  const { permanentBanUser, temporaryBanUser } = useSocketEmitters();
   return (
     <div className="flex justify-between px-4 py-2 hover:bg-background">
       <div className="flex gap-2">
@@ -44,12 +46,14 @@ const Participant = ({ member }) => {
         </Avatar>
         <div className="flex items-center gap-2">
           <div className="text-lg">{member.name}</div>
-          <Badge variant="outline" className="h-fit w-fit text-xs capitalize text-muted-foreground">
-            {member.role}
-          </Badge>
+          {member.role !== "member" && (
+            <Badge variant="outline" className="h-fit w-fit text-xs capitalize text-muted-foreground">
+              {member.role}
+            </Badge>
+          )}
         </div>
       </div>
-      {member.role !== "admin" && (
+      {member.role !== "admin" && userRole === "admin" && !isBanned && (
         <>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -64,13 +68,25 @@ const Participant = ({ member }) => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        useRoomStore
+                          .getState()
+                          .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "moderator" });
+                      }}
+                    >
                       <Check
                         className={cn("mr-2 h-4 w-4", member.role === "moderator" ? "opacity-100" : "opacity-0")}
                       />
                       <span>Moderator</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        useRoomStore
+                          .getState()
+                          .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "member" });
+                      }}
+                    >
                       <Check className={cn("mr-2 h-4 w-4", member.role === "member" ? "opacity-100" : "opacity-0")} />
                       <span>Member</span>
                     </DropdownMenuItem>
@@ -128,7 +144,14 @@ const Participant = ({ member }) => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => {
+                    temporaryBanUser({ userId: member._id, roomId: currentRoomId, banDuration: banDuration });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -137,14 +160,21 @@ const Participant = ({ member }) => {
           <AlertDialog open={isPermBanDialogOpen} onOpenChange={setIsPermBanDialogOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Do you want to permanently ban this user?</AlertDialogTitle>
+                <AlertDialogTitle>Do you want to permanently ban {member.name}?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action will revoke their access indefinitely and cannot be undone. Do you want to proceed?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => {
+                    permanentBanUser({ userId: member._id, roomId: currentRoomId });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -160,9 +190,14 @@ export const Participants = () => {
     currentRoom?.members?.map((member) => {
       return { ...member.userId, role: member.role, joinedAt: member.joinedAt };
     }) || [];
+  const bannedMembers = allmembers.filter((member) =>
+    currentRoom?.temporaryBanned?.find((mem) => mem.user === member._id),
+  );
 
   const members = useMembersStore((state) => state.members);
-  const offlineMembers = allmembers.filter((member) => !members?.find((m) => m._id === member._id));
+  const offlineMembers = allmembers.filter(
+    (member) => !members?.find((m) => m._id === member._id) && !bannedMembers?.find((m) => m._id === member._id),
+  );
 
   return (
     <div className="flex h-full flex-col gap-3">
@@ -171,7 +206,7 @@ export const Participants = () => {
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
             {members?.map((member) => (
-              <Participant key={member._id} member={member} />
+              <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
             ))}
           </AccordionContent>
         </AccordionItem>
@@ -179,10 +214,20 @@ export const Participants = () => {
           <AccordionTrigger className="p-4 hover:no-underline">Offline</AccordionTrigger>
           <AccordionContent>
             {offlineMembers.map((member) => (
-              <Participant key={member._id} member={member} />
+              <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
             ))}
           </AccordionContent>
         </AccordionItem>
+        {bannedMembers.length > 0 && (
+          <AccordionItem value="temporarily banned">
+            <AccordionTrigger className="p-4 hover:no-underline">Temporarily Banned</AccordionTrigger>
+            <AccordionContent>
+              {bannedMembers.map((member) => (
+                <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} isBanned />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        )}
       </Accordion>
       <div className="p-4 text-transparent">
         I will like to thank Suruchi for helping me to write this code by providing emotional support and sending

@@ -1,6 +1,6 @@
 import { useUserStore } from "@/store/user";
 
-export const ThemeNote = ({ note, fontSize, align, position }) => {
+export const Note = ({ note, fontSize, align, position }) => {
   const user = useUserStore((state) => state.user);
 
   const firstName = user?.name?.split(" ")[0] || "there";

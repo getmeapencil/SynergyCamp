@@ -13,8 +13,8 @@ export const useNoteStore = create(
       },
       roomNote: {
         note: "",
-        fontSize: 26,
-        align: "left",
+        fontSize: 64,
+        align: "center",
         position: "center",
       },
       setRoomNote: (roomNote) => {

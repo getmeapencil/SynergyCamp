@@ -67,7 +67,6 @@ export const getTasksByRoom = async (req, res) => {
 export const getTasks = async (req, res) => {
   const userId = req.user._id;
   try {
-    console.log("get task");
     let tasks = await TaskModel.find({ user: userId }).populate("room");
     tasks = tasks.map((task) => {
       if (task.room) {
