@@ -13,8 +13,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { DeleteDialog } from "./components/DeleteDialog";
-import { toast } from "sonner";
-
 export const AdminControl = () => {
   const { theme } = useTheme();
   const { roomId } = useParams();
@@ -62,7 +60,7 @@ export const AdminControl = () => {
     console.log(validateEmail(trimmedEmail));
     if (trimmedEmail && validateEmail(trimmedEmail)) {
       sendInvites({ emails: [trimmedEmail], roomId });
-      setInputValue(""); 
+      setInputValue("");
       toast("Invite sent successfully");
     } else {
       setError("Please enter a valid email address.");
