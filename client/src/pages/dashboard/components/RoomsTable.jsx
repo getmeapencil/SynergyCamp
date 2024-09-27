@@ -5,38 +5,36 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export const RoomsTable = ({ filterRole, searchName }) => {
-  const { rooms, allUsers } = useRoomStore();
-  const { user } = useUserStore();
-  const [filteredData, setFilteredData] = useState([]);
+export const RoomsTable = ({ filterRoles, searchName }) => {
+  const rooms = useRoomStore((state) => state.rooms);
+  const user = useUserStore((state) => state.user);
   const userId = user?._id;
   const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (filterRole?.length === 0) {
-      setFilteredData(rooms);
-    } else {
-      setFilteredData(() => {
-        return rooms.filter((data) => data.role === filterRole);
-      });
-    }
-  }, [filterRole]);
+  const filteredData = rooms.filter((room) => {
+    const memberRole = room.members.find((member) => member.userId === userId)?.role;
+    const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
+    const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
+
+    return matchesRole && matchesSearch;
+  });
 
   useEffect(() => {
     useRoomStore.getState().getRooms();
   }, []);
-  useEffect(() => {
-    if (rooms) {
-      setFilteredData(rooms);
-    }
-  }, [rooms]);
+
+  const calculateTotalMembers = (data) => {
+    const length = data.members.length;
+    return length;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -52,7 +50,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                 <TableRow>
                   <TableHead className="sm:table-cell">Room</TableHead>
                   <TableHead className="text-center sm:table-cell">Role</TableHead>
-                  <TableHead className="text-center sm:table-cell">Online</TableHead>
+                  <TableHead className="text-center sm:table-cell">Total Members</TableHead>
                   <TableHead className="text-center sm:table-cell">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -76,7 +74,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       <TableCell className="text-center capitalize sm:table-cell">
                         <Badge variant={"outline"}>{role}</Badge>
                       </TableCell>
-                      <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
+                      <TableCell className="text-center sm:table-cell">{calculateTotalMembers(data)} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
                         <TooltipProvider>
                           <Tooltip>
@@ -102,7 +100,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                 })}
               </TableBody>
             </Table>
-          ) : filteredData?.length === 0 ? (
+          ) : filteredData?.length === 0 && searchName.length ? (
             <EmptyTable variant={"room"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />

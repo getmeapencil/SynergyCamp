@@ -22,19 +22,17 @@ export function RoomsData() {
     minMembers: 0,
     name: "",
   });
-  const [inviteCount, setInviteCount] = useState(0);
+  const [selectedTab, setSelectedTab] = useState("rooms");
   const getInvites = useInvitesStore((state) => state.getInvites);
   const invites = useInvitesStore((state) => state.invites);
+  const inviteCount = invites.length;
 
   useEffect(() => {
     getInvites();
   }, [getInvites]);
 
-  useEffect(() => {
-    setInviteCount(invites.length);
-  }, [invites]);
   return (
-    <Tabs defaultValue="rooms" className="">
+    <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
       <div className="flex justify-between">
         <div>
           <TabsList className="grid w-full grid-cols-2">
@@ -64,66 +62,68 @@ export function RoomsData() {
               }}
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex gap-1">
-                <ListFilter className="h-4 w-4" />
-                Filter
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="" align="end">
-              <DropdownMenuLabel>Role</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Admin")}
-                onCheckedChange={() => {
-                  setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Admin");
-                    return {
-                      ...prevFilter,
-                      selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Admin")
-                        : [...prevFilter.selectedRole, "Admin"],
-                    };
-                  });
-                }}
-              >
-                Admin
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Moderator")}
-                onCheckedChange={() => {
-                  setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Moderator");
-                    return {
-                      ...prevFilter,
-                      selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Moderator")
-                        : [...prevFilter.selectedRole, "Moderator"],
-                    };
-                  });
-                }}
-              >
-                Moderator
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={filter.selectedRole.includes("Member")}
-                onCheckedChange={() => {
-                  setFilter((prevFilter) => {
-                    const isSelected = prevFilter.selectedRole.includes("Member");
-                    return {
-                      ...prevFilter,
-                      selectedRole: isSelected
-                        ? prevFilter.selectedRole.filter((role) => role !== "Member")
-                        : [...prevFilter.selectedRole, "Member"],
-                    };
-                  });
-                }}
-              >
-                Member
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {selectedTab === "rooms" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex gap-1">
+                  <ListFilter className="h-4 w-4" />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="" align="end">
+                <DropdownMenuLabel>Role</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={filter.selectedRole.includes("admin")}
+                  onCheckedChange={() => {
+                    setFilter((prevFilter) => {
+                      const isSelected = prevFilter.selectedRole.includes("admin");
+                      return {
+                        ...prevFilter,
+                        selectedRole: isSelected
+                          ? prevFilter.selectedRole.filter((role) => role !== "admin")
+                          : [...prevFilter.selectedRole, "admin"],
+                      };
+                    });
+                  }}
+                >
+                  Admin
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filter.selectedRole.includes("moderator")}
+                  onCheckedChange={() => {
+                    setFilter((prevFilter) => {
+                      const isSelected = prevFilter.selectedRole.includes("moderator");
+                      return {
+                        ...prevFilter,
+                        selectedRole: isSelected
+                          ? prevFilter.selectedRole.filter((role) => role !== "moderator")
+                          : [...prevFilter.selectedRole, "moderator"],
+                      };
+                    });
+                  }}
+                >
+                  Moderator
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem
+                  checked={filter.selectedRole.includes("member")}
+                  onCheckedChange={() => {
+                    setFilter((prevFilter) => {
+                      const isSelected = prevFilter.selectedRole.includes("member");
+                      return {
+                        ...prevFilter,
+                        selectedRole: isSelected
+                          ? prevFilter.selectedRole.filter((role) => role !== "member")
+                          : [...prevFilter.selectedRole, "member"],
+                      };
+                    });
+                  }}
+                >
+                  Member
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
       <TabsContent value="rooms">
