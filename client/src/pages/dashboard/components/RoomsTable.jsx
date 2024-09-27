@@ -68,7 +68,7 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
                         <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
-                          <Emoji emojiStyle={EmojiStyle.NATIVE} unified={data.avatar} size={20} />
+                          <Emoji emojiStyle={EmojiStyle.APPLE} unified={data.avatar} size={20} />
                         </div>
 
                         <div className="font-medium">{data.name}</div>

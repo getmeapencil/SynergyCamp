@@ -31,7 +31,7 @@ import {
 import { useRoomStore } from "@/store/room";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
-const Participant = ({ member, currentRoomId }) => {
+const Participant = ({ member, currentRoomId, isBanned }) => {
   const { userRole } = useRoomStore();
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
@@ -53,7 +53,7 @@ const Participant = ({ member, currentRoomId }) => {
           )}
         </div>
       </div>
-      {member.role !== "admin" && userRole === "admin" && (
+      {member.role !== "admin" && userRole === "admin" && !isBanned && (
         <>
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -223,7 +223,7 @@ export const Participants = () => {
             <AccordionTrigger className="p-4 hover:no-underline">Temporarily Banned</AccordionTrigger>
             <AccordionContent>
               {bannedMembers.map((member) => (
-                <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
+                <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} isBanned />
               ))}
             </AccordionContent>
           </AccordionItem>

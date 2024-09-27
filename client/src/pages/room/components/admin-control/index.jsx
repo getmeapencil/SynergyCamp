@@ -205,7 +205,7 @@ export const AdminControl = () => {
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button size="icon" variant="outline" className="shrink-0">
-                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomProfile.roomAvatar} size={20} />
+                      <Emoji emojiStyle={EmojiStyle.APPLE} unified={roomProfile.roomAvatar} size={20} />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="border-0 p-0" align="end">
