@@ -23,17 +23,14 @@ export function RoomsData() {
     name: "",
   });
   const [selectedTab, setSelectedTab] = useState("rooms");
-  const [inviteCount, setInviteCount] = useState(0);
   const getInvites = useInvitesStore((state) => state.getInvites);
   const invites = useInvitesStore((state) => state.invites);
+  const inviteCount = invites.length;
 
   useEffect(() => {
     getInvites();
   }, [getInvites]);
 
-  useEffect(() => {
-    setInviteCount(invites.length);
-  }, [invites]);
   return (
     <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
       <div className="flex justify-between">
