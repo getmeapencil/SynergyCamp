@@ -5,7 +5,7 @@ import { UserModel } from "../../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const oauthClient = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, "postmessage");
+export const oauthClient = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET, "postmessage");
 const COOKIE_AGE = 14 * 24 * 60 * 60 * 1000;
 const DOMAIN = process.env.DOMAIN || "localhost";
 

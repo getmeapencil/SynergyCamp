@@ -39,6 +39,7 @@ const GoogleLoginBtn = () => {
   const navigate = useNavigate();
   const login = useGoogleLogin({
     flow: "auth-code",
+    scope: "https://www.googleapis.com/auth/calendar.events",
     onSuccess: async ({ code }) => {
       await useUserStore.getState().authGoogle(code);
       navigate("/dashboard");
