@@ -106,7 +106,7 @@ const registerSocketHandlers = (io, socket) => {
     const username = userSocket.name;
     const message = {
       _id: uuidv4(),
-      text: `${username} has been permanently banned`,
+      text: `${username} has been permanently banned!`,
       notification: {
         type: "permanent-ban",
       },
