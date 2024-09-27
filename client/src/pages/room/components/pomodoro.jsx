@@ -13,7 +13,6 @@ import { usePomodoroStore } from "@/store/pomodoro";
 import moment from "moment-timezone";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useParams } from "react-router-dom";
-import { useUserStore } from "@/store/user";
 import { useRoomStore } from "@/store/room";
 const timezones = moment.tz.names();
 
@@ -21,8 +20,7 @@ export const Pomodoro = () => {
   const pomodoroType = usePomodoroStore((state) => state.pomodoroType);
   const timezone = usePomodoroStore((state) => state.timezone);
   const pomodoro = usePomodoroStore((state) => state.pomodoro);
-  const {currentRoom}=useRoomStore()
-  const {user}=useUserStore()
+  const userRole = useRoomStore((state) => state.userRole);
 
   const { editPomodoro } = useSocketEmitters();
   const { roomId } = useParams();
@@ -37,7 +35,7 @@ export const Pomodoro = () => {
     if (!timezones.includes(timezoneSetting)) return;
     editPomodoro({ pomodoroType: pomodoroTypeSetting, timezone: timezoneSetting, roomId: roomId });
   };
-  const currentRoomUser=currentRoom?.members?.find((member)=>member?.userId?._id===user?._id)
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <Card>
@@ -64,7 +62,7 @@ export const Pomodoro = () => {
             <Separator orientation="vertical" className="mx-2 h-10 w-px" />
             <div className="grid flex-1 auto-rows-min gap-0.5">
               <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                {pomodoro.minutes}
+                {pomodoro?.minutes}
                 <span className="text-sm font-normal text-emerald-600 dark:text-emerald-400">min</span>
               </div>
             </div>
@@ -79,7 +77,7 @@ export const Pomodoro = () => {
         </CardContent>
       </Card>
 
-      {currentRoomUser?.role === "admin" && (
+      {userRole === "admin" && (
         <Card className="mx-auto w-full max-w-md">
           <CardHeader>
             <CardTitle>Settings</CardTitle>

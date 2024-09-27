@@ -8,6 +8,7 @@ router.get("/", checkJWT, controller.getRooms);
 router.get("/:roomId", checkJWT, controller.getCurrentRoom);
 router.put("/:roomId", checkJWT, controller.updateRoom);
 router.post("/edit-room-profile", checkJWT, controller.editRoomProfile);
-router.delete('/deleteRoom/:roomId',checkJWT, controller.deleteRoom)
-router.delete('/permanentleave',checkJWT, controller.leaveRoomPermanetly)
+router.delete("/deleteRoom/:roomId", checkJWT, controller.deleteRoom);
+router.post("/change-user-role", checkJWT, controller.changeUserRole);
+router.delete("/permanentleave", checkJWT, controller.leaveRoomPermanetly);
 export default router;

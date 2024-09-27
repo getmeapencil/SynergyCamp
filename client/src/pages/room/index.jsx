@@ -8,6 +8,7 @@ import { useRoomStore } from "@/store/room";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { useMembersStore } from "@/store/members";
+import { useMessagesStore } from "@/store/messages";
 
 export const Room = () => {
   const { roomId } = useParams();
@@ -28,6 +29,7 @@ export const Room = () => {
   useEffect(() => {
     window.onpopstate = () => {
       leaveRoom({ roomId });
+      useMessagesStore.getState().clearMessages();
     };
   }, [leaveRoom, roomId]);
 
@@ -37,9 +39,9 @@ export const Room = () => {
     <div className="flex min-h-screen w-full bg-muted/40">
       <main className="flex max-h-screen flex-1">
         <MainView />
-        <SidePanel  activePanel={activePanel} setActivePanel={setActivePanel} />
+        <SidePanel activePanel={activePanel} setActivePanel={setActivePanel} />
       </main>
-      <SideNav members ={members} roomId={roomId} activePanel={activePanel} setActivePanel={setActivePanel} />
+      <SideNav activePanel={activePanel} setActivePanel={setActivePanel} />
     </div>
   );
 };
