@@ -1,6 +1,5 @@
 import { InviteModel } from "../../models/invite.js";
 import { RoomModel } from "../../models/room.js";
-import { UserModel } from "../../models/user.js";
 
 export const createRoom = async (req, res) => {
   try {
@@ -23,10 +22,45 @@ export const createRoom = async (req, res) => {
   }
 };
 
+export const verifyMember = async ({ userId, roomId }) => {
+  try {
+    const room = await RoomModel.findById(roomId);
+
+    if (!room) {
+      // Handle case where room is not found
+      console.log(`Room with id ${roomId} not found`);
+      return false;
+    }
+
+    // Check if any member's ObjectId equals the userObjectId
+    const isMember = room.members.some((member) => {
+      return String(member.userId) === String(userId);
+    });
+    console.log("verifyMember ~ isMember:", isMember);
+
+    return isMember; // Return true if userId exists in room.members, otherwise false
+  } catch (e) {
+    console.log(e);
+    return false; // Return false in case of any error
+  }
+};
+
 export const getCurrentRoom = async (req, res) => {
   try {
     const { roomId } = req.params;
+    const user = req.user;
+
+    const isMember = await verifyMember({ userId: user._id, roomId });
+    if (!isMember) {
+      return res.status(401).json({ message: "You are not a member of this room!}" });
+    }
+
     const room = await RoomModel.findById(roomId).populate("members.userId");
+    // check if user temp banned
+    const banned = room.temporaryBanned.find((ban) => ban.user.toString() === user._id.toString());
+    if (banned) {
+      return res.status(401).json({ message: "You are temporarily banned from this room}" });
+    }
     res.json(room);
   } catch (e) {
     console.log(e);
@@ -37,6 +71,14 @@ export const getRooms = async (req, res) => {
   try {
     const user = req.user;
     const rooms = await RoomModel.find({ "members.userId": user?._id });
+    for (let room of rooms) {
+      if (room.temporaryBanned && room.temporaryBanned.length > 0) {
+        room.temporaryBanned = room.temporaryBanned.filter((ban) => {
+          return ban.banEndTime > Date.now();
+        });
+        await room.save();
+      }
+    }
     res.json(rooms);
   } catch (e) {
     console.log(e);
@@ -115,5 +157,84 @@ export const deleteRoom = async (req, res) => {
     res.send("Room deleted successfully");
   } catch (error) {
     console.log("error", error);
+  }
+};
+
+export const changeUserRole = async (req, res) => {
+  const { userId, roomId, role } = req.body;
+  try {
+    const room = await RoomModel.findById(roomId).populate("members.userId");
+    if (!room) {
+      return res.status(400).json({ message: "Room not found" });
+    }
+    if (!role || !userId) {
+      return res.status(400).json({ message: "Role or userId not found" });
+    }
+    room.members = room.members.map((member) => {
+      if (member.userId?._id.toString() === userId.toString()) {
+        member.role = role;
+      }
+      return member;
+    });
+    await room.save();
+    res.json(room);
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const tempBanUserRoom = async ({ userId, roomId, banEndTime }) => {
+  try {
+    let room = await RoomModel.findById(roomId);
+    if (!room) {
+      return;
+    }
+    // if(room.temporaryBanned.map((mem)=>mem.user).includes(userId)){
+    //   return
+    // }
+    console.log(banEndTime, "banDuration");
+    room.temporaryBanned.push({ user: userId, banEndTime: banEndTime });
+    // // remove temporary ban after banDuration
+    // room.temporaryBanned=room.temporaryBanned.filter((ban) => {
+    //   return ban.banEndTime < Date.now();
+    // });
+    await room.save();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const removeUserFromRoom = async ({ userId, roomId }) => {
+  try {
+    console.log(userId, roomId, "mai mileha");
+    const room = await RoomModel.findById(roomId);
+    console.log(room, room.members);
+    room.members = room.members.filter((member) => member.userId.toString() !== userId.toString());
+    // delete invite of the user
+    await InviteModel.deleteOne({ invitee: userId, roomId: roomId });
+
+    await room.save();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const leaveRoomPermanetly = async (req, res) => {
+  const { roomId, userId } = req.body;
+
+  try {
+    const room = await RoomModel.findById(roomId);
+    if (userId === room.createdBy.toString()) {
+      return res.json("Admin cannot delete his own room!");
+    }
+    if (!room) {
+      return res.status(404).json({ message: "Room not found!" });
+    }
+    room.members = room.members.filter((member) => member.userId.toString() !== userId);
+    await room.save();
+
+    res.status(200).json({ message: "Member removed successfully!", room });
+  } catch (error) {
+    console.error("Error removing member:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -14,4 +14,7 @@ export const useMessagesStore = create((set, get) => ({
     message.createdAt = date.toUTCString();
     set({ messages: [...messages, message] });
   },
+  clearMessages: () => {
+    set({ messages: [] });
+  },
 }));

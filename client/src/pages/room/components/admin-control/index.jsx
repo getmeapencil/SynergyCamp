@@ -11,6 +11,7 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 import { DeleteDialog } from "./components/DeleteDialog";
 import { toast } from "sonner";
 
@@ -24,9 +25,9 @@ export const AdminControl = () => {
   const { sendInvites } = useSocketEmitters();
   const currentRoom = useRoomStore((state) => state.currentRoom);
   const [roomProfile, setRoomProfile] = useState({
-    roomName: `${currentRoom.name}`,
-    roomDescription: `${currentRoom.description ? currentRoom.description : ""}`,
-    roomAvatar: `${currentRoom.avatar ? currentRoom.avatar : "1f6a4"}`,
+    roomName: `${currentRoom?.name}`,
+    roomDescription: `${currentRoom?.description ? currentRoom?.description : ""}`,
+    roomAvatar: `${currentRoom?.avatar ? currentRoom?.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",
@@ -180,7 +181,7 @@ export const AdminControl = () => {
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button size="icon" variant="outline" className="shrink-0">
-                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomProfile.roomAvatar} size={20} />
+                      <Emoji emojiStyle={EmojiStyle.APPLE} unified={roomProfile.roomAvatar} size={20} />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="border-0 p-0" align="end">

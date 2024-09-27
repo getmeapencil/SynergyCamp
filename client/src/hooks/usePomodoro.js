@@ -35,8 +35,8 @@ export const usePomodoro = () => {
     const interval = setInterval(() => {
       const now = moment().tz(timezone);
 
-      const minutes = now.minutes();
-      const seconds = now.seconds();
+      const minutes = now?.minutes();
+      const seconds = now?.seconds();
       const totalSeconds = minutes * 60 + seconds;
 
       if (isWorkPeriod) {

@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ListFilter, Search } from "lucide-react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { useInvitesStore } from "@/store/invite";
 
 export function RoomsData() {
   const [filter, setFilter] = useState({
@@ -22,6 +23,13 @@ export function RoomsData() {
     name: "",
   });
   const [selectedTab, setSelectedTab] = useState("rooms");
+  const getInvites = useInvitesStore((state) => state.getInvites);
+  const invites = useInvitesStore((state) => state.invites);
+  const inviteCount = invites.length;
+
+  useEffect(() => {
+    getInvites();
+  }, [getInvites]);
 
   return (
     <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
@@ -29,7 +37,14 @@ export function RoomsData() {
         <div>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="rooms">Rooms</TabsTrigger>
-            <TabsTrigger value="invites">Invites</TabsTrigger>
+            <TabsTrigger value="invites" className="relative">
+              Invites
+              {inviteCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary pt-1 text-xs text-primary-foreground">
+                  {inviteCount}
+                </span>
+              )}
+            </TabsTrigger>
           </TabsList>
         </div>
         <div className="flex gap-2">

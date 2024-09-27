@@ -5,31 +5,26 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const RoomsTable = ({ filterRoles, searchName }) => {
-  const { rooms } = useRoomStore();
-  const { user } = useUserStore();
-  const [filteredData, setFilteredData] = useState([]);
+  const rooms = useRoomStore((state) => state.rooms);
+  const user = useUserStore((state) => state.user);
   const userId = user?._id;
   const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
+  const filteredData = rooms.filter((room) => {
+    const memberRole = room.members.find((member) => member.userId === userId)?.role;
+    const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
+    const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
 
-  useEffect(() => {
-    const filteredRooms = rooms.filter((room) => {
-      const memberRole = room.members.find((member) => member.userId === userId)?.role;
-      const matchesRole = filterRoles.length === 0 || filterRoles.includes(memberRole);
-      const matchesSearch = room.name.toLowerCase().includes(searchName.toLowerCase());
-
-      return matchesRole && matchesSearch;
-    });
-
-    setFilteredData(filteredRooms);
-  }, [filterRoles, searchName, rooms, userId]);
+    return matchesRole && matchesSearch;
+  });
 
   useEffect(() => {
     useRoomStore.getState().getRooms();
@@ -39,6 +34,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
     const length = data.members.length;
     return length;
   };
+
   return (
     <Card>
       <CardHeader>
@@ -61,11 +57,16 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
               <TableBody>
                 {filteredData.map((data) => {
                   const role = data?.members?.find((member) => member.userId === userId)?.role;
+                  const temp = data?.temporaryBanned?.find((member) => member.user === userId);
+                  let banned = false;
+                  if (temp) {
+                    banned = true;
+                  }
                   return (
                     <TableRow key={data._id}>
                       <TableCell className="flex items-center gap-2">
                         <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
-                          <Emoji emojiStyle={EmojiStyle.NATIVE} unified={data.avatar} size={20} />
+                          <Emoji emojiStyle={EmojiStyle.APPLE} unified={data.avatar} size={20} />
                         </div>
 
                         <div className="font-medium">{data.name}</div>
@@ -75,21 +76,31 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                       </TableCell>
                       <TableCell className="text-center sm:table-cell">{calculateTotalMembers(data)} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
-                        <Button
-                          onClick={() => {
-                            navigate(`/room/${data._id}`);
-                            joinRoom({ roomId: data._id });
-                          }}
-                        >
-                          Enter Room
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger className="text-xs text-muted-foreground">
+                              <Button
+                                disabled={banned}
+                                onClick={() => {
+                                  navigate(`/room/${data._id}`);
+                                  joinRoom({ roomId: data._id });
+                                }}
+                              >
+                                Enter Room
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {banned ? "You are temporarily banned from this room" : "Click to go inside room"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
                   );
                 })}
               </TableBody>
             </Table>
-          ) : filteredData?.length === 0 ? (
+          ) : filteredData?.length === 0 && searchName.length ? (
             <EmptyTable variant={"room"} text={"No rooms found by that name."} />
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
