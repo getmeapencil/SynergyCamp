@@ -28,6 +28,7 @@ export const useSocket = () => {
       }
     });
     newSocket.on("user-status", (users) => {
+      if (!users) return;
       useMembersStore.getState().setMembers(users);
     });
 
@@ -72,15 +73,14 @@ export const useSocket = () => {
       playSound("/message.mp3");
     });
     newSocket.on("permanent-banned", (data) => {
-      if(data?.userId===useUserStore.getState().user._id){
+      if (data?.userId === useUserStore.getState().user._id) {
         toast("You have been permanently banned from the room", {
           type: "error",
         });
         // Redirect to home page
         window.location.href = "/dashboard";
-       
-      }else{
-        useMembersStore.getState().removeMember(data?.userId)
+      } else {
+        useMembersStore.getState().removeMember(data?.userId);
       }
     });
     newSocket.on("edit-pomodoro", ({ pomodoroType, timezone }) => {

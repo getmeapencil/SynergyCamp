@@ -46,9 +46,11 @@ const Participant = ({ member, currentRoomId }) => {
         </Avatar>
         <div className="flex items-center gap-2">
           <div className="text-lg">{member.name}</div>
-          <Badge variant="outline" className="h-fit w-fit text-xs capitalize text-muted-foreground">
-            {member.role}
-          </Badge>
+          {member.role !== "member" && (
+            <Badge variant="outline" className="h-fit w-fit text-xs capitalize text-muted-foreground">
+              {member.role}
+            </Badge>
+          )}
         </div>
       </div>
       {member.role !== "admin" && userRole === "admin" && (
@@ -179,7 +181,7 @@ export const Participants = () => {
         <AccordionItem value="online">
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
-            {members.map((member) => (
+            {members?.map((member) => (
               <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
             ))}
           </AccordionContent>
