@@ -5,9 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useTheme } from "@/components/theme-provider";
-import LogoBlack from "/logo-black.svg";
-import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
 import { Companions } from "./components/Companions";
 import { Clock } from "./components/Clock";
@@ -46,13 +43,12 @@ const themes = [
 export const MainView = memo(() => {
   const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("Companions");
-  const currentRoom = useRoomStore((state) => state.currentRoom);
-  if (!currentRoom) return null;
-  const avatar = currentRoom.avatar ? currentRoom.avatar : "1f6a4";
-  const roomName = currentRoom.name ? currentRoom.name : "";
-
-  const { roomNote, setRoomNote } = useNoteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const roomNote = useNoteStore((state) => state.roomNote);
+  const setRoomNote = useNoteStore((state) => state.setRoomNote);
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+  const avatar = currentRoom?.avatar ? currentRoom?.avatar : "1f6a4";
+  const roomName = currentRoom?.name ? currentRoom?.name : "";
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -95,6 +91,8 @@ export const MainView = memo(() => {
         return null;
     }
   };
+
+  // if (!currentRoom) return null;
 
   return (
     <div className="flex flex-1 flex-col">
