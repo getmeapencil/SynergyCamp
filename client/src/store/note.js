@@ -6,17 +6,19 @@ export const useNoteStore = create(
     (set) => ({
       dashboardNote: {
         note: "",
-        fontSize: 16,
+        fontSize: 26,
       },
       setDashboardNote: (dashboardNote) => {
         set({ dashboardNote });
       },
       roomNote: {
         note: "",
-        fontSize: "16px",
+        fontSize: 26,
+        align: "left",
+        position: "center",
       },
-      setRoomNote: (dashboardNote) => {
-        set({ dashboardNote });
+      setRoomNote: (roomNote) => {
+        set({ roomNote });
       },
     }),
     {
