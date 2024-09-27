@@ -11,11 +11,12 @@ import LogoWhite from "/logo-white.svg";
 import { Breathe } from "./components/Breathe";
 import { Companions } from "./components/Companions";
 import { Clock } from "./components/Clock";
-import { ThemeNote } from "./components/ThemeNote";
+import { Note } from "./components/Note";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNoteStore } from "@/store/note";
 import { Input } from "@/components/ui/input";
+import { Pomodoro } from "./components/Pomodoro";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -37,6 +38,9 @@ const themes = [
   },
   {
     label: "Note",
+  },
+  {
+    label: "Pomodoro",
   },
 ];
 
@@ -78,13 +82,10 @@ export const MainView = memo(() => {
         return <Clock />;
       case "Note":
         return (
-          <ThemeNote
-            note={roomNote.note}
-            fontSize={roomNote.fontSize}
-            align={roomNote.align}
-            position={roomNote.position}
-          />
+          <Note note={roomNote.note} fontSize={roomNote.fontSize} align={roomNote.align} position={roomNote.position} />
         );
+      case "Pomodoro":
+        return <Pomodoro />;
       default:
         return null;
     }
