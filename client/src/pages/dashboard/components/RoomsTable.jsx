@@ -10,6 +10,7 @@ import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const RoomsTable = ({ filterRole, searchName }) => {
   const { rooms, allUsers } = useRoomStore();
@@ -58,10 +59,10 @@ export const RoomsTable = ({ filterRole, searchName }) => {
               <TableBody>
                 {filteredData.map((data) => {
                   const role = data?.members?.find((member) => member.userId === userId)?.role;
-                  const temp=data?.temporaryBanned?.find((member)=>member.user===userId);
-                  let banned=false
-                  if(temp){
-                    banned=true;
+                  const temp = data?.temporaryBanned?.find((member) => member.user === userId);
+                  let banned = false;
+                  if (temp) {
+                    banned = true;
                   }
                   return (
                     <TableRow key={data._id}>
@@ -77,15 +78,24 @@ export const RoomsTable = ({ filterRole, searchName }) => {
                       </TableCell>
                       <TableCell className="text-center sm:table-cell">{data.onlineMembers} Members</TableCell>
                       <TableCell className="text-center sm:table-cell">
-                        <Button
-                          disabled={banned}
-                          onClick={() => {
-                            navigate(`/room/${data._id}`);
-                            joinRoom({ roomId: data._id });
-                          }}
-                        >
-                          Enter Room
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger className="text-xs text-muted-foreground">
+                              <Button
+                                disabled={banned}
+                                onClick={() => {
+                                  navigate(`/room/${data._id}`);
+                                  joinRoom({ roomId: data._id });
+                                }}
+                              >
+                                Enter Room
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {banned ? "You are temporarily banned from this room" : "Click to go inside room"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
                   );
