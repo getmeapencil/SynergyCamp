@@ -24,9 +24,9 @@ export const AdminControl = () => {
   const { sendInvites } = useSocketEmitters();
   const currentRoom = useRoomStore((state) => state.currentRoom);
   const [roomProfile, setRoomProfile] = useState({
-    roomName: `${currentRoom.name}`,
-    roomDescription: `${currentRoom.description ? currentRoom.description : ""}`,
-    roomAvatar: `${currentRoom.avatar ? currentRoom.avatar : "1f6a4"}`,
+    roomName: `${currentRoom?.name}`,
+    roomDescription: `${currentRoom?.description ? currentRoom?.description : ""}`,
+    roomAvatar: `${currentRoom?.avatar ? currentRoom?.avatar : "1f6a4"}`,
   });
   const [inputWarnings, setInputWarnings] = useState({
     roomDescription: "",

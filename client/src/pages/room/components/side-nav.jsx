@@ -65,7 +65,7 @@ const NavItem = ({ item, setActivePanel }) => {
 export const SideNav = memo(({ activePanel, setActivePanel, members }) => {
   const navigate = useNavigate();
   const currentUser = useUserStore((state) => state.user);
-  const isAdmin = members.some((member) => member.id === currentUser.id && member.role === "admin");
+  const isAdmin = members?.some((member) => member.id === currentUser.id && member.role === "admin");
   console.log(isAdmin);
   return (
     <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">

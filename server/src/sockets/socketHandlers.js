@@ -95,6 +95,7 @@ const registerSocketHandlers = (io, socket) => {
     io.to(roomId).emit("edit-pomodoro", { pomodoroType, timezone });
     io.to(roomId).emit("incoming-message", message);
   });
+
   socket.on("permanent-ban-user", async ({ userId, roomId }) => {
     console.log("permanent ban user", userId, roomId);
     // get socket io of user from userslist
@@ -119,9 +120,9 @@ const registerSocketHandlers = (io, socket) => {
     io.sockets.sockets.get(socketId).leave(roomId);
     // emit banned message to user
     io.to(roomId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
-   
-    io.to(socketId).emit("permanent-banned",{ message: "You have been banned from the room", userId: userId });
-    
+
+    io.to(socketId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
+
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== userId.toString();
     });
@@ -129,6 +130,7 @@ const registerSocketHandlers = (io, socket) => {
     // remove user from room members list
     await removeUserFromRoom({ userId, roomId });
   });
+
   socket.on("leave-room", ({ roomId }) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
