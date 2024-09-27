@@ -18,6 +18,9 @@ import { useNoteStore } from "@/store/note";
 import { Input } from "@/components/ui/input";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useRoomStore } from "@/store/room";
+
+import { Emoji, EmojiStyle } from "emoji-picker-react";
 
 const themes = [
   {
@@ -43,7 +46,10 @@ const themes = [
 export const MainView = memo(() => {
   const [open, setOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState("Companions");
-  const { theme: appTheme } = useTheme();
+  const currentRoom = useRoomStore((state) => state.currentRoom);
+  if (!currentRoom) return null;
+  const avatar = currentRoom.avatar ? currentRoom.avatar : "1f6a4";
+  const roomName = currentRoom.name ? currentRoom.name : "";
 
   const { roomNote, setRoomNote } = useNoteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -93,14 +99,12 @@ export const MainView = memo(() => {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
-        <span className="flex gap-2 text-2xl font-extrabold">
-          <img
-            src={appTheme === "light" ? LogoBlack : LogoWhite}
-            alt="MindMesh"
-            className="grid aspect-square w-5 place-content-center"
-          />
-          MindMesh
-        </span>
+        <div className="flex gap-2 text-2xl font-extrabold">
+          <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
+            <Emoji emojiStyle={EmojiStyle.NATIVE} unified={avatar} size={20} />
+          </div>
+          {roomName}
+        </div>
         <div className="flex items-center gap-2">
           {currentTheme === "Note" && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

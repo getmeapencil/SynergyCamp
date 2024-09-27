@@ -21,9 +21,6 @@ export const useRoomStore = create((set, get) => ({
       console.error("Error creating room:", error); // Add this line to catch and display errors
     }
   },
-  setCurrentRoom: (roomId) => {
-    set({ currentRoom: roomId });
-  },
   getCurrentRoom: async (roomId) => {
     try {
       const currentRoom = await createApiCall({
@@ -62,6 +59,7 @@ export const useRoomStore = create((set, get) => ({
         data: { roomProfile, roomId },
       });
       const rooms = get().rooms.filter((room) => room != newRoom._id);
+      set({ currentRoom: newRoom });
       set({ rooms: [...rooms, newRoom] });
       toast.success("Room profile updated!");
     } catch (error) {
