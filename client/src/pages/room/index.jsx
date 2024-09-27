@@ -37,9 +37,9 @@ export const Room = () => {
     <div className="flex min-h-screen w-full bg-muted/40">
       <main className="flex max-h-screen flex-1">
         <MainView />
-        <SidePanel activePanel={activePanel} setActivePanel={setActivePanel} />
+        <SidePanel  activePanel={activePanel} setActivePanel={setActivePanel} />
       </main>
-      <SideNav roomId={roomId} activePanel={activePanel} setActivePanel={setActivePanel} />
+      <SideNav members ={members} roomId={roomId} activePanel={activePanel} setActivePanel={setActivePanel} />
     </div>
   );
 };

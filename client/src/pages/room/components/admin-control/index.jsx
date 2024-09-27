@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 import { DeleteDialog } from "./components/DeleteDialog";
 import { useUserStore } from "@/store/user";
 
-export const AdminControl = ({ allmembers }) => {
+export const AdminControl = () => {
   const { theme } = useTheme();
   const { roomId } = useParams();
   const [emails, setEmails] = useState([]);
@@ -137,12 +137,8 @@ export const AdminControl = ({ allmembers }) => {
     e.preventDefault();
     await useRoomStore.getState().editRoomProfile({ roomProfile, roomId });
   };
-  const currentUser = useUserStore((state) => state.user);
-  const isAdmin = allmembers.find((member) => member.id === currentUser.id && member.role === "admin");
 
   return (
-
-    // {isAdmin ? <p></p>:(<p>dddd</p>)}
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
         <CardHeader>

@@ -8,7 +8,7 @@ import { AdminControl } from "./admin-control";
 import { Task } from "./Task";
 import { Settings } from "./settings";
 
-export const SidePanel = memo(({ activePanel, setActivePanel,  members }) => {
+export const SidePanel = memo(({ activePanel, setActivePanel, members }) => {
   const renderPanelContent = () => {
     switch (activePanel) {
       case "Chat":
@@ -22,7 +22,7 @@ export const SidePanel = memo(({ activePanel, setActivePanel,  members }) => {
       case "Calendar":
         return <div className="p-4">Calendar content goes here.</div>;
       case "Admin Control":
-        return <AdminControl allmembers={members} />;
+        return <AdminControl />;
       case "Settings":
         return <Settings />;
       default:
