@@ -29,12 +29,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRoomStore } from "@/store/room";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
-const Participant = ({ member }) => {
+const Participant = ({ member, currentRoomId }) => {
   const [banDuration, setBanDuration] = useState("");
   const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
   const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
-
+  console.log("currentRoomId", currentRoomId);  
+  const { permanentBanUser } = useSocketEmitters();
   return (
     <div className="flex justify-between px-4 py-2 hover:bg-background">
       <div className="flex gap-2">
@@ -137,14 +139,21 @@ const Participant = ({ member }) => {
           <AlertDialog open={isPermBanDialogOpen} onOpenChange={setIsPermBanDialogOpen}>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Do you want to permanently ban this user?</AlertDialogTitle>
+                <AlertDialogTitle>Do you want to permanently ban {member.name}?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action will revoke their access indefinitely and cannot be undone. Do you want to proceed?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction variant="destructive">Continue</AlertDialogAction>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => {
+                    permanentBanUser({ userId: member._id, roomId: currentRoomId });
+                  }}
+                >
+                  Continue
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -171,7 +180,7 @@ export const Participants = () => {
           <AccordionTrigger className="p-4 hover:no-underline">Online</AccordionTrigger>
           <AccordionContent>
             {members.map((member) => (
-              <Participant key={member._id} member={member} />
+              <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
             ))}
           </AccordionContent>
         </AccordionItem>
@@ -179,7 +188,7 @@ export const Participants = () => {
           <AccordionTrigger className="p-4 hover:no-underline">Offline</AccordionTrigger>
           <AccordionContent>
             {offlineMembers.map((member) => (
-              <Participant key={member._id} member={member} />
+              <Participant key={member._id} member={member} currentRoomId={currentRoom?._id} />
             ))}
           </AccordionContent>
         </AccordionItem>

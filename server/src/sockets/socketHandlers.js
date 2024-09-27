@@ -1,10 +1,10 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
-import { editPomodoro } from "../apps/room/controller.js";
+import { editPomodoro, removeUserFromRoom } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { getRole } from "../apps/room/controller.js";
 
-const users={}
+const users = {};
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
@@ -12,10 +12,11 @@ const registerSocketHandlers = (io, socket) => {
     socket.join(roomId);
     const role = await getRole(socket.user._id, roomId);
     if (users[roomId]) {
-      if(users[roomId].map((user)=>user._id.toString()).includes(socket.user._id.toString())){
-        return
+      if (users[roomId].map((user) => user._id.toString()).includes(socket.user._id.toString())) {
+        return;
       }
       users[roomId].push({
+        socketid: socket.id,
         _id: socket.user._id,
         name: socket.user.name,
         role: role,
@@ -24,6 +25,7 @@ const registerSocketHandlers = (io, socket) => {
     } else {
       users[roomId] = [
         {
+          socketid: socket.id,
           _id: socket.user._id,
           name: socket.user.name,
           role: role,
@@ -92,11 +94,45 @@ const registerSocketHandlers = (io, socket) => {
     io.to(roomId).emit("edit-pomodoro", { pomodoroType, timezone });
     io.to(roomId).emit("incoming-message", message);
   });
+  socket.on("permanent-ban-user", async ({ userId, roomId }) => {
+    console.log("permanent ban user", userId, roomId);
+    const message = {
+      _id: uuidv4(),
+      text: `User has been permanently banned`,
+      notification: {
+        type: "permanent-ban",
+      },
+      user: {
+        _id: socket.user._id,
+      },
+    };
+    io.to(roomId).emit("incoming-message", message);
+    
+    // get socket io of user from userslist
+    const userSocket = users[roomId].find((user) => {
+      return user._id.toString() === userId.toString();
+    });
+    const socketId = userSocket.socketid;
 
-  socket.on("leave-room", ({roomId}) => {
+    // remove user from room
+    io.sockets.sockets.get(socketId).leave(roomId);
+    // emit banned message to user
+    io.to(socketId).emit("permanent-banned", { message: "You have been banned from the room" });
+    // remove user from users list
+    users[roomId] = users[roomId]?.filter((user) => {
+      return user._id.toString() !== userId.toString();
+    });
+
+
+    io.to(roomId).emit("user-status", users[roomId]);
+    // remove user from room members list
+    await removeUserFromRoom({ userId, roomId });
+  });
+  socket.on("leave-room", ({ roomId }) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
     });
+    socket.leave(roomId);
     io.to(roomId).emit("user-status", users[roomId]);
   });
   socket.on("disconnecting", () => {

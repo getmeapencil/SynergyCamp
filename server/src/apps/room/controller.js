@@ -101,3 +101,15 @@ export const editRoomProfile = async (req, res) => {
     console.log(error);
   }
 };
+
+export const removeUserFromRoom = async ({ userId, roomId }) => {
+  try {
+    console.log(userId, roomId,"mai mileha");
+    const room = await RoomModel.findById(roomId);
+    console.log(room,room.members)
+    room.members = room.members.filter((member) => member.userId.toString() !== userId.toString());
+    await room.save();
+  } catch (e) {
+    console.log(e);
+  }
+};

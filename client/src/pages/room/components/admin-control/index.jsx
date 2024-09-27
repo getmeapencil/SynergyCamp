@@ -11,6 +11,7 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
@@ -70,8 +71,10 @@ export const AdminControl = () => {
     if (emails.length > 0) {
       sendInvites({ emails, roomId });
       setEmails([]);
+      toast("Invites sent successfully");
     } else {
       setError("Please add at least one valid email address.");
+      toast("Please add at least one valid email address.");
     }
   };
 
@@ -153,7 +156,7 @@ export const AdminControl = () => {
                 onChange={handleInputChange}
                 onKeyDown={handleInputKeyDown}
                 onBlur={addEmail}
-                autocomplete="off"
+                autoComplete="off"
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
@@ -172,7 +175,9 @@ export const AdminControl = () => {
                 ))}
               </div>
             )}
-            <Button type="submit" className="w-full">
+            <Button type="submit"
+            disabled={emails.length === 0}
+            className="w-full">
               Send Invites
             </Button>
           </form>
