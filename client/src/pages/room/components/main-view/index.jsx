@@ -107,7 +107,7 @@ export const MainView = memo(() => {
           {currentTheme === "Note" && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="outline" size="icon">
                   <PencilIcon className="h-4 w-4" />
                   <span className="sr-only">Edit note</span>
                 </Button>
