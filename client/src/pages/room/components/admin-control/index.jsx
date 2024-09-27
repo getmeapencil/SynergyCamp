@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { redirect, useNavigate, useParams } from "react-router-dom";
 import { Trash } from "lucide-react";
 import { createApiCall } from "@/utils/createApiCall";
+import { DeleteDialog } from "./components/DeleteDialog";
 
 export const AdminControl = () => {
   const { theme } = useTheme();
@@ -137,21 +138,8 @@ export const AdminControl = () => {
     e.preventDefault();
     await useRoomStore.getState().editRoomProfile({ roomProfile, roomId });
   };
-const navigate = useNavigate();
-  const handleDeleteRoom = async () => {
-    const id = currentRoom._id;
-    const response = await createApiCall({
-      method: "DELETE",
-      route: `/room/deleteroom/${id}`,
-      withCredentials: true,
-    });
-    if (response) {
-      navigate("/dashboard");
-    }
 
-    console.log(response);
-  };
-
+  
   return (
     <div className="flex h-full flex-col gap-3 p-4">
       <Card>
@@ -253,10 +241,14 @@ const navigate = useNavigate();
           </form>
         </CardContent>
       </Card>
-      <Button onClick={handleDeleteRoom} className="w-full gap-2" variant="destructive">
+      {/* <Button onClick={handleDeleteRoom} className="w-full gap-2" variant="destructive">
         <Trash />
         Delete Room
-      </Button>
+      </Button> */}
+      <Card>
+
+      <DeleteDialog currentRoom={currentRoom} />
+      </Card>
     </div>
   );
 };
