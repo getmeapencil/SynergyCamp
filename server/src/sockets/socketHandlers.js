@@ -3,14 +3,22 @@ import { invite } from "../apps/invite/controller.js";
 import { editPomodoro, removeUserFromRoom, tempBanUserRoom } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { getRole } from "../apps/room/controller.js";
+import { trackJoin, trackLeave } from "../apps/history/controller.js";
 
 const users = {};
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
   socket.on("join-room", async ({ roomId }) => {
+    // check if user is already in room
+    if (users[roomId]?.map((user) => user._id.toString()).includes(socket.user._id.toString())) {
+      return;
+    }
+
     socket.join(roomId);
     const role = await getRole(socket.user._id, roomId);
+
+    trackJoin({ roomId, userId: socket.user._id });
     if (users[roomId]) {
       if (users[roomId].map((user) => user._id.toString()).includes(socket.user._id.toString())) {
         return;
@@ -174,6 +182,7 @@ const registerSocketHandlers = (io, socket) => {
     });
     socket.leave(roomId);
     io.to(roomId).emit("user-status", users[roomId]);
+    trackLeave({ roomId, userId: socket.user._id });
 
     const message = {
       _id: uuidv4(),
@@ -204,6 +213,7 @@ const registerSocketHandlers = (io, socket) => {
       users[room] = users[room]?.filter((user) => {
         return user._id.toString() !== socket.user._id.toString();
       });
+      trackLeave({ roomId: room, userId: socket.user._id });
       socket.to(room).emit("user-status", users[room]);
       socket.to(room).emit("incoming-message", message);
     });
