@@ -45,12 +45,12 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
       <CardContent>
         <ScrollArea className="h-72 rounded-md border">
           {filteredData?.length ? (
-            <Table>
+            <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead className="sm:table-cell">Room</TableHead>
-                  <TableHead className="text-center sm:table-cell">Role</TableHead>
-                  <TableHead className="text-center sm:table-cell">Total Members</TableHead>
+                  <TableHead className="hidden text-center sm:table-cell">Role</TableHead>
+                  <TableHead className="hidden text-center sm:table-cell">Total Members</TableHead>
                   <TableHead className="text-center sm:table-cell">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -71,11 +71,13 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
 
                         <div className="font-medium">{data.name}</div>
                       </TableCell>
-                      <TableCell className="text-center capitalize sm:table-cell">
+                      <TableCell className="hidden text-center capitalize sm:table-cell">
                         <Badge variant={"outline"}>{role}</Badge>
                       </TableCell>
-                      <TableCell className="text-center sm:table-cell">{calculateTotalMembers(data)} Members</TableCell>
-                      <TableCell className="text-center sm:table-cell">
+                      <TableCell className="hidden text-center sm:table-cell">
+                        {calculateTotalMembers(data)} Members
+                      </TableCell>
+                      <TableCell className="text-center">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger className="text-xs text-muted-foreground">

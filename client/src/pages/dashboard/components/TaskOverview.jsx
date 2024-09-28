@@ -34,7 +34,7 @@ export const TaskOverview = () => {
     });
 
   return (
-    <Card className="h-fit sm:w-1/3 w-full min-w-sm  max-w-md">
+    <Card className="h-fit sm:w-1/3 w-full min-w-smd max-w-md">
       <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>Tasks</CardTitle>
