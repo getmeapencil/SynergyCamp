@@ -40,7 +40,7 @@ export function RoomsData() {
             <TabsTrigger value="invites" className="relative">
               Invites
               {inviteCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary pt-1 text-xs text-primary-foreground">
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
                   {inviteCount}
                 </span>
               )}
@@ -130,7 +130,7 @@ export function RoomsData() {
         <RoomsTable filterRoles={filter.selectedRole} searchName={filter.name} />
       </TabsContent>
       <TabsContent value="invites">
-        <InvitesTable filterRoles={filter.selectedRole} searchName={filter.name} />
+        <InvitesTable searchName={filter.name} />
       </TabsContent>
     </Tabs>
   );

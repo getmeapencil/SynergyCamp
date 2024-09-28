@@ -66,6 +66,8 @@ const registerSocketHandlers = (io, socket) => {
 
     if (res.failedInvites?.length) {
       io.to(senderId).emit("invite-error", { failedInvites: res.failedInvites });
+    } else {
+      io.to(senderId).emit("invite-success");
     }
   });
 

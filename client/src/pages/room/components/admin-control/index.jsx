@@ -11,12 +11,12 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { DeleteDialog } from "./components/DeleteDialog";
 export const AdminControl = () => {
   const { theme } = useTheme();
   const { roomId } = useParams();
-  const [emails, setEmails] = useState([]);
+  // const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -49,22 +49,19 @@ export const AdminControl = () => {
     }
   };
 
-  const removeEmail = (emailToRemove) => {
-    setEmails(emails.filter((email) => email !== emailToRemove));
-  };
+  // const removeEmail = (emailToRemove) => {
+  //   setEmails(emails.filter((email) => email !== emailToRemove));
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const trimmedEmail = inputValue.trim();
-    console.log(trimmedEmail);
-    console.log(validateEmail(trimmedEmail));
     if (trimmedEmail && validateEmail(trimmedEmail)) {
       sendInvites({ emails: [trimmedEmail], roomId });
       setInputValue("");
-      toast("Invite sent successfully");
     } else {
       setError("Please enter a valid email address.");
-      toast("Please enter a valid email address.");
+      // toast("Please enter a valid email address.");
     }
   };
 
@@ -138,11 +135,11 @@ export const AdminControl = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email-input">Emails</Label>
+              <Label htmlFor="email-input">Email</Label>
               <Input
                 id="email-input"
                 type="text"
-                placeholder="Type email address and press Enter key"
+                placeholder="Type email address"
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={(e) => handleInputKeyDown(e)}
@@ -152,7 +149,7 @@ export const AdminControl = () => {
             </div>
 
             <Button type="submit" className="w-full">
-              Send Invites
+              Send Invite
             </Button>
           </form>
         </CardContent>
