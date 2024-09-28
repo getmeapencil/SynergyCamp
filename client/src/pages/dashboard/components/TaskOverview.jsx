@@ -35,7 +35,7 @@ export const TaskOverview = () => {
 
   return (
     <Card className="h-fit w-1/3 max-w-md">
-      <CardHeader className="flex flex-row justify-between">
+      <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>tasks</CardTitle>
           <CardDescription>tasks from all your rooms</CardDescription>
@@ -55,7 +55,7 @@ export const TaskOverview = () => {
           </div>
         ) : (
           sortedTasks?.map((task) => (
-            <div key={task.id} className="flex items-start justify-between gap-2">
+            <div key={task._id} className="flex items-start justify-between gap-2">
               <div className="flex min-w-0 flex-1 items-start gap-2">
                 <Checkbox
                   id={`task-${task._id}`}
@@ -67,7 +67,7 @@ export const TaskOverview = () => {
                 />
                 <div className="min-w-0 flex-1">
                   <label
-                    htmlFor={`task-${task.id}`}
+                    htmlFor={`task-${task._id}`}
                     className={`break-words text-sm font-medium leading-tight peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${
                       task.completed ? "text-gray-500 line-through" : ""
                     }`}
@@ -79,7 +79,7 @@ export const TaskOverview = () => {
                   </p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => handleDeleteTask(task.id)} className="shrink-0">
+              <Button variant="ghost" size="icon" onClick={() => handleDeleteTask(task._id)} className="shrink-0">
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
             </div>
