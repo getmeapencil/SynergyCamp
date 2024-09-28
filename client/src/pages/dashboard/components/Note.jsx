@@ -34,7 +34,7 @@ export const Note = () => {
   };
 
   return (
-    <Card className="h-fit w-1/3">
+    <Card className="h-fit w-full sm:w-1/3">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-2">
           <CardTitle>Note</CardTitle>
