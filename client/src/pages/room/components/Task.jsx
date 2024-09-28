@@ -12,7 +12,7 @@ export const Task = () => {
   const tasks = useTaskStore((state) => state.tasks);
   // console.log("Task ~ tasks:", tasks);
   const { roomId } = useParams();
-  const tasksToUse = tasks.filter((task) => task.roomId === roomId);
+  const tasksToUse = tasks.filter((task) => task?.room?._id === roomId);
 
   const addTask = () => {
     if (newTask.trim()) {

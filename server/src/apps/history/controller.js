@@ -1,0 +1,131 @@
+import { HistoryModel } from "../../models/history.js";
+import { UserModel } from "../../models/user.js";
+export const getHistoryByRoomId = async (req, res) => {
+  try {
+    const { roomId } = req.body;
+    const history = await HistoryModel.find({ roomId });
+    res.status(200).json(history);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get history" });
+  }
+};
+
+export const getStreak = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    // Get the user's history, sorted by date in descending order
+    const history = await HistoryModel.find({ userId }).sort({ joinedAt: -1 });
+
+    if (history.length === 0) {
+      return res.status(200).json({ streak: 0 }); // No history, streak is 0
+    }
+
+    let streak = 1; // Start with a streak of 1
+    let lastDate = new Date(history[0].joinedAt).setHours(0, 0, 0, 0); // Normalize to midnight
+
+    for (let i = 1; i < history.length; i++) {
+      const currentDate = new Date(history[i].joinedAt).setHours(0, 0, 0, 0); // Normalize to midnight
+
+      // Check if currentDate is exactly one day before lastDate
+      const dayDifference = (lastDate - currentDate) / (1000 * 60 * 60 * 24);
+      if (dayDifference === 1) {
+        streak += 1;
+      } else if (dayDifference > 1) {
+        break; // Streak is broken, exit the loop
+      }
+
+      lastDate = currentDate; // Update lastDate to the currentDate
+    }
+    // update user longest streak
+    const user = await UserModel.findById(userId);
+    if (user.longestStreak < streak) {
+      user.longestStreak = streak;
+      await user.save();
+    }
+    if (!user.longestStreak) {
+      user.longestStreak = streak;
+      await user.save();
+    }
+    res.status(200).json(streak);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get streak" });
+  }
+};
+export const getLast7daysHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const history = await HistoryModel.find({ userId, leftAt: { $exists: true } }).sort({ joinedAt: -1 });
+
+    const last7days = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to midnight
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i); // Get each date for the last 7 days
+
+      // Get the start and end of the day for this particular date
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // Filter the history for the current day and calculate total hours spanned
+      const totalHours = history.reduce((acc, h) => {
+        const joinedAtDate = new Date(h.joinedAt).getTime();
+        const leftAtDate = new Date(h.leftAt).getTime();
+
+        if (joinedAtDate >= startOfDay.getTime() && leftAtDate <= endOfDay.getTime()) {
+          // Calculate hours spanned and add to accumulator
+          const hours = (leftAtDate - joinedAtDate) / (1000 * 60 * 60); // Convert milliseconds to hours
+          return acc + hours;
+        }
+        return acc;
+      }, 0);
+
+      // Add to last7days list
+      last7days.unshift({
+        date: date.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+        hoursSpanned: totalHours.toFixed(2) // Total hours spanned rounded to 2 decimal places
+      });
+    }
+
+    console.log(last7days);
+    res.status(200).json(last7days);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get last 7 days history" });
+  }
+};
+
+
+
+
+
+export const trackJoin = async ({ roomId, userId }) => {
+  try {
+    const history = new HistoryModel({
+      roomId,
+      userId,
+      joinedAt: Date.now(),
+    });
+    await history.save();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const trackLeave = async ({ roomId, userId }) => {
+  try {
+    const history = await HistoryModel.findOne({ roomId, userId }).sort({ joinedAt: -1 });
+    if (history && !history.leftAt) {
+      history.leftAt = Date.now();
+      await history.save();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};

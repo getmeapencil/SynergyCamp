@@ -3,17 +3,36 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { useEffect, useState } from "react";
+import { useHistoryStore } from "@/store/history";
 export const Barchart = () => {
-  const data = {
-    presentDayTime: 7500,
-    weekTime: 1000000,
-    goaltime: 200000,
-  };
-  dayjs.extend(duration);
-  const dailyDuration = dayjs.duration(data.presentDayTime, "seconds").format("H[h] m[m] ");
-  const weeklyDuration = dayjs.duration(data.weekTime, "seconds").format("H[h] m[m] ");
-  const goalTime = dayjs.duration(data.goaltime, "seconds").format("H[h] m[m] ");
+  const {last7days}=useHistoryStore()
+  const [barchartData,setbarchartData]=useState([])
 
+  dayjs.extend(duration);
+  const totalHours = last7days.reduce((total, day) => total + parseFloat(day.hoursSpanned), 0);
+  const todayData = last7days[6]; // Assuming last7days[6] is today
+  let todayHours = 0, todayMinutes = 0;
+
+  if (todayData) {
+    const hoursSpanned = parseFloat(todayData.hoursSpanned);
+    todayHours = Math.floor(hoursSpanned); // Whole hours
+    todayMinutes = Math.round((hoursSpanned - todayHours) * 60); // Remaining minutes
+  }
+  const dailyDuration = `${todayHours}h ${todayMinutes}m`; 
+  useEffect(() => {
+    useHistoryStore.getState().getLast7days()
+  }, []);
+  useEffect(() => {
+    let dydata = last7days.map((day) => {
+      return {
+        date: day.date,
+        Hours: day.hoursSpanned,
+      };
+    })
+    setbarchartData(dydata)
+  }, [last7days]);
+  console.log("last7days",last7days)
   return (
     <div className="w-full">
       <Card>
@@ -36,36 +55,7 @@ export const Barchart = () => {
                 left: -4,
                 right: -4,
               }}
-              data={[
-                {
-                  date: "2024-09-01",
-                  Hours: 12,
-                },
-                {
-                  date: "2024-09-02",
-                  Hours: 4,
-                },
-                {
-                  date: "2024-09-03",
-                  Hours: 6,
-                },
-                {
-                  date: "2024-09-04",
-                  Hours: 8,
-                },
-                {
-                  date: "2024-09-05",
-                  Hours: 2,
-                },
-                {
-                  date: "2024-09-06",
-                  Hours: 3,
-                },
-                {
-                  date: "2024-09-07",
-                  Hours: 10,
-                },
-              ]}
+              data={barchartData}
             >
               <Bar
                 dataKey="Hours"
@@ -116,10 +106,7 @@ export const Barchart = () => {
         </CardContent>
         <CardFooter className="flex-col items-start gap-1">
           <CardDescription>
-            Over the past 7 days, you have studied <span className="font-medium text-foreground">{weeklyDuration}</span>
-          </CardDescription>
-          <CardDescription>
-            You need <span className="font-medium text-foreground">{goalTime}</span> more to reach your goal.
+            Over the past 7 days, you have studied <span className="font-medium text-foreground">{totalHours}hours</span>
           </CardDescription>
         </CardFooter>
       </Card>

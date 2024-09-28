@@ -21,7 +21,6 @@ export const Pomodoro = () => {
   const timezone = usePomodoroStore((state) => state.timezone);
   const pomodoro = usePomodoroStore((state) => state.pomodoro);
   const userRole = useRoomStore((state) => state.userRole);
-
   const { editPomodoro } = useSocketEmitters();
   const { roomId } = useParams();
 
@@ -35,12 +34,13 @@ export const Pomodoro = () => {
     if (!timezones.includes(timezoneSetting)) return;
     editPomodoro({ pomodoroType: pomodoroTypeSetting, timezone: timezoneSetting, roomId: roomId });
   };
+  if(!pomodoro) return null;
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <Card>
         <CardHeader className="p-4">
-          <CardTitle>{pomodoro.isWorkPeriod ? "Work" : "Break"}</CardTitle>
+          <CardTitle>{pomodoro?.isWorkPeriod ? "Work" : "Break"}</CardTitle>
           <CardDescription className="flex flex-col font-mono">
             {pomodoroType === "25-5" ? <span>25:00 work, 05:00 break</span> : <span>50:00 work, 10:00 break</span>}
             <span>{timezone}</span>

@@ -1,8 +1,21 @@
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Flame, Trophy } from "lucide-react";
+import { useEffect } from "react";
+import { useMembersStore } from "@/store/members";
+import { useHistoryStore } from "@/store/history";
+import { useUserStore } from "@/store/user";
 
-export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
+export const Streak = () => {
+  const {streak}=useHistoryStore();
+  const {user}=useUserStore();
+  console.log("user",user);
+  const longestStreak=user.longestStreak;
+  console.log(streak,longestStreak);
+  useEffect(() => {
+    useHistoryStore.getState().getStreak();
+  }, []);
+
   return (
     <Card className="h-fit w-1/3">
       <CardHeader>
@@ -16,9 +29,9 @@ export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
               <Flame className="h-5 w-5" />
               Current Streak
             </span>
-            <span className="text-sm font-semibold"> {currentStreak}d</span>
+            <span className="text-sm font-semibold"> {streak}d</span>
           </div>
-          <Progress value={(currentStreak / longestStreak) * 100} className="h-4 bg-muted" />
+          <Progress value={(streak / longestStreak) * 100} className="h-4 bg-muted" />
         </div>
 
         <div className="space-y-3">

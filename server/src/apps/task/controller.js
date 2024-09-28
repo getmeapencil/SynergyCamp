@@ -21,6 +21,7 @@ export const addTask = async (req, res) => {
       user: userId,
       completed: false,
     });
+    task.room = room;
     res.json({ message: "successfully inserted new task", data: task }).status(200);
   } catch (err) {
     console.log(err);
@@ -32,7 +33,7 @@ export const updateTask = async (req, res) => {
   const { id } = req.params;
   const { completed, title, completedAt } = req.body;
   try {
-    const task = await TaskModel.findById(id);
+    const task = await TaskModel.findById(id).populate("room");
     if (title) {
       task.title = title;
     }
@@ -58,7 +59,7 @@ export const getTasksByRoom = async (req, res) => {
       return res.json({ message: "no roomId given" }).status(400);
     }
 
-    const tasks = await TaskModel.find({ room: roomId, user: userId });
+    const tasks = await TaskModel.find({ room: roomId, user: userId }).populate("room");
     return res.json({ message: "successfully fetched tasks", data: tasks }).status(200);
   } catch (err) {
     return res.json({ message: "Internal Server Error" }).status(500);
@@ -68,13 +69,6 @@ export const getTasks = async (req, res) => {
   const userId = req.user._id;
   try {
     let tasks = await TaskModel.find({ user: userId }).populate("room");
-    tasks = tasks.map((task) => {
-      if (task.room) {
-        return { ...task._doc, room: task.room.name, roomId: task.room._id };
-      } else {
-        return { ...task._doc, room: "", roomId: "" };
-      }
-    });
     return res.json({ message: "successfully fetched tasks", data: tasks }).status(200);
   } catch (err) {
     console.log(err);
@@ -85,6 +79,7 @@ export const getTasks = async (req, res) => {
 export const deleteTask = async (req, res) => {
   console.log("delete task");
   const { id } = req.params;
+  console.log("delete task", id);
   try {
     await TaskModel.findByIdAndDelete(id);
     return res.json({ message: "successfully deleted task" }).status(200);

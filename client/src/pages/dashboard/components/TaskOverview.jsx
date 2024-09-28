@@ -32,7 +32,7 @@ export const TaskOverview = () => {
       }
       return a.completed ? 1 : -1;
     });
-
+    console.log("tasks", tasks,sortedTasks);
   return (
     <Card className="h-fit w-1/3 max-w-md">
       <CardHeader className="flex flex-row justify-between gap-2">
@@ -75,7 +75,7 @@ export const TaskOverview = () => {
                     {task.title}
                   </label>
                   <p className={`mt-1 truncate text-sm ${task.completed ? "text-gray-500" : "text-muted-foreground"}`}>
-                    {task.room}
+                    {task.room.name}
                   </p>
                 </div>
               </div>

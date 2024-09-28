@@ -21,7 +21,6 @@ export const useSocket = () => {
     setSocket(newSocket);
     // Handle connection state
     newSocket.on("connect", () => {
-      console.log("Connected to socket server");
       const roomId = useRoomStore.getState().currentRoom?._id;
       if (roomId) {
         newSocket.emit("join-room", { roomId });
