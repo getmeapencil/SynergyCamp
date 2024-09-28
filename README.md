@@ -1,70 +1,14 @@
-# SynergyCamp
+# MindMesh
 
-Project Name -  
-**MindMesh**
-
-Description -  
-Video Conferencing app with features that allows you to study and work with friends in real-time.
-
-## StyleGuide-
-
-- Make sure `Format on save` is enabled and configured to `Prettier`  
-  https://www.digitalocean.com/community/tutorials/how-to-format-code-with-prettier-in-visual-studio-code
-
-- Optionally, you can run `npm run format` in terminal and prettier will format all the `js, ts, jsx, tsx` files that needs formatting
-
-- Always use arrow functions  
-  Eg.
-
-```js
-const niceFunction = () => {
-  return "Hello";
-};
-```
-
-- Don't use `default` export  
-  Eg.
-
-```js
-export default const niceFunction = () => {return "Hello"}; // ❌
-export const niceFunction = () => {return "Hello"}; // ✅
-```
-
-- If a function takes more than one params, pass params as object  
-  Eg.
-
-```js
-export const getSum = ({ num1, num2 }) => {
-  return num1 + num2;
-}; // ✅
-getSum({ num1: 3, num2: 4 });
-```
+Mindmesh is a study-together web app that boosts productivity through real-time collaboration and focused study tools.
 
 ## Features
+- **Real-Time Study Rooms**: Join or create rooms where you can study with friends, see who’s online, and keep each other accountable.
+- **Pomodoro Timer**: Built-in 25/50 minute Pomodoro timers to help structure focused study sessions.
+- **Task Management**: Track tasks across all study rooms, with the ability to delete tasks for better organization.
+- **Customizable Motivational Quotes**: Users can change a displayed quote to stay inspired throughout the study session.
+- **Multiple Themes**: Choose from a variety of study themes (e.g., companions, clock, pomodoro, breath) to personalize the environment.
+- **Distraction-Free Design**: Minimalist interface designed to keep students focused without unnecessary distractions.
+- **Chat & Collaboration**: Real-time chat and participant status (online/offline) within each room to encourage collaboration and interaction.
+- **Admin & Moderator Controls**: Manage rooms and participants effectively with admin-level permissions.
 
-- Dashboard
-  - Create Room
-  - Room list
-  - Invite list
-  - Bar Chart (Stats)
-  - Streak (like Github)
-  - Todo Overview
-- Chat
-- Pomodoro
-- Todo
-- Google Calendar Integration
-- Polls?
-- Video Conferencing
-- Music?
-- Whiteboard?
-
-## Room DB Schema
-
-- id (unique)
-- Name (string)
-- Members (ref(user)[]) {Admin, Mod, Members, Todo}
-- temporaryBanned (ref(user), banEndTime(Date))
-- permanentBanned (ref(user))
-- pomodoroStartTime (Date)
-- pinnedMessages (5 pins, 1000 chars)
-- Rules
