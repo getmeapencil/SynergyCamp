@@ -20,7 +20,7 @@ export const SidePanel = memo(({ activePanel, setActivePanel, members }) => {
       case "Pomodoro":
         return <Pomodoro />;
       case "Calendar":
-        return <div className="p-4">Calendar content goes here.</div>;
+        return <div className="grid flex-1 place-content-center p-4 text-xl">Coming soon...</div>;
       case "Admin Control":
         return <AdminControl />;
       case "Settings":
