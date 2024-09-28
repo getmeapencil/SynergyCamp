@@ -25,22 +25,22 @@ const themes = [
     label: "Companions",
   },
   {
+    label: "Note",
+  },
+  {
+    label: "Pomodoro",
+  },
+  {
     label: "Breathe",
+  },
+  {
+    label: "Clock",
   },
   {
     label: "Library",
   },
   {
     label: "Tea",
-  },
-  {
-    label: "Clock",
-  },
-  {
-    label: "Note",
-  },
-  {
-    label: "Pomodoro",
   },
 ];
 
