@@ -202,7 +202,7 @@ export const MainView = memo(() => {
                         key={theme.label}
                         value={theme.label}
                         onSelect={(currentValue) => {
-                          setCurrentTheme(currentValue === currentTheme ? "" : currentValue);
+                          setCurrentTheme(currentValue);
                           setOpen(false);
                         }}
                       >
