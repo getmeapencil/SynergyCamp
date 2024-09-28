@@ -32,12 +32,18 @@ export function RoomsData() {
   }, [getInvites]);
 
   return (
-    <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
-      <div className="flex justify-between">
-        <div>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="rooms">Rooms</TabsTrigger>
-            <TabsTrigger value="invites" className="relative">
+    <Tabs
+      defaultValue="rooms"
+      className="w-full"
+      onValueChange={(value) => setSelectedTab(value)}
+    >
+      <div className="flex flex-wrap justify-between gap-2">
+        <div className="w-full md:w-auto">
+          <TabsList className="grid grid-cols-2">
+            <TabsTrigger value="rooms" className="w-full md:w-auto">
+              Rooms
+            </TabsTrigger>
+            <TabsTrigger value="invites" className="relative w-full md:w-auto">
               Invites
               {inviteCount > 0 && (
                 <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -47,9 +53,9 @@ export function RoomsData() {
             </TabsTrigger>
           </TabsList>
         </div>
-        <div className="flex gap-2">
-          <div className="relative flex-1 md:grow-0">
-            <span className="absolute grid h-full w-8 place-content-center text-muted-foreground">
+        <div className="flex w-full flex-wrap justify-between gap-2 md:w-auto md:gap-4">
+          <div className="relative w-full flex-1 md:grow-0">
+            <span className="absolute inset-y-0 left-0 grid h-full w-8 place-content-center text-muted-foreground">
               <Search className="h-4 w-4" />
             </span>
             <Input
@@ -70,7 +76,7 @@ export function RoomsData() {
                   Filter
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="" align="end">
+              <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Role</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuCheckboxItem

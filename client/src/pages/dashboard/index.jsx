@@ -20,27 +20,27 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex  h-screen flex-col">
       <div className="flex items-center justify-between border-b p-4">
-        <span className="flex gap-2 text-4xl font-extrabold">
+        <span className="flex gap-2 text-2xl sm:text-3xl md:text-4xl font-extrabold">
           <img
             src={theme === "light" ? LogoBlack : LogoWhite}
             alt="MindMesh"
-            className="grid aspect-square w-8 place-content-center"
+            className="grid aspect-square w-5 lg:w-8 md:w-6 sm:w-4 place-content-center"
           />
           MindMesh
         </span>
         <DropdownAvatar user={user} />
       </div>
       <ScrollArea>
-        <div className="flex gap-4 p-4 sm:flex-row">
-          <div className="flex flex-col gap-4 sm:w-1/3">
+        <div className="md:flex flex-col w-screen gap-4 p-4 sm:flex-row">
+          <div className="flex flex-col   gap-4  sm:w-1/3">
             <CreateRoom />
             <Barchart />
           </div>
           <div className="flex flex-1 flex-col gap-4">
             <RoomsData />
-            <div className="flex flex-1 gap-4">
+            <div className="flex flex-col sm:flex-row w-full flex-1 gap-4">
               <Streak />
               <TaskOverview />
               <Note />

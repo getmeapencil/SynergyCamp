@@ -19,7 +19,7 @@ export const CreateRoom = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <Card className="min-w-sm">
         <CardHeader>
           <CardTitle>Your Room</CardTitle>

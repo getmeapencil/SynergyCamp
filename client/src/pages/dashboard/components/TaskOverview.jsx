@@ -34,10 +34,10 @@ export const TaskOverview = () => {
     });
 
   return (
-    <Card className="h-fit w-1/3 max-w-md">
+    <Card className="h-fit sm:w-1/3 w-full min-w-smd max-w-md">
       <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
-          <CardTitle>tasks</CardTitle>
+          <CardTitle>Tasks</CardTitle>
           <CardDescription>tasks from all your rooms</CardDescription>
         </div>
         <div className="flex items-end gap-2">

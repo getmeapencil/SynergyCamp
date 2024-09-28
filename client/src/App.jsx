@@ -37,6 +37,7 @@ function App() {
       <Route path="/auth" element={<Auth />} />
       {/* <Route path="/error" element={<Error />} /> */}
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* <Route path="/dash" element={<Dashboard />} /> */}
     </Routes>
   );
 }

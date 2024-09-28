@@ -11,9 +11,7 @@ import { useEffect } from "react";
 export const InvitesTable = ({ searchName }) => {
   const inviteData = useInvitesStore((state) => state.invites);
   let filteredData = inviteData;
-  // if (filterRoles.length !== 0) {
-  //   filteredData = inviteData.filter((data) => filterRoles.includes(data.role));
-  // }
+  
   filteredData = filteredData.filter((data) => data.roomName.toLowerCase().includes(searchName.toLowerCase()));
 
   useEffect(() => {
@@ -39,12 +37,12 @@ export const InvitesTable = ({ searchName }) => {
       <CardContent>
         <ScrollArea className="h-72 rounded-md border">
           {filteredData.length ? (
-            <Table>
+            <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead className="sm:table-cell">Invited by</TableHead>
                   <TableHead className="text-center sm:table-cell">Room</TableHead>
-                  <TableHead className="text-center sm:table-cell">Total Members</TableHead>
+                  <TableHead className="hidden text-center sm:table-cell">Total Members</TableHead>
                   <TableHead className="text-center sm:table-cell">Action</TableHead>
                 </TableRow>
               </TableHeader>
@@ -59,8 +57,8 @@ export const InvitesTable = ({ searchName }) => {
                       <div className="font-medium">{data.invitedBy.name}</div>
                     </TableCell>
                     <TableCell className="text-center sm:table-cell">{data.roomName}</TableCell>
-                    <TableCell className="text-center sm:table-cell">{data.totalMembers} Members</TableCell>
-                    <TableCell className="text-center sm:table-cell">
+                    <TableCell className="hidden text-center sm:table-cell">{data.totalMembers} Members</TableCell>
+                    <TableCell className="text-center">
                       <div className="flex place-content-center gap-2">
                         <Button
                           variant="outline"
@@ -83,9 +81,9 @@ export const InvitesTable = ({ searchName }) => {
               </TableBody>
             </Table>
           ) : noSearchResults ? (
-            <EmptyTable variant={"invite"} text={"No invites recieved by that name."} />
+            <EmptyTable variant={"invite"} text={"No invites received by that name."} />
           ) : (
-            <EmptyTable variant={"invite"} text={"You haven't recieved any room invites yet."} />
+            <EmptyTable variant={"invite"} text={"You haven't received any room invites yet."} />
           )}
         </ScrollArea>
       </CardContent>

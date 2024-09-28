@@ -4,7 +4,7 @@ import { Flame, Trophy } from "lucide-react";
 
 export const Streak = ({ currentStreak = 5, longestStreak = 10 }) => {
   return (
-    <Card className="h-fit w-1/3">
+    <Card className="h-fit w-full sm:w-1/3">
       <CardHeader>
         <CardTitle>Streak</CardTitle>
         <CardDescription>Continuous days you&apos;ve exceeded your study goal</CardDescription>
