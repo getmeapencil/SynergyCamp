@@ -11,13 +11,12 @@ import { useTheme } from "@/components/theme-provider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { DeleteDialog } from "./components/DeleteDialog";
-
 export const AdminControl = () => {
   const { theme } = useTheme();
   const { roomId } = useParams();
-  const [emails, setEmails] = useState([]);
+  // const [emails, setEmails] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -45,43 +44,30 @@ export const AdminControl = () => {
 
   const handleInputKeyDown = (e) => {
     if (["Enter", "Tab", ","].includes(e.key)) {
-      e.preventDefault();
-      addEmail();
+      // e.preventDefault();
+      handleSubmit();
     }
   };
 
-  const addEmail = () => {
-    const trimmedEmail = inputValue.trim();
-    if (trimmedEmail && validateEmail(trimmedEmail)) {
-      if (!emails.includes(trimmedEmail)) {
-        setEmails([...emails, trimmedEmail]);
-        setInputValue("");
-      } else {
-        setError("This email has already been added.");
-      }
-    } else if (trimmedEmail) {
-      setError("Please enter a valid email address.");
-    }
-  };
-
-  const removeEmail = (emailToRemove) => {
-    setEmails(emails.filter((email) => email !== emailToRemove));
-  };
+  // const removeEmail = (emailToRemove) => {
+  //   setEmails(emails.filter((email) => email !== emailToRemove));
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (emails.length > 0) {
-      sendInvites({ emails, roomId });
-      setEmails([]);
-      toast("Invites sent successfully");
+    const trimmedEmail = inputValue.trim();
+    if (trimmedEmail && validateEmail(trimmedEmail)) {
+      sendInvites({ emails: [trimmedEmail], roomId });
+      setInputValue("");
     } else {
-      setError("Please add at least one valid email address.");
-      toast("Please add at least one valid email address.");
+      setError("Please enter a valid email address.");
+      // toast("Please enter a valid email address.");
     }
   };
 
   const handleChange = (e, type) => {
     const value = e.target.value;
+
     if (type === "roomDescription") {
       if (value.length >= 100) {
         setInputWarnings((prev) => ({
@@ -149,36 +135,21 @@ export const AdminControl = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email-input">Emails</Label>
+              <Label htmlFor="email-input">Email</Label>
               <Input
                 id="email-input"
                 type="text"
-                placeholder="Type email address and press Enter key"
+                placeholder="Type email address"
                 value={inputValue}
                 onChange={handleInputChange}
-                onKeyDown={handleInputKeyDown}
-                onBlur={addEmail}
+                onKeyDown={(e) => handleInputKeyDown(e)}
                 autoComplete="off"
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
-            {!!emails.length && (
-              <div className="flex flex-wrap gap-2 text-sm">
-                {emails.map((email) => (
-                  <div
-                    key={email}
-                    className="flex items-center gap-1 rounded bg-secondary px-2 py-1 text-secondary-foreground"
-                  >
-                    <span>{email}</span>
-                    <button type="button" onClick={() => removeEmail(email)} className="text-secondary-foreground">
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <Button type="submit" disabled={emails.length === 0} className="w-full">
-              Send Invites
+
+            <Button type="submit" className="w-full">
+              Send Invite
             </Button>
           </form>
         </CardContent>
@@ -205,7 +176,7 @@ export const AdminControl = () => {
                 <Popover open={isEmojiPickerOpen} onOpenChange={setIsEmojiPickerOpen}>
                   <PopoverTrigger asChild>
                     <Button size="icon" variant="outline" className="shrink-0">
-                      <Emoji emojiStyle={EmojiStyle.NATIVE} unified={roomProfile.roomAvatar} size={20} />
+                      <Emoji emojiStyle={EmojiStyle.APPLE} unified={roomProfile.roomAvatar} size={20} />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="border-0 p-0" align="end">

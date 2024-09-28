@@ -51,6 +51,10 @@ export const useSocket = () => {
       useInvitesStore.getState().setInvites(invite);
     });
 
+    newSocket.on("invite-success", () => {
+      toast("Invite sent successfully");
+    });
+
     newSocket.on("invite-error", (error) => {
       console.log("Invite unsuccessful:", error);
       if (error.failedInvites) {
@@ -85,14 +89,14 @@ export const useSocket = () => {
     });
 
     newSocket.on("temporary-banned", (data) => {
-      if(data?.userId===useUserStore.getState().user._id){
+      if (data?.userId === useUserStore.getState().user._id) {
         toast(`You have been temporarily banned from the room for ${data?.banEndTime}`, {
           type: "error",
         });
         // Redirect to home page
         window.location.href = "/dashboard";
-      }else{
-        useMembersStore.getState().removeMember(data?.userId)
+      } else {
+        useMembersStore.getState().removeMember(data?.userId);
       }
     });
     newSocket.on("edit-pomodoro", ({ pomodoroType, timezone }) => {

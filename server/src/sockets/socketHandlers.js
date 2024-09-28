@@ -1,6 +1,6 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
-import { editPomodoro, removeUserFromRoom, tempBanUserRoom } from "../apps/room/controller.js";
+import { editPomodoro, removeUserFromRoom, tempBanUserRoom, verifyMember } from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { getRole } from "../apps/room/controller.js";
 import { trackJoin, trackLeave } from "../apps/history/controller.js";
@@ -10,6 +10,9 @@ const users = {};
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
   socket.on("join-room", async ({ roomId }) => {
+    const isMember = await verifyMember({ userId: socket.user._id, roomId });
+    if (!isMember) return;
+
     // check if user is already in room
     if (users[roomId]?.map((user) => user._id.toString()).includes(socket.user._id.toString())) {
       return;
@@ -71,6 +74,8 @@ const registerSocketHandlers = (io, socket) => {
 
     if (res.failedInvites?.length) {
       io.to(senderId).emit("invite-error", { failedInvites: res.failedInvites });
+    } else {
+      io.to(senderId).emit("invite-success");
     }
   });
 
@@ -180,7 +185,7 @@ const registerSocketHandlers = (io, socket) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
     });
-    console.log("leave room",roomId)
+    console.log("leave room", roomId);
     socket.leave(roomId);
     io.to(roomId).emit("user-status", users[roomId]);
     trackLeave({ roomId, userId: socket.user._id });
@@ -211,13 +216,13 @@ const registerSocketHandlers = (io, socket) => {
           _id: socket.user._id,
         },
       };
-      if(!users[room]?.includes(socket.user._id)){
-        return
+      if (!users[room]?.includes(socket.user._id)) {
+        return;
       }
       users[room] = users[room]?.filter((user) => {
         return user._id.toString() !== socket.user._id.toString();
       });
-      console.log("leave room 2nd",room)
+      console.log("leave room 2nd", room);
       trackLeave({ roomId: room, userId: socket.user._id });
       socket.to(room).emit("user-status", users[room]);
       socket.to(room).emit("incoming-message", message);

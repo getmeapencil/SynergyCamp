@@ -35,7 +35,7 @@ export const TaskOverview = () => {
     console.log("tasks", tasks,sortedTasks);
   return (
     <Card className="h-fit w-1/3 max-w-md">
-      <CardHeader className="flex flex-row justify-between">
+      <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>tasks</CardTitle>
           <CardDescription>tasks from all your rooms</CardDescription>

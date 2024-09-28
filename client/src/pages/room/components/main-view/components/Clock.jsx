@@ -13,10 +13,13 @@ export const Clock = () => {
   }, []);
 
   const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
+    let hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const seconds = date.getSeconds().toString().padStart(2, "0");
-    return `${hours}:${minutes}:${seconds}`;
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12; // Convert to 12-hour format, with 12 instead of 0 for midnight
+    const formattedHours = hours.toString().padStart(2, "0");
+    return `${formattedHours}:${minutes}:${seconds} ${ampm}`;
   };
 
   return (
