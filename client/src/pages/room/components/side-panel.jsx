@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
 import { Participants } from "./participants";
-import { EventForm } from "./calendar";
+import { Calendar } from "./calendar";
 import { AdminControl } from "./admin-control";
 import { Task } from "./Task";
 import { Settings } from "./settings";
@@ -21,7 +21,7 @@ export const SidePanel = memo(({ activePanel, setActivePanel, members }) => {
       case "Pomodoro":
         return <Pomodoro />;
       case "Calendar":
-        return <EventForm />;
+        return <Calendar />;
       case "Admin Control":
         return <AdminControl />;
       case "Settings":

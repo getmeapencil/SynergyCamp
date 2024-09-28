@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const calendarSchema = new mongoose.Schema(
   {
     summary: {
-      type: string,
+      type: String,
       required: true,
     },
     description: {
-      type: string,
+      type: String,
       required: true,
     },
     start: {
@@ -16,7 +16,7 @@ const calendarSchema = new mongoose.Schema(
         required: true,
       },
       timeZone: {
-        type: string,
+        type: String,
         required: true,
       },
     },
@@ -26,7 +26,7 @@ const calendarSchema = new mongoose.Schema(
         required: true,
       },
       timeZone: {
-        type: string,
+        type: String,
         required: true,
       },
     },
