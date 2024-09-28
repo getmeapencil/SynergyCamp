@@ -32,13 +32,13 @@ export const TaskOverview = () => {
       }
       return a.completed ? 1 : -1;
     });
-    console.log("tasks", tasks,sortedTasks);
+  console.log("tasks", tasks, sortedTasks);
   return (
     <Card className="h-fit w-1/3 max-w-md">
       <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
-          <CardTitle>tasks</CardTitle>
-          <CardDescription>tasks from all your rooms</CardDescription>
+          <CardTitle>Tasks</CardTitle>
+          <CardDescription>Tasks from all your rooms</CardDescription>
         </div>
         <div className="flex items-end gap-2">
           <span className="flex justify-end text-5xl font-semibold">{incompleteTasksNo}</span>
