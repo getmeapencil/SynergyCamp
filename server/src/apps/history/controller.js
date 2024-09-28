@@ -17,11 +17,11 @@ export const getStreak = async (req, res) => {
     // Get the user's history, sorted by date in descending order
     const history = await HistoryModel.find({ userId }).sort({ joinedAt: -1 });
 
-    if (history.length === 0) {
-      return res.status(200).json({ streak: 0 }); // No history, streak is 0
-    }
-
+    
     let streak = 1; // Start with a streak of 1
+    if (history.length === 0) {
+      return res.status(200).json(streak); // No history, streak is 0
+    }
     let lastDate = new Date(history[0].joinedAt).setHours(0, 0, 0, 0); // Normalize to midnight
 
     for (let i = 1; i < history.length; i++) {
