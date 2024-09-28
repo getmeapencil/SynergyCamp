@@ -8,7 +8,7 @@ import { useInvitesStore } from "@/store/invite";
 import { generateAvatarFallback } from "@/utils/generateAvatarFallback";
 import { useEffect } from "react";
 
-export const InvitesTable = ({ filterRoles, searchName }) => {
+export const InvitesTable = ({ searchName }) => {
   const inviteData = useInvitesStore((state) => state.invites);
   let filteredData = inviteData;
   

@@ -17,7 +17,7 @@ export const Note = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const newNote = formData.get("note");
+    const newNote = formData.get("note").trim();
     const newFontSize = parseInt(formData.get("fontSize"), 10);
     setDashboardNote({ note: newNote, fontSize: newFontSize });
     setIsDialogOpen(false);

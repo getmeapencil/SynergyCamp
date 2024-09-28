@@ -25,22 +25,22 @@ const themes = [
     label: "Companions",
   },
   {
+    label: "Note",
+  },
+  {
+    label: "Pomodoro",
+  },
+  {
     label: "Breathe",
+  },
+  {
+    label: "Clock",
   },
   {
     label: "Library",
   },
   {
     label: "Tea",
-  },
-  {
-    label: "Clock",
-  },
-  {
-    label: "Note",
-  },
-  {
-    label: "Pomodoro",
   },
 ];
 
@@ -84,7 +84,12 @@ export const MainView = memo(() => {
         return <Clock />;
       case "Note":
         return (
-          <Note note={roomNote.note} fontSize={roomNote.fontSize} align={roomNote.align} position={roomNote.position} />
+          <Note
+            note={roomNote.note.trim()}
+            fontSize={roomNote.fontSize}
+            align={roomNote.align}
+            position={roomNote.position}
+          />
         );
       case "Pomodoro":
         return <Pomodoro />;
@@ -197,7 +202,7 @@ export const MainView = memo(() => {
                         key={theme.label}
                         value={theme.label}
                         onSelect={(currentValue) => {
-                          setCurrentTheme(currentValue === currentTheme ? "" : currentValue);
+                          setCurrentTheme(currentValue);
                           setOpen(false);
                         }}
                       >

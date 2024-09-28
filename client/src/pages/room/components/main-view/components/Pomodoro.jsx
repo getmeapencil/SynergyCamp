@@ -11,7 +11,7 @@ export const Pomodoro = () => {
       <Card className="w-fit">
         <CardHeader className="p-4">
           <CardTitle className="text-4xl">{pomodoro.isWorkPeriod ? "Work" : "Break"}</CardTitle>
-          <CardDescription className="flex flex-col font-mono text-2xl">
+          <CardDescription className="flex flex-col font-mono text-lg">
             {pomodoroType === "25-5" ? <span>25:00 work, 05:00 break</span> : <span>50:00 work, 10:00 break</span>}
             <span>{timezone}</span>
           </CardDescription>
