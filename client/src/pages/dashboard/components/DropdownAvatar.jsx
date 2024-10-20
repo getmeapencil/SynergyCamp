@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useUserStore } from "@/store/user";
-import { LogOut, Moon, Settings, User } from "lucide-react";
+import { LogOut, Moon, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
 import { generateAvatarFallback } from "@/utils/generateAvatarFallback";
@@ -52,10 +52,10 @@ export const DropdownAvatar = ({ user }) => {
               />
             </div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2 font-medium">
+          {/* <DropdownMenuItem className="flex gap-2 font-medium">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex gap-2 font-medium focus:text-red-500"
