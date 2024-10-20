@@ -19,9 +19,13 @@ const registerSocketHandlers = (io, socket) => {
     }
 
     socket.join(roomId);
+
+    // const activeSockets = await io.in(roomId).fetchSockets();
+    // console.log(activeSockets.length);
+
     const role = await getRole(socket.user._id, roomId);
 
-    trackJoin({ roomId, userId: socket.user._id });
+    // trackJoin({ roomId, userId: socket.user._id });
     if (users[roomId]) {
       if (users[roomId].map((user) => user._id.toString()).includes(socket.user._id.toString())) {
         return;
@@ -141,6 +145,7 @@ const registerSocketHandlers = (io, socket) => {
     // remove user from room members list
     await removeUserFromRoom({ userId, roomId });
   });
+
   socket.on("temporary-ban-user", async ({ userId, roomId, banDuration }) => {
     const userSocket = users[roomId].find((user) => {
       return user._id.toString() === userId.toString();
@@ -181,6 +186,7 @@ const registerSocketHandlers = (io, socket) => {
     });
     io.to(roomId).emit("user-status", users[roomId]);
   });
+
   socket.on("leave-room", ({ roomId }) => {
     users[roomId] = users[roomId]?.filter((user) => {
       return user._id.toString() !== socket.user._id.toString();
