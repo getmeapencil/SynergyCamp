@@ -32,7 +32,7 @@ export function RoomsData() {
   }, [getInvites]);
 
   return (
-    <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
+    <Tabs defaultValue="rooms" onValueChange={(value) => setSelectedTab(value)}>
       <div className="flex justify-between">
         <div>
           <TabsList className="grid w-full grid-cols-2">

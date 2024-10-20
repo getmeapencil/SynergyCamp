@@ -37,7 +37,7 @@ export const InvitesTable = ({ searchName }) => {
         <CardDescription>Rooms you&apos;ve been invited to.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-72 rounded-md border">
+        <ScrollArea className="h-1/2 rounded-md border">
           {filteredData.length ? (
             <Table>
               <TableHeader>

@@ -24,7 +24,7 @@ const navTopItems = [
   { label: "Participants", icon: SquareUserRound },
   { label: "Task", icon: ListTodo },
   { label: "Pomodoro", icon: Timer },
-  { label: "Calendar", icon: Calendar },
+  // { label: "Calendar", icon: Calendar },
 ];
 
 const cn = {
@@ -83,11 +83,11 @@ export const SideNav = memo(({ activePanel, setActivePanel }) => {
           ) : (
             <NavItem item={{ label: "Admin Control", icon: ShieldPlus }} setActivePanel={setActivePanel} />
           ))}
-        {activePanel === "Settings" ? (
+        {/* {activePanel === "Settings" ? (
           <ActiveNavItem item={{ label: "Settings", icon: Settings }} />
         ) : (
           <NavItem item={{ label: "Settings", icon: Settings }} setActivePanel={setActivePanel} />
-        )}
+        )} */}
         <AlertDialog>
           <Tooltip>
             <TooltipTrigger asChild>

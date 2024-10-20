@@ -43,7 +43,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
       </CardHeader>
 
       <CardContent>
-        <ScrollArea className="h-72 rounded-md border">
+        <ScrollArea className="h-96 rounded-md border">
           {filteredData?.length ? (
             <Table>
               <TableHeader>
