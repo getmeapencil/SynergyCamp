@@ -3,18 +3,18 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Pomodoro } from "./pomodoro";
 import { Chat } from "./chat";
-import { Participants } from "./participants";
+// import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Task } from "./Task";
-import { Settings } from "./settings";
+// import { Settings } from "./settings";
 
-export const SidePanel = memo(({ activePanel, setActivePanel, members }) => {
+export const SidePanel = memo(({ activePanel, setActivePanel }) => {
   const renderPanelContent = () => {
     switch (activePanel) {
       case "Chat":
         return <Chat />;
-      case "Participants":
-        return <Participants allmembers={members} />;
+      // case "Participants":
+      //   return <Participants />;
       case "Task":
         return <Task />;
       case "Pomodoro":
@@ -23,8 +23,8 @@ export const SidePanel = memo(({ activePanel, setActivePanel, members }) => {
         return <div className="grid flex-1 place-content-center p-4 text-xl">Coming soon...</div>;
       case "Admin Control":
         return <AdminControl />;
-      case "Settings":
-        return <Settings />;
+      // case "Settings":
+      //   return <Settings />;
       default:
         return null;
     }
