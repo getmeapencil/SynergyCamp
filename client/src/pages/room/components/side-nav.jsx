@@ -66,8 +66,8 @@ export const SideNav = memo(({ activePanel, setActivePanel }) => {
   const navigate = useNavigate();
   const userRole = useRoomStore((state) => state.userRole);
   return (
-    <aside className="z-10 hidden min-h-screen w-14 flex-col border-l bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+    <aside className="z-10 flex min-h-screen w-14 flex-col border-l bg-background">
+      <nav className="flex flex-col items-center gap-4 px-2 py-5">
         {navTopItems.map((item, index) => {
           return activePanel === item.label ? (
             <ActiveNavItem key={index} item={item} />
@@ -76,7 +76,7 @@ export const SideNav = memo(({ activePanel, setActivePanel }) => {
           );
         })}
       </nav>
-      <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-5">
         {userRole === "admin" &&
           (activePanel === "Admin Control" ? (
             <ActiveNavItem item={{ label: "Admin Control", icon: ShieldPlus }} />

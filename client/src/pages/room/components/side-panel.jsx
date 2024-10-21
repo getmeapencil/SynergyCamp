@@ -33,7 +33,7 @@ export const SidePanel = memo(({ activePanel, setActivePanel }) => {
   if (!activePanel) return null;
 
   return (
-    <div className="flex w-1/4 min-w-[400px] flex-col border-l border-l-border">
+    <div className="absolute bottom-0 left-0 right-0 top-0 flex w-full min-w-[400px] flex-col border-l border-l-border bg-background md:static md:w-1/4">
       <div className="flex justify-between border-b border-b-border p-4 text-xl font-semibold leading-none tracking-tight">
         <span>{activePanel}</span>
         <Button className="h-6 w-6" variant="ghost" size="icon" onClick={() => setActivePanel("")}>
