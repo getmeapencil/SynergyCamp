@@ -1,4 +1,6 @@
 import { create } from "zustand";
+// import { notifyUser } from "@/utils/notifyUser";
+// import { useUserStore } from "./user";
 
 export const useMessagesStore = create((set, get) => ({
   messages: [],
@@ -7,6 +9,8 @@ export const useMessagesStore = create((set, get) => ({
     const date = new Date();
     message.createdAt = date.toUTCString();
     set({ messages: [...messages, message] });
+    // if (message.user._id === useUserStore.getState().user._id) return;
+    // notifyUser({ message: message.text, icon: message.user.picture });
   },
   pushMessage: (message) => {
     const messages = get().messages;
