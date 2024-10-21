@@ -32,8 +32,8 @@ export function RoomsData() {
   }, [getInvites]);
 
   return (
-    <Tabs defaultValue="rooms" className="" onValueChange={(value) => setSelectedTab(value)}>
-      <div className="flex justify-between">
+    <Tabs defaultValue="rooms" onValueChange={(value) => setSelectedTab(value)}>
+      <div className="flex justify-between gap-2">
         <div>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="rooms">Rooms</TabsTrigger>

@@ -1,14 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/user";
 import { useNavigate } from "react-router-dom";
-import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 import { Emoji, EmojiStyle } from "emoji-picker-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -16,7 +14,6 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
   const rooms = useRoomStore((state) => state.rooms);
   const user = useUserStore((state) => state.user);
   const userId = user?._id;
-  const { joinRoom } = useSocketEmitters();
   const navigate = useNavigate();
   const filteredData = rooms.filter((room) => {
     const memberRole = room.members.find((member) => member.userId === userId)?.role;
@@ -43,7 +40,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
       </CardHeader>
 
       <CardContent>
-        <ScrollArea className="h-72 rounded-md border">
+        <div className="h-96 overflow-auto rounded-md border">
           {filteredData?.length ? (
             <Table>
               <TableHeader>
@@ -83,7 +80,6 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
                                 disabled={banned}
                                 onClick={() => {
                                   navigate(`/room/${data._id}`);
-                                  joinRoom({ roomId: data._id });
                                 }}
                               >
                                 Enter Room
@@ -105,7 +101,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );

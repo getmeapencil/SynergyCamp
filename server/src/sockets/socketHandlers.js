@@ -1,49 +1,65 @@
 import socketRegistry from "./socketRegistry.js";
 import { invite } from "../apps/invite/controller.js";
-import { editPomodoro, removeUserFromRoom, tempBanUserRoom, verifyMember } from "../apps/room/controller.js";
+import {
+  editPomodoro,
+  removeUserFromRoom,
+  tempBanUserRoom,
+  verifyMember,
+  getOnlineMembersWithRole,
+} from "../apps/room/controller.js";
 import { v4 as uuidv4 } from "uuid";
-import { getRole } from "../apps/room/controller.js";
 import { trackJoin, trackLeave } from "../apps/history/controller.js";
 
-const users = {};
+// const users = {};
 
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
   socket.on("join-room", async ({ roomId }) => {
-    const isMember = await verifyMember({ userId: socket.user._id, roomId });
-    if (!isMember) return;
+    console.log("join-room before:", socket.rooms);
+    const userId = String(socket.user._id);
 
-    // check if user is already in room
-    if (users[roomId]?.map((user) => user._id.toString()).includes(socket.user._id.toString())) {
+    if (socket.rooms.has(roomId) || roomId === userId) {
       return;
     }
 
-    socket.join(roomId);
-    const role = await getRole(socket.user._id, roomId);
+    const isMember = await verifyMember({ userId, roomId });
+    if (!isMember) return;
 
-    trackJoin({ roomId, userId: socket.user._id });
-    if (users[roomId]) {
-      if (users[roomId].map((user) => user._id.toString()).includes(socket.user._id.toString())) {
-        return;
+    // leave every custom room joined
+    socket.rooms.forEach((room) => {
+      if (room !== socket.id) {
+        socket.leave(room);
+
+        const message = {
+          _id: uuidv4(),
+          text: `${socket.user.name} left the room!`,
+          notification: {
+            type: "leaving-room",
+          },
+          user: {
+            _id: socket.user._id,
+          },
+        };
+        socket.to(room).emit("incoming-message", message);
       }
-      users[roomId].push({
-        socketid: socket.id,
-        _id: socket.user._id,
-        name: socket.user.name,
-        role: role,
-        picture: socket.user.picture,
+    });
+    socket.join(userId);
+
+    socket.join(roomId);
+    // console.log(socket.rooms);
+
+    const activeSockets = await io.in(roomId).fetchSockets();
+    let onlineMembers = [];
+    activeSockets.map((s) => {
+      onlineMembers.push({
+        socketid: s.id,
+        _id: s.user._id,
+        name: s.user.name,
+        picture: s.user.picture,
       });
-    } else {
-      users[roomId] = [
-        {
-          socketid: socket.id,
-          _id: socket.user._id,
-          name: socket.user.name,
-          role: role,
-          picture: socket.user.picture,
-        },
-      ];
-    }
+    });
+    onlineMembers = await getOnlineMembersWithRole(onlineMembers, roomId);
+    io.to(roomId).emit("user-status", onlineMembers);
 
     const message = {
       _id: uuidv4(),
@@ -52,11 +68,55 @@ const registerSocketHandlers = (io, socket) => {
         type: "joining-room",
       },
       user: {
-        _id: socket.user._id,
+        _id: userId,
       },
     };
-    io.to(roomId).emit("user-status", users[roomId]);
     io.to(roomId).emit("incoming-message", message);
+
+    console.log("join-room after:", socket.rooms);
+  });
+
+  // join userId room
+  socket.on("join-userId-room", async () => {
+    console.log("join-userId-room before:", socket.rooms);
+    const userId = String(socket.user._id);
+    const socketRooms = Array.from(socket.rooms);
+
+    // leave every custom room joined (except userId)
+    await Promise.all(
+      socketRooms.map(async (room) => {
+        if (room === socket.id || room === String(socket.user._id)) {
+          return;
+        }
+        socket.leave(room);
+        const activeSockets = await io.in(room).fetchSockets();
+        let onlineMembers = [];
+        activeSockets.map((s) => {
+          onlineMembers.push({
+            socketid: s.id,
+            _id: s.user._id,
+            name: s.user.name,
+            picture: s.user.picture,
+          });
+        });
+        onlineMembers = await getOnlineMembersWithRole(onlineMembers, room);
+        io.to(room).emit("user-status", onlineMembers);
+
+        const message = {
+          _id: uuidv4(),
+          text: `${socket.user.name} left the room!`,
+          notification: {
+            type: "leaving-room",
+          },
+          user: {
+            _id: socket.user._id,
+          },
+        };
+        socket.to(room).emit("incoming-message", message);
+      }),
+    );
+    socket.join(userId);
+    console.log("join-userId-room after:", socket.rooms);
   });
 
   // Handle sending an invite by userId
@@ -108,125 +168,149 @@ const registerSocketHandlers = (io, socket) => {
     io.to(roomId).emit("incoming-message", message);
   });
 
-  socket.on("permanent-ban-user", async ({ userId, roomId }) => {
-    // get socket io of user from userslist
-    const userSocket = users[roomId].find((user) => {
-      return user._id.toString() === userId.toString();
-    });
-    const socketId = userSocket.socketid;
-    const username = userSocket.name;
-    const message = {
-      _id: uuidv4(),
-      text: `${username} has been permanently banned!`,
-      notification: {
-        type: "permanent-ban",
-      },
-      user: {
-        _id: socket.user._id,
-      },
-    };
-    io.to(roomId).emit("incoming-message", message);
+  // socket.on("permanent-ban-user", async ({ userId, roomId }) => {
+  //   // get socket io of user from userslist
+  //   const userSocket = users[roomId].find((user) => {
+  //     return user._id.toString() === userId.toString();
+  //   });
+  //   const socketId = userSocket.socketid;
+  //   const username = userSocket.name;
+  //   const message = {
+  //     _id: uuidv4(),
+  //     text: `${username} has been permanently banned!`,
+  //     notification: {
+  //       type: "permanent-ban",
+  //     },
+  //     user: {
+  //       _id: socket.user._id,
+  //     },
+  //   };
+  //   io.to(roomId).emit("incoming-message", message);
 
-    // remove user from room
-    io.sockets.sockets.get(socketId).leave(roomId);
-    // emit banned message to user
-    io.to(roomId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
+  //   // remove user from room
+  //   io.sockets.sockets.get(socketId).leave(roomId);
+  //   // emit banned message to user
+  //   io.to(roomId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
 
-    io.to(socketId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
+  //   io.to(socketId).emit("permanent-banned", { message: "You have been banned from the room", userId: userId });
 
-    users[roomId] = users[roomId]?.filter((user) => {
-      return user._id.toString() !== userId.toString();
-    });
-    io.to(roomId).emit("user-status", users[roomId]);
-    // remove user from room members list
-    await removeUserFromRoom({ userId, roomId });
-  });
-  socket.on("temporary-ban-user", async ({ userId, roomId, banDuration }) => {
-    const userSocket = users[roomId].find((user) => {
-      return user._id.toString() === userId.toString();
-    });
-    let time = 0;
-    if (banDuration === "a day") {
-      time = Date.now() + 86400000;
-    }
-    if (banDuration === "a week") {
-      time = Date.now() + 604800000;
-    }
-    if (banDuration === "a month") {
-      time = Date.now() + 2592000000;
-    }
-    await tempBanUserRoom({ userId, roomId, banEndTime: time });
-    const socketId = userSocket.socketid;
-    const username = userSocket.name;
-    const message = {
-      _id: uuidv4(),
-      text: `${username} has been temporarily banned`,
-      notification: {
-        type: "temperory-ban",
-      },
-      user: {
-        _id: socket.user._id,
-      },
-    };
-    io.to(roomId).emit("incoming-message", message);
-    io.sockets.sockets.get(socketId).leave(roomId);
-    io.to(roomId).emit("temporary-banned", { message: "You have been banned from the room", userId: userId });
-    io.to(socketId).emit("temporary-banned", {
-      message: "You have been banned from the room",
-      userId: userId,
-      banEndTime: banDuration,
-    });
-    users[roomId] = users[roomId]?.filter((user) => {
-      return user._id.toString() !== userId.toString();
-    });
-    io.to(roomId).emit("user-status", users[roomId]);
-  });
-  socket.on("leave-room", ({ roomId }) => {
-    users[roomId] = users[roomId]?.filter((user) => {
-      return user._id.toString() !== socket.user._id.toString();
-    });
-    console.log("leave room", roomId);
-    socket.leave(roomId);
-    io.to(roomId).emit("user-status", users[roomId]);
-    trackLeave({ roomId, userId: socket.user._id });
+  //   users[roomId] = users[roomId]?.filter((user) => {
+  //     return user._id.toString() !== userId.toString();
+  //   });
+  //   io.to(roomId).emit("user-status", users[roomId]);
+  //   // remove user from room members list
+  //   await removeUserFromRoom({ userId, roomId });
+  // });
 
-    const message = {
-      _id: uuidv4(),
-      text: `${socket.user.name} left the room!`,
-      notification: {
-        type: "leaving-room",
-      },
-      user: {
-        _id: socket.user._id,
-      },
-    };
-    socket.to(roomId).emit("incoming-message", message);
-  });
+  // socket.on("temporary-ban-user", async ({ userId, roomId, banDuration }) => {
+  //   const userSocket = users[roomId].find((user) => {
+  //     return user._id.toString() === userId.toString();
+  //   });
+  //   let time = 0;
+  //   if (banDuration === "a day") {
+  //     time = Date.now() + 86400000;
+  //   }
+  //   if (banDuration === "a week") {
+  //     time = Date.now() + 604800000;
+  //   }
+  //   if (banDuration === "a month") {
+  //     time = Date.now() + 2592000000;
+  //   }
+  //   await tempBanUserRoom({ userId, roomId, banEndTime: time });
+  //   const socketId = userSocket.socketid;
+  //   const username = userSocket.name;
+  //   const message = {
+  //     _id: uuidv4(),
+  //     text: `${username} has been temporarily banned`,
+  //     notification: {
+  //       type: "temperory-ban",
+  //     },
+  //     user: {
+  //       _id: socket.user._id,
+  //     },
+  //   };
+  //   io.to(roomId).emit("incoming-message", message);
+  //   io.sockets.sockets.get(socketId).leave(roomId);
+  //   io.to(roomId).emit("temporary-banned", { message: "You have been banned from the room", userId: userId });
+  //   io.to(socketId).emit("temporary-banned", {
+  //     message: "You have been banned from the room",
+  //     userId: userId,
+  //     banEndTime: banDuration,
+  //   });
+  //   users[roomId] = users[roomId]?.filter((user) => {
+  //     return user._id.toString() !== userId.toString();
+  //   });
+  //   io.to(roomId).emit("user-status", users[roomId]);
+  // });
 
-  socket.on("disconnecting", () => {
-    const rooms = Array.from(socket.rooms); // Get the rooms the user was in
-    rooms.forEach((room) => {
-      const message = {
-        _id: uuidv4(),
-        text: `${socket.user.name} left the room!`,
-        notification: {
-          type: "leaving-room",
-        },
-        user: {
-          _id: socket.user._id,
-        },
-      };
-      if (!users[room]?.includes(socket.user._id)) {
-        return;
-      }
-      users[room] = users[room]?.filter((user) => {
-        return user._id.toString() !== socket.user._id.toString();
-      });
-      console.log("leave room 2nd", room);
-      trackLeave({ roomId: room, userId: socket.user._id });
-      socket.to(room).emit("user-status", users[room]);
-      socket.to(room).emit("incoming-message", message);
-    });
+  // socket.on("leave-room", async ({ roomId }) => {
+  //   // console.log("leave room", roomId);
+  //   console.log("leave-room before:", socket.rooms);
+  //   socket.leave(roomId);
+
+  //   const activeSockets = await io.in(roomId).fetchSockets();
+  //   let onlineMembers = [];
+  //   activeSockets.map((s) => {
+  //     onlineMembers.push({
+  //       socketid: s.id,
+  //       _id: s.user._id,
+  //       name: s.user.name,
+  //       picture: s.user.picture,
+  //     });
+  //   });
+  //   onlineMembers = await getOnlineMembersWithRole(onlineMembers, roomId);
+  //   io.to(roomId).emit("user-status", onlineMembers);
+
+  //   const message = {
+  //     _id: uuidv4(),
+  //     text: `${socket.user.name} left the room!`,
+  //     notification: {
+  //       type: "leaving-room",
+  //     },
+  //     user: {
+  //       _id: socket.user._id,
+  //     },
+  //   };
+  //   socket.to(roomId).emit("incoming-message", message);
+  //   console.log("leave-room after:", socket.rooms);
+  // });
+
+  socket.on("disconnecting", async () => {
+    console.log("disconnecting before:", socket.rooms);
+    const socketRooms = Array.from(socket.rooms);
+    await Promise.all(
+      socketRooms.map(async (room) => {
+        if (room === socket.id || room === String(socket.user._id)) {
+          return;
+        }
+        socket.leave(room);
+        const activeSockets = await io.in(room).fetchSockets();
+        let onlineMembers = [];
+        activeSockets.map((s) => {
+          onlineMembers.push({
+            socketid: s.id,
+            _id: s.user._id,
+            name: s.user.name,
+            picture: s.user.picture,
+          });
+        });
+        onlineMembers = await getOnlineMembersWithRole(onlineMembers, room);
+        io.to(room).emit("user-status", onlineMembers);
+
+        const message = {
+          _id: uuidv4(),
+          text: `${socket.user.name} left the room!`,
+          notification: {
+            type: "leaving-room",
+          },
+          user: {
+            _id: socket.user._id,
+          },
+        };
+        socket.to(room).emit("incoming-message", message);
+      }),
+    );
+    console.log("disconnecting after:", socket.rooms);
   });
 
   socket.on("disconnect", () => {

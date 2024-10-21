@@ -102,12 +102,12 @@ export const MainView = memo(() => {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex items-center justify-between border-b border-b-border p-2 font-semibold leading-none tracking-tight">
+      <div className="flex items-center justify-between gap-2 border-b border-b-border p-2 font-semibold leading-none tracking-tight">
         <div className="flex items-center gap-2 text-2xl font-extrabold">
           <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center whitespace-nowrap rounded-md border bg-background text-sm font-medium">
             <Emoji emojiStyle={EmojiStyle.APPLE} unified={avatar} size={20} />
           </div>
-          {roomName}
+          <span className="max-w-28 truncate md:max-w-36 lg:max-w-60 xl:max-w-full">{roomName}</span>
         </div>
         <div className="flex items-center gap-2">
           {currentTheme === "Note" && (

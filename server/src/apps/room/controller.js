@@ -36,7 +36,7 @@ export const verifyMember = async ({ userId, roomId }) => {
     const isMember = room.members.some((member) => {
       return String(member.userId) === String(userId);
     });
-    console.log("verifyMember ~ isMember:", isMember);
+    // console.log("verifyMember ~ isMember:", isMember);
 
     return isMember; // Return true if userId exists in room.members, otherwise false
   } catch (e) {
@@ -120,13 +120,27 @@ export const updateRoom = async (req, res) => {
   }
 };
 
-export const getRole = async (userId, roomId) => {
+export const getOnlineMembersWithRole = async (onlineMembers, roomId) => {
   try {
     const room = await RoomModel.findById(roomId);
-    const member = room?.members.find((member) => member.userId.toString() === userId.toString());
-    return member?.role;
+
+    if (!room || !room.members) {
+      throw new Error(`${roomId} room isn't valid.`);
+    }
+
+    const updatedOnlineMembers = onlineMembers.map((onlineMember) => {
+      const roomMember = room.members.find((member) => member.userId.toString() === onlineMember._id.toString());
+
+      return {
+        ...onlineMember,
+        role: roomMember ? roomMember.role : null,
+      };
+    });
+
+    return updatedOnlineMembers;
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
 

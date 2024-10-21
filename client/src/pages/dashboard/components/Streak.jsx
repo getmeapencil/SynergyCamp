@@ -2,16 +2,15 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Flame, Trophy } from "lucide-react";
 import { useEffect } from "react";
-import { useMembersStore } from "@/store/members";
 import { useHistoryStore } from "@/store/history";
 import { useUserStore } from "@/store/user";
 
 export const Streak = () => {
-  const {streak}=useHistoryStore();
-  const {user}=useUserStore();
-  console.log("user",user);
-  const longestStreak=user.longestStreak;
-  console.log(streak,longestStreak);
+  const { streak } = useHistoryStore();
+  const { user } = useUserStore();
+  console.log("user", user);
+  const longestStreak = user.longestStreak;
+  console.log(streak, longestStreak);
   useEffect(() => {
     useHistoryStore.getState().getStreak();
   }, []);

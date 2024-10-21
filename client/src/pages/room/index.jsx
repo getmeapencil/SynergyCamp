@@ -7,22 +7,20 @@ import { useParams } from "react-router-dom";
 import { useRoomStore } from "@/store/room";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { useMembersStore } from "@/store/members";
+// import { useMembersStore } from "@/store/members";
 import { useMessagesStore } from "@/store/messages";
 import { Error } from "../error";
 
 export const Room = () => {
   const { roomId } = useParams();
   const [activePanel, setActivePanel] = useState("Chat");
-  const members = useMembersStore((state) => state.members);
+  // const members = useMembersStore((state) => state.members);
   const currentRoom = useRoomStore((state) => state.currentRoom);
-  const { joinRoom, leaveRoom } = useSocketEmitters();
+  const { joinRoom } = useSocketEmitters();
 
   useEffect(() => {
-    if (members?.length === 0) {
-      joinRoom({ roomId });
-    }
-  }, [members, joinRoom, roomId]);
+    joinRoom({ roomId });
+  }, [joinRoom, roomId]);
 
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
@@ -30,10 +28,9 @@ export const Room = () => {
 
   useEffect(() => {
     window.onpopstate = () => {
-      leaveRoom({ roomId });
       useMessagesStore.getState().clearMessages();
     };
-  }, [leaveRoom, roomId]);
+  }, []);
 
   usePomodoro();
 
@@ -41,7 +38,7 @@ export const Room = () => {
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
-      <main className="flex max-h-screen flex-1">
+      <main className="relative flex max-h-screen flex-1">
         <MainView />
         <SidePanel activePanel={activePanel} setActivePanel={setActivePanel} />
       </main>

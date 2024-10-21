@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useTaskStore } from "@/store/task";
 
-export const TaskOverview = () => {
+export const TaskOverview = ({ className }) => {
   const { tasks } = useTaskStore();
   useEffect(() => {
     useTaskStore.getState().fetchAllTasks();
@@ -33,8 +33,9 @@ export const TaskOverview = () => {
       return a.completed ? 1 : -1;
     });
   console.log("tasks", tasks, sortedTasks);
+
   return (
-    <Card className="h-fit w-1/3 max-w-md">
+    <Card className={className}>
       <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>Tasks</CardTitle>

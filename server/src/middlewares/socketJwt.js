@@ -20,6 +20,7 @@ export default async function checkJwtSocketMiddleware(socket, next) {
     }
     socket.user = user;
     socket.join(user._id.toString());
+    // console.log("socket.rooms jwt", socket.rooms);
     return next();
   } catch (err) {
     console.error(err.message);

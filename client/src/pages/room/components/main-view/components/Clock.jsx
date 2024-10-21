@@ -25,8 +25,8 @@ export const Clock = () => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background">
       <Card>
-        <CardContent className="flex items-center justify-center p-6">
-          <div className="font-mono text-8xl font-bold text-primary">{formatTime(time)}</div>
+        <CardContent className="flex items-center justify-center p-4 xl:p-6">
+          <div className="font-mono text-5xl font-bold text-primary xl:text-8xl">{formatTime(time)}</div>
         </CardContent>
       </Card>
     </div>
