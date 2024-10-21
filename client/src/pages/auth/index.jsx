@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { BsGoogle } from "react-icons/bs";
 import LogoWhite from "/logo-white.svg";
+import LogoBlack from "/logo-black.svg";
 import Typewriter from "typewriter-effect";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useUserStore } from "@/store/user";
@@ -8,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Auth = () => {
   return (
-    <div className="light h-screen w-full lg:flex">
+    <div className="light flex h-screen w-full flex-col lg:flex-row">
       <div className="hidden w-2/3 flex-col justify-between bg-[url('/src/assets/auth-bg.svg')] bg-cover bg-right-top p-8 lg:flex">
         <h1 className="flex gap-2 text-5xl font-extrabold text-white">
           <img src={LogoWhite} alt="MindMesh" className="grid aspect-square w-10 place-content-center" />
@@ -27,6 +28,12 @@ export const Auth = () => {
             with Friends in Real-Time
           </span>
         </div>
+      </div>
+      <div className="flex-col justify-between bg-white p-4 lg:hidden">
+        <h1 className="flex gap-2 text-4xl font-extrabold text-black">
+          <img src={LogoBlack} alt="MindMesh" className="grid aspect-square w-8 place-content-center" />
+          MindMesh
+        </h1>
       </div>
       <div className="grid flex-1 place-items-center bg-white p-6">
         <GoogleLoginBtn />
