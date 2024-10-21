@@ -54,5 +54,4 @@ export const useUserStore = create((set, get) => ({
       set({ triedTokenRefresh: true });
     }
   },
- 
 }));

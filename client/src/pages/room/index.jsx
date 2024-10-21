@@ -7,33 +7,24 @@ import { useParams } from "react-router-dom";
 import { useRoomStore } from "@/store/room";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { useMembersStore } from "@/store/members";
-import { useMessagesStore } from "@/store/messages";
+// import { useMembersStore } from "@/store/members";
+// import { useMessagesStore } from "@/store/messages";
 import { Error } from "../error";
 
 export const Room = () => {
   const { roomId } = useParams();
   const [activePanel, setActivePanel] = useState("Chat");
-  const members = useMembersStore((state) => state.members);
+  // const members = useMembersStore((state) => state.members);
   const currentRoom = useRoomStore((state) => state.currentRoom);
-  const { joinRoom, leaveRoom } = useSocketEmitters();
+  const { joinRoom } = useSocketEmitters();
 
   useEffect(() => {
-    if (members?.length === 0) {
-      joinRoom({ roomId });
-    }
-  }, [members, joinRoom, roomId]);
+    joinRoom({ roomId });
+  }, [joinRoom, roomId]);
 
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
   }, [roomId]);
-
-  useEffect(() => {
-    window.onpopstate = () => {
-      leaveRoom({ roomId });
-      useMessagesStore.getState().clearMessages();
-    };
-  }, [leaveRoom, roomId]);
 
   usePomodoro();
 

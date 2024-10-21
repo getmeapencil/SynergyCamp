@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUserStore } from "@/store/user";
@@ -10,10 +11,16 @@ import { TaskOverview } from "./components/TaskOverview";
 import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 // import { Streak } from "./components/Streak";
+import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 
 export const Dashboard = () => {
   const { user } = useUserStore();
   const { theme } = useTheme();
+  const { joinUserIdRoom } = useSocketEmitters();
+
+  useEffect(() => {
+    joinUserIdRoom();
+  }, [joinUserIdRoom]);
 
   if (!user) {
     return null;

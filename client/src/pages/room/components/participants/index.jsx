@@ -1,44 +1,44 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useMembersStore } from "@/store/members";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { generateAvatarFallback } from "@/utils/generateAvatarFallback";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { EllipsisVertical, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuPortal,
-  DropdownMenuSubContent,
-} from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+// import { Button } from "@/components/ui/button";
+// import { EllipsisVertical, Check } from "lucide-react";
+// import { cn } from "@/lib/utils";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+//   DropdownMenuSub,
+//   DropdownMenuSubTrigger,
+//   DropdownMenuPortal,
+//   DropdownMenuSubContent,
+// } from "@/components/ui/dropdown-menu";
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+// } from "@/components/ui/alert-dialog";
+// import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+// import { useUserStore } from "@/store/user";
 import { useRoomStore } from "@/store/room";
-import { useSocketEmitters } from "@/hooks/useSocketEmitters";
-import { useUserStore } from "@/store/user";
 
 const Participant = ({ member, currentRoomId, isBanned }) => {
-  const userRole = useRoomStore((state) => state.userRole);
-  const user = useUserStore((state) => state.user);
-  const [banDuration, setBanDuration] = useState("");
-  const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
-  const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
-  const { permanentBanUser, temporaryBanUser } = useSocketEmitters();
+  // const userRole = useRoomStore((state) => state.userRole);
+  // const user = useUserStore((state) => state.user);
+  // const [banDuration, setBanDuration] = useState("");
+  // const [isTempBanDialogOpen, setIsTempBanDialogOpen] = useState(false);
+  // const [isPermBanDialogOpen, setIsPermBanDialogOpen] = useState(false);
+  // const { permanentBanUser, temporaryBanUser } = useSocketEmitters();
   return (
     <div className="flex justify-between px-4 py-2 hover:bg-background">
       <div className="flex gap-2">
@@ -55,142 +55,144 @@ const Participant = ({ member, currentRoomId, isBanned }) => {
           )}
         </div>
       </div>
-      {member._id !== user?._id &&
-        member.role !== "admin" &&
-        (userRole === "admin" || userRole === "moderator") &&
-        !isBanned && (
-          <>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <EllipsisVertical />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="bottom" align="end">
-                {userRole === "admin" && (
+      {/* <span>
+        {member._id !== user?._id &&
+          member.role !== "admin" &&
+          (userRole === "admin" || userRole === "moderator") &&
+          !isBanned && (
+            <>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <EllipsisVertical />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom" align="end">
+                  {userRole === "admin" && (
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger className="gap-1">
+                        <span>Change Role</span>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              useRoomStore
+                                .getState()
+                                .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "moderator" });
+                            }}
+                          >
+                            <Check
+                              className={cn("mr-2 h-4 w-4", member.role === "moderator" ? "opacity-100" : "opacity-0")}
+                            />
+                            <span>Moderator</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              useRoomStore
+                                .getState()
+                                .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "member" });
+                            }}
+                          >
+                            <Check
+                              className={cn("mr-2 h-4 w-4", member.role === "member" ? "opacity-100" : "opacity-0")}
+                            />
+                            <span>Member</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                  )}
+                  {userRole === "admin" && <DropdownMenuSeparator />}
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger className="gap-1">
-                      <span>Change Role</span>
+                      <span>Temporary Ban</span>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                       <DropdownMenuSubContent>
                         <DropdownMenuItem
                           onClick={() => {
-                            useRoomStore
-                              .getState()
-                              .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "moderator" });
+                            setBanDuration("a day");
+                            setIsTempBanDialogOpen(true);
                           }}
                         >
-                          <Check
-                            className={cn("mr-2 h-4 w-4", member.role === "moderator" ? "opacity-100" : "opacity-0")}
-                          />
-                          <span>Moderator</span>
+                          <span>a day</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            useRoomStore
-                              .getState()
-                              .changeUserRole({ userId: member._id, roomId: currentRoomId, role: "member" });
+                            setBanDuration("a week");
+                            setIsTempBanDialogOpen(true);
                           }}
                         >
-                          <Check
-                            className={cn("mr-2 h-4 w-4", member.role === "member" ? "opacity-100" : "opacity-0")}
-                          />
-                          <span>Member</span>
+                          <span>a week</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setBanDuration("a month");
+                            setIsTempBanDialogOpen(true);
+                          }}
+                        >
+                          <span>a month</span>
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
-                )}
-                {userRole === "admin" && <DropdownMenuSeparator />}
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="gap-1">
-                    <span>Temporary Ban</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setBanDuration("a day");
-                          setIsTempBanDialogOpen(true);
-                        }}
-                      >
-                        <span>a day</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setBanDuration("a week");
-                          setIsTempBanDialogOpen(true);
-                        }}
-                      >
-                        <span>a week</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setBanDuration("a month");
-                          setIsTempBanDialogOpen(true);
-                        }}
-                      >
-                        <span>a month</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-                {userRole === "admin" && (
-                  <DropdownMenuItem className="focus:text-red-500" onClick={() => setIsPermBanDialogOpen(true)}>
-                    Permanent Ban
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {userRole === "admin" && (
+                    <DropdownMenuItem className="focus:text-red-500" onClick={() => setIsPermBanDialogOpen(true)}>
+                      Permanent Ban
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Temporary Ban AlertDialog */}
-            <AlertDialog open={isTempBanDialogOpen} onOpenChange={setIsTempBanDialogOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Do you want to temporarily ban this user?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action will restrict their access for {banDuration}. Do you want to proceed?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    variant="destructive"
-                    onClick={() => {
-                      temporaryBanUser({ userId: member._id, roomId: currentRoomId, banDuration: banDuration });
-                    }}
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              
+              <AlertDialog open={isTempBanDialogOpen} onOpenChange={setIsTempBanDialogOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Do you want to temporarily ban this user?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action will restrict their access for {banDuration}. Do you want to proceed?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={() => {
+                        temporaryBanUser({ userId: member._id, roomId: currentRoomId, banDuration: banDuration });
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
 
-            {/* Permanent Ban AlertDialog */}
-            <AlertDialog open={isPermBanDialogOpen} onOpenChange={setIsPermBanDialogOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Do you want to permanently ban {member.name}?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action will revoke their access indefinitely and cannot be undone. Do you want to proceed?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    variant="destructive"
-                    onClick={() => {
-                      permanentBanUser({ userId: member._id, roomId: currentRoomId });
-                    }}
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </>
-        )}
+              
+              <AlertDialog open={isPermBanDialogOpen} onOpenChange={setIsPermBanDialogOpen}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Do you want to permanently ban {member.name}?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action will revoke their access indefinitely and cannot be undone. Do you want to proceed?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      variant="destructive"
+                      onClick={() => {
+                        permanentBanUser({ userId: member._id, roomId: currentRoomId });
+                      }}
+                    >
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
+      </span> */}
     </div>
   );
 };

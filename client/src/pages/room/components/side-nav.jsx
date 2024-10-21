@@ -21,7 +21,7 @@ import { useRoomStore } from "@/store/room";
 // JSON structure
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
-  // { label: "Participants", icon: SquareUserRound },
+  { label: "Participants", icon: SquareUserRound },
   { label: "Task", icon: ListTodo },
   { label: "Pomodoro", icon: Timer },
   // { label: "Calendar", icon: Calendar },
