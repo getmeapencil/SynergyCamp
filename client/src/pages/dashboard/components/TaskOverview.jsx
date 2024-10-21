@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useTaskStore } from "@/store/task";
 
-export const TaskOverview = () => {
+export const TaskOverview = ({ className }) => {
   const { tasks } = useTaskStore();
   useEffect(() => {
     useTaskStore.getState().fetchAllTasks();
@@ -35,7 +35,7 @@ export const TaskOverview = () => {
   console.log("tasks", tasks, sortedTasks);
 
   return (
-    <Card className="h-fit">
+    <Card className={className}>
       <CardHeader className="flex flex-row justify-between gap-2">
         <div className="flex flex-col space-y-1.5">
           <CardTitle>Tasks</CardTitle>

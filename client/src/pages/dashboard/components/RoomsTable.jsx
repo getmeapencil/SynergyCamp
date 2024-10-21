@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { EmptyTable } from "./EmptyTable";
 import { useRoomStore } from "@/store/room";
@@ -41,7 +40,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
       </CardHeader>
 
       <CardContent>
-        <ScrollArea className="h-96 rounded-md border">
+        <div className="h-96 overflow-auto rounded-md border">
           {filteredData?.length ? (
             <Table>
               <TableHeader>
@@ -102,7 +101,7 @@ export const RoomsTable = ({ filterRoles, searchName }) => {
           ) : (
             <EmptyTable variant={"room"} text={"You haven't joined any study rooms yet."} />
           )}
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );

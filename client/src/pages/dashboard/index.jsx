@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useTheme } from "@/components/theme-provider";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useUserStore } from "@/store/user";
 // import { Barchart } from "./components/Barchart";
 import { DropdownAvatar } from "./components/DropdownAvatar";
@@ -12,6 +11,7 @@ import LogoBlack from "/logo-black.svg";
 import LogoWhite from "/logo-white.svg";
 // import { Streak } from "./components/Streak";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
+import { useMessagesStore } from "@/store/messages";
 
 export const Dashboard = () => {
   const { user } = useUserStore();
@@ -20,6 +20,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     joinUserIdRoom();
+    useMessagesStore.getState().clearMessages();
   }, [joinUserIdRoom]);
 
   if (!user) {
@@ -39,18 +40,17 @@ export const Dashboard = () => {
         </span>
         <DropdownAvatar user={user} />
       </div>
-      <ScrollArea>
-        <div className="flex gap-4 p-4 sm:flex-row">
-          <div className="flex flex-col gap-4 sm:w-1/3">
-            <CreateRoom />
-            {/* <Barchart /> */}
-            <TaskOverview />
-          </div>
-          <div className="flex flex-1 flex-col gap-4">
-            <RoomsData />
-          </div>
+
+      <div className="flex flex-col gap-4 overflow-auto p-4 lg:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row lg:w-1/3 lg:flex-col">
+          <CreateRoom className="sm:w-1/2 lg:w-full" />
+          {/* <Barchart /> */}
+          <TaskOverview className="sm:w-1/2 lg:h-fit lg:w-full" />
         </div>
-      </ScrollArea>
+        <div className="flex flex-1 flex-col gap-4">
+          <RoomsData />
+        </div>
+      </div>
     </div>
   );
 };

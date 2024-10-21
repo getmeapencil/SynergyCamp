@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EmptyTable } from "./EmptyTable";
 import { useInvitesStore } from "@/store/invite";
@@ -37,7 +36,7 @@ export const InvitesTable = ({ searchName }) => {
         <CardDescription>Rooms you&apos;ve been invited to.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-1/2 rounded-md border">
+        <div className="h-96 overflow-auto rounded-md border">
           {filteredData.length ? (
             <Table>
               <TableHeader>
@@ -87,7 +86,7 @@ export const InvitesTable = ({ searchName }) => {
           ) : (
             <EmptyTable variant={"invite"} text={"You haven't recieved any room invites yet."} />
           )}
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );

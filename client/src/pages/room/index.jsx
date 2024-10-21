@@ -8,7 +8,7 @@ import { useRoomStore } from "@/store/room";
 import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 // import { useMembersStore } from "@/store/members";
-// import { useMessagesStore } from "@/store/messages";
+import { useMessagesStore } from "@/store/messages";
 import { Error } from "../error";
 
 export const Room = () => {
@@ -25,6 +25,12 @@ export const Room = () => {
   useEffect(() => {
     useRoomStore.getState().getCurrentRoom(roomId);
   }, [roomId]);
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      useMessagesStore.getState().clearMessages();
+    };
+  }, []);
 
   usePomodoro();
 

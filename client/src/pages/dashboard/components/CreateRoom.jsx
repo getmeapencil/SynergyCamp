@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import moment from "moment-timezone";
 
-export const CreateRoom = () => {
+export const CreateRoom = ({ className }) => {
   const [name, setName] = useState("");
 
   const createRoom = async () => {
@@ -19,7 +19,7 @@ export const CreateRoom = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className={className}>
       <Card className="min-w-sm">
         <CardHeader>
           <CardTitle>Your Room</CardTitle>
