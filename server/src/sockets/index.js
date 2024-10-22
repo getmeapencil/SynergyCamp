@@ -7,13 +7,14 @@ export const initializeSocket = (server) => {
   const io = new Server(server, {
     cors: {
       origin: process.env.FRONTEND_URL,
-      methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
       credentials: true,
       allowedHeaders: ["Authorization", "Content-Type"],
       maxAge: 86400,
       maxFileSize: 1073741824, // 1 GB in bytes
       maxFieldsSize: 1073741824,
     },
+    transports: ["websocket", "polling"],
   });
 
   // Use JWT middleware for Socket authentication

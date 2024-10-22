@@ -16,12 +16,13 @@ const server = createServer(app);
 app.use(express.json());
 
 const allowedOrigins = [process.env.FRONTEND_URL];
-console.log("allowedOrigins:", allowedOrigins);
 app.use(
   cors({
     origin: function (origin, callback) {
       console.log("origin:", origin);
-      if (allowedOrigins.includes(origin)) {
+      if (!origin) {
+        callback(null, true);
+      } else if (allowedOrigins.includes(origin)) {
         callback(null, origin);
       } else {
         callback(new Error("Not allowed by CORS"));
