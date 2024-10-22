@@ -14,7 +14,7 @@ export const initializeSocket = (server) => {
       maxFileSize: 1073741824, // 1 GB in bytes
       maxFieldsSize: 1073741824,
     },
-    transports: ["websocket", "polling"],
+    transports: ["websocket"],
   });
 
   // Use JWT middleware for Socket authentication
