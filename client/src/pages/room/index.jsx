@@ -9,7 +9,7 @@ import { usePomodoro } from "@/hooks/usePomodoro";
 import { useSocketEmitters } from "@/hooks/useSocketEmitters";
 // import { useMembersStore } from "@/store/members";
 import { useMessagesStore } from "@/store/messages";
-import { Error } from "../error";
+import { Loading } from "@/pages/loading";
 
 export const Room = () => {
   const { roomId } = useParams();
@@ -34,7 +34,7 @@ export const Room = () => {
 
   usePomodoro();
 
-  if (!currentRoom) return <Error errorMessage="You currently don't belong to this room :/" />;
+  if (!currentRoom) return <Loading />;
 
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
