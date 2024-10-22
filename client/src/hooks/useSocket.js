@@ -16,6 +16,7 @@ export const useSocket = () => {
   const initializeSocket = useCallback((token) => {
     const newSocket = io(import.meta.env.VITE_WEBSOCKET_URL, {
       query: { token },
+      transports: ["websocket"],
     });
 
     setSocket(newSocket);
