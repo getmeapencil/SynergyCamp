@@ -18,7 +18,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <ErrorBoundary>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <TooltipProvider>
           <RouterProvider router={router} />
           <Toaster richColors />
