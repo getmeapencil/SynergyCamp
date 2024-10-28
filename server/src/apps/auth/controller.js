@@ -2,6 +2,7 @@ import { OAuth2Client } from "google-auth-library";
 import { randomBytes } from "crypto";
 import JWT from "jsonwebtoken";
 import { UserModel } from "../../models/user.js";
+import { whitelisted } from "./whitelisted.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -26,6 +27,11 @@ export const googleAuth = async (req, res) => {
       audience: process.env.CLIENT_ID,
     });
     const { email, name, picture } = ticket.getPayload();
+
+    if (!whitelisted.includes(email)) {
+      throw new Error(`${email} isn't whitelisted. Please contact the developer for the access.`);
+    }
+
     const user = await UserModel.findOneAndUpdate(
       { email: email.toLowerCase() },
       {

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createApiCall } from "@/utils/createApiCall";
 import axios from "axios";
+import { toast } from "sonner";
 
 export const useUserStore = create((set, get) => ({
   user: null,
@@ -37,6 +38,9 @@ export const useUserStore = create((set, get) => ({
       }
     } catch (err) {
       console.error(err);
+      if (err?.response?.data?.message) {
+        toast(err.response.data.message);
+      }
     }
   },
   tryTokenRefresh: async () => {
