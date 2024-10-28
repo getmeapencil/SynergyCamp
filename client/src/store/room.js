@@ -29,7 +29,7 @@ export const useRoomStore = create((set, get) => ({
         route: `/room/${roomId}`,
         withCredentials: true,
       });
-      console.log("getCurrentRoom: ~ currentRoom:", currentRoom);
+      // console.log("getCurrentRoom: ~ currentRoom:", currentRoom);
       set({ currentRoom });
       // get user role
       const userId = useUserStore.getState().user._id;
