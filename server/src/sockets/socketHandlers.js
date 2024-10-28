@@ -15,7 +15,7 @@ import { trackJoin, trackLeave } from "../apps/history/controller.js";
 const registerSocketHandlers = (io, socket) => {
   // Handle room joining
   socket.on("join-room", async ({ roomId }) => {
-    console.log("join-room before:", socket.rooms);
+    // console.log("join-room before:", socket.rooms);
     const userId = String(socket.user._id);
 
     if (socket.rooms.has(roomId) || roomId === userId) {
@@ -73,12 +73,12 @@ const registerSocketHandlers = (io, socket) => {
     };
     io.to(roomId).emit("incoming-message", message);
 
-    console.log("join-room after:", socket.rooms);
+    // console.log("join-room after:", socket.rooms);
   });
 
   // join userId room
   socket.on("join-userId-room", async () => {
-    console.log("join-userId-room before:", socket.rooms);
+    // console.log("join-userId-room before:", socket.rooms);
     const userId = String(socket.user._id);
     const socketRooms = Array.from(socket.rooms);
 
@@ -116,7 +116,7 @@ const registerSocketHandlers = (io, socket) => {
       }),
     );
     socket.join(userId);
-    console.log("join-userId-room after:", socket.rooms);
+    // console.log("join-userId-room after:", socket.rooms);
   });
 
   // Handle sending an invite by userId
@@ -276,7 +276,7 @@ const registerSocketHandlers = (io, socket) => {
   // });
 
   socket.on("disconnecting", async () => {
-    console.log("disconnecting before:", socket.rooms);
+    // console.log("disconnecting before:", socket.rooms);
     const socketRooms = Array.from(socket.rooms);
     await Promise.all(
       socketRooms.map(async (room) => {
@@ -310,7 +310,7 @@ const registerSocketHandlers = (io, socket) => {
         socket.to(room).emit("incoming-message", message);
       }),
     );
-    console.log("disconnecting after:", socket.rooms);
+    // console.log("disconnecting after:", socket.rooms);
   });
 
   socket.on("disconnect", () => {
