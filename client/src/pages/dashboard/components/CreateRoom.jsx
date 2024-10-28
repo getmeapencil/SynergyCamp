@@ -6,6 +6,7 @@ import { useRoomStore } from "@/store/room";
 import { useState } from "react";
 import { toast } from "sonner";
 import moment from "moment-timezone";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const CreateRoom = ({ className }) => {
   const [name, setName] = useState("");
@@ -47,7 +48,18 @@ export const CreateRoom = ({ className }) => {
               setName(e.target.value);
             }}
           />
-          <Button onClick={createRoom}>Create New Room</Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span tabIndex={0} className="inline-flex">
+                <Button onClick={createRoom} className="flex-1" disabled>
+                  Create New Room
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Unavailable. Ask developer for an invite.</p>
+            </TooltipContent>
+          </Tooltip>
         </CardContent>
       </Card>
     </div>
