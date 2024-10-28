@@ -29,7 +29,7 @@ export const Companions = () => {
     <div className="flex flex-1 flex-col overflow-auto bg-background">
       <div className="grid w-full flex-1 grid-cols-1 gap-4 overflow-auto p-6 lg:grid-cols-2">
         {companions.map((companion, index) => (
-          <div key={index} className="relative w-full pb-[56.25%]">
+          <div key={index} className="relative w-full pb-[56.25%] xl:pb-[36.25%]">
             <img
               src={companion.src}
               alt={`Companion ${index}`}
