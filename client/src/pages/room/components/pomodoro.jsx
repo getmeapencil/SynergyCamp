@@ -34,7 +34,7 @@ export const Pomodoro = () => {
     if (!timezones.includes(timezoneSetting)) return;
     editPomodoro({ pomodoroType: pomodoroTypeSetting, timezone: timezoneSetting, roomId: roomId });
   };
-  if(!pomodoro) return null;
+  if (!pomodoro) return null;
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">

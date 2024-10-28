@@ -100,8 +100,9 @@ export const useSocket = () => {
         useMembersStore.getState().removeMember(data?.userId);
       }
     });
+
     newSocket.on("edit-pomodoro", ({ pomodoroType, timezone }) => {
-      usePomodoroStore.getState().setPomodoro({ pomodoroType, timezone });
+      usePomodoroStore.getState().setPomodoroTypeAndTZ({ pomodoroType, timezone });
     });
 
     return newSocket;
