@@ -74,6 +74,7 @@ export const useSocket = () => {
         return;
       }
       useMessagesStore.getState().recieveMessage(message);
+      if (message.notification) return;
       playSound("/message.mp3");
     });
 
