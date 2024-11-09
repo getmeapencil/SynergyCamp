@@ -12,7 +12,7 @@ export const useHistoryStore = create((set, get) => ({
         route: "/history/streak",
         withCredentials: true,
       });
-      set({ streak:streak });
+      set({ streak: streak });
     } catch (error) {
       console.error(error);
     }
@@ -24,10 +24,10 @@ export const useHistoryStore = create((set, get) => ({
         route: "/history/last7days",
         withCredentials: true,
       });
-      console.log(last7days)
+      // console.log(last7days)
       set({ last7days });
     } catch (error) {
       console.error(error);
     }
-  }
+  },
 }));

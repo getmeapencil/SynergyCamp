@@ -1,5 +1,15 @@
 import { memo } from "react";
-import { MessageSquare, Timer, Settings, ListTodo, Calendar, LogOut, ShieldPlus, SquareUserRound } from "lucide-react";
+import {
+  MessageSquare,
+  Timer,
+  Settings,
+  ListTodo,
+  Logs,
+  Calendar,
+  LogOut,
+  ShieldPlus,
+  SquareUserRound,
+} from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +33,7 @@ const navTopItems = [
   { label: "Chat", icon: MessageSquare },
   { label: "Participants", icon: SquareUserRound },
   { label: "Task", icon: ListTodo },
+  { label: "Task Stats", icon: Logs },
   { label: "Pomodoro", icon: Timer },
   // { label: "Calendar", icon: Calendar },
 ];

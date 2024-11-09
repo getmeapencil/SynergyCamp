@@ -32,7 +32,7 @@ export const TaskOverview = ({ className }) => {
       }
       return a.completed ? 1 : -1;
     });
-  console.log("tasks", tasks, sortedTasks);
+  // console.log("tasks", tasks, sortedTasks);
 
   return (
     <Card className={className}>

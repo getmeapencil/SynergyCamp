@@ -6,6 +6,7 @@ import { Chat } from "./chat";
 import { Participants } from "./participants";
 import { AdminControl } from "./admin-control";
 import { Task } from "./Task";
+import { TaskStats } from "./task-stats";
 // import { Settings } from "./settings";
 
 export const SidePanel = memo(({ activePanel, setActivePanel }) => {
@@ -17,6 +18,8 @@ export const SidePanel = memo(({ activePanel, setActivePanel }) => {
         return <Participants />;
       case "Task":
         return <Task />;
+      case "Task Stats":
+        return <TaskStats />;
       case "Pomodoro":
         return <Pomodoro />;
       // case "Calendar":

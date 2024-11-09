@@ -5,6 +5,7 @@ import authRouter from "./auth/index.js";
 import usersRouter from "./users/index.js";
 import inviteRouter from "./invite/index.js";
 import taskRouter from "./task/index.js";
+import taskStatsRouter from "./task-stats/index.js";
 // import historyRouter from "./history/index.js";
 
 const apiRouter = express.Router();
@@ -15,6 +16,7 @@ apiRouter.use("/auth", authRouter);
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/invite", inviteRouter);
 apiRouter.use("/task", taskRouter);
+apiRouter.use("/task-stats", taskStatsRouter);
 // apiRouter.use("/history", historyRouter);
 
 export default apiRouter;
