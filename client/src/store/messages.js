@@ -21,4 +21,8 @@ export const useMessagesStore = create((set, get) => ({
   clearMessages: () => {
     set({ messages: [] });
   },
+  clearNotifications: () => {
+    const messages = get().messages.filter((message) => !message.notification);
+    set({ messages });
+  },
 }));
