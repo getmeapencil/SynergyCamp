@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { useTaskStore } from "@/store/task";
 import { useParams } from "react-router-dom";
 
-export const Task = () => {
+export const Tasks = () => {
   const [newTask, setNewTask] = useState("");
   const tasks = useTaskStore((state) => state.tasks);
   // console.log("Task ~ tasks:", tasks);

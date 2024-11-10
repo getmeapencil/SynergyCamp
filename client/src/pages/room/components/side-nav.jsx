@@ -32,7 +32,7 @@ import { useRoomStore } from "@/store/room";
 const navTopItems = [
   { label: "Chat", icon: MessageSquare },
   { label: "Participants", icon: SquareUserRound },
-  { label: "Task", icon: ListTodo },
+  { label: "Tasks", icon: ListTodo },
   { label: "Task Stats", icon: Logs },
   { label: "Pomodoro", icon: Timer },
   // { label: "Calendar", icon: Calendar },
