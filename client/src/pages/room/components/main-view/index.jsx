@@ -140,7 +140,7 @@ export const MainView = memo(() => {
                       type="number"
                       defaultValue={roomNote.fontSize}
                       min={8}
-                      max={72}
+                      max={100}
                     />
                   </div>
                   <div className="space-y-2">

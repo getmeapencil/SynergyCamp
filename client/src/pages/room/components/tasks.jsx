@@ -66,7 +66,7 @@ export const Tasks = () => {
         <Input
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add new tasks"
+          placeholder="Add new task"
           className="flex-1 rounded-md"
           onKeyDown={handleEnterPress}
         />
